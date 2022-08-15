@@ -86,6 +86,7 @@
         :loading="loading"
         sort-by="item.id"
         class="elevation-1"
+        @click:row="pageView"
       >
         <template v-slot:top>
           <v-dialog v-model="dialogimage" max-width="700px">
@@ -582,18 +583,18 @@
           <v-btn
             class="mr-2 btn"
             color="primary"
-            @click="opendialogresolve(item)"
+            @click.stop="opendialogresolve(item)"
           >
             Resolved
           </v-btn>
           <v-btn
             class="mr-2 btn"
             color="error"
-            @click="opendialogrejected(item)"
+            @click.stop="opendialogrejected(item)"
           >
             Rejected
           </v-btn>
-          <v-btn class="mr-2 btn" color="primary" @click="dialogclose = true">
+          <v-btn class="mr-2 btn" color="primary" @click..stop="dialogclose = true">
             Close
           </v-btn>
 
@@ -601,7 +602,7 @@
             v-if="userDepartment == 'IT'"
             color="red"
             class="mr-2 btn white--text"
-            @click="opendialogDelete(item)"
+            @click.stop="opendialogDelete(item)"
           >
             <v-icon medium class="mr-2"> mdi-delete </v-icon>
           </v-btn>
@@ -915,13 +916,18 @@ export default {
       "FindDamageTypeByEquipmentID_ITAction",
       "FindDamageTypeByEquipmentID_TECAction",
     ]),
-    pageView(item) {
+    pageView(item,row) {
       this.damageSelect = item;
       this.photo.id = item.id;
 
       console.log("this.damageSelect", this.damageSelect);
       this.dialog = true;
       this.showdetails = true;
+    },
+    clickrow(item, row){
+      console.log('row clicked',row);
+      console.log('item clicked',item);
+
     },
     closedtailedialoge() {
       this.showdetails = false;

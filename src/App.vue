@@ -135,13 +135,13 @@
             "
           >
             <div class="itemdrawer">
-              <router-link class="itemd" to="/technique">Technique</router-link>
+              <router-link class="itemd" to="/technique">Defects</router-link>
             </div>
           </div>
 
           <div class="admin" v-if="fonction == 'ADMIN'">
             <div class="itemdrawer">
-              <router-link class="itemd" to="/technique">Technique</router-link>
+              <router-link class="itemd" to="/technique">Defects</router-link>
             </div>
             <div class="itemdrawer">
               <router-link class="itemd" to="/userGestion"

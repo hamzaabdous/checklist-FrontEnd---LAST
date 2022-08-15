@@ -162,7 +162,7 @@ export default {
     search: "",
     headers: [
       { text: "Name", value: "nameEquipment", sortable: true },
-      { text: "Total defictive items", value: "damagedCount", sortable: true },
+      { text: "Total defects items", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
       { text: "Closed", value: "closedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },

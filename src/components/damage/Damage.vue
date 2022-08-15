@@ -106,10 +106,7 @@
                         :key="i"
                         class="item itemDamaged d-flex flex-wrap"
                         :disabled="true"
-                        style="
-                          background-color: rgb(255, 235, 234);
-                          color: #f54;
-                        "
+                        style="background-color: #f54; color: #fff"
                       >
                         <v-list-item-content class="item-content">
                           <v-list-item-title
@@ -117,7 +114,6 @@
                             class="itemName"
                             >{{ item.name }}</v-list-item-title
                           >
-                          <h4>{{ item.damage.status }}</h4>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -126,7 +122,7 @@
                         v-for="(item, i) in confirmedDamageIT"
                         :key="i"
                         class="item"
-                        style="background-color: #76ba99; color: #fff"
+                        style="background-color: #ff8f56; color: #fff"
                         :disabled="true"
                       >
                         <v-list-item-content class="item-content">
@@ -135,7 +131,6 @@
                             class="itemName"
                             >{{ item.name }}</v-list-item-title
                           >
-                          <h4>{{ item.damage.status }}</h4>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -144,6 +139,7 @@
                         v-for="(item, i) in damageTypesIT"
                         :key="i"
                         class="item"
+                        style="background-color: #76ba99; color: #fff"
                         @click="valider(item, i)"
                       >
                         <v-list-item-content class="item-content">
@@ -188,10 +184,7 @@
                         v-for="(item, i) in modelDamageTEC"
                         :key="i"
                         class="item"
-                        style="
-                          background-color: rgb(255, 235, 234);
-                          color: #f54;
-                        "
+                        style="background-color: #f54; color: #fff"
                         :disabled="true"
                       >
                         <v-list-item-content class="item-content">
@@ -208,7 +201,7 @@
                         v-for="(item, i) in confirmedDamageTEC"
                         :key="i"
                         class="item"
-                        style="background-color: #76ba99; color: #fff"
+                        style="background-color: #ff8f56; color: #fff"
                         :disabled="true"
                       >
                         <v-list-item-content class="item-content">
@@ -225,6 +218,8 @@
                         v-for="(item, i) in damageTypesTEC"
                         :key="i"
                         class="item"
+                        style="background-color: #76ba99; color: #fff"
+                        
                         @click="valider(item, i)"
                       >
                         <v-list-item-content class="item-content">
@@ -244,17 +239,17 @@
           <v-row class="d-flex justify-center">
             <v-col cols="4">
               <v-sheet
-                color="red"
+                color="#f54"
                 elevation="1"
                 height="20"
                 width="20"
                 rounded
               ></v-sheet>
-              Defective
+              Defected
             </v-col>
             <v-col cols="4">
               <v-sheet
-                color="green"
+                color="#FF8F56"
                 elevation="1"
                 height="20"
                 width="20"
@@ -264,13 +259,13 @@
             </v-col>
             <v-col cols="3">
               <v-sheet
-                color="white"
+                color="#76ba99"
                 elevation="1"
                 height="20"
                 width="20"
                 rounded
               ></v-sheet>
-              3
+              Not-Defected
             </v-col>
           </v-row>
         </v-container>

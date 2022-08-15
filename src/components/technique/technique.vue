@@ -7,7 +7,7 @@
         class="pa-2 white--text"
         @click="changeDepartment"
       >
-        Declare Defictive<v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
+        Declare Defect<v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
       </v-btn>
     </v-col>
     <v-data-table
@@ -63,18 +63,18 @@ export default {
     confirmAddSave: false,
     headers: [
       { text: "Name", value: "name", sortable: true },
-      { text: "Total equipment", value: "equipmentsCount", sortable: true },
+      { text: "Total equipments", value: "equipmentsCount", sortable: true },
       {
-        text: "Equipment with non defictive items",
+        text: "With non defects items",
         value: "functionalEquipmnet",
         sortable: true,
       },
       {
-        text: "Equipment with defictive items",
+        text: "With defects items",
         value: "NonFunctionalEquipement",
         sortable: true,
       },
-      { text: "Total defictive items", value: "damagedCount", sortable: true },
+      { text: "Total of defects", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
       { text: "Closed", value: "closedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
