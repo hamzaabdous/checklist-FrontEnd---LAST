@@ -179,6 +179,18 @@ const damageTypeModule = {
           });
       });
     },
+    FindDamageTypeByEquipmentIDRapportAction({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.get("damages/getDamagesByEquipmentsRapport/" + id)
+          .then((response) => {
+           // commit("FindDamageTypeByEquipmentID", response.data.payload);
+            resolve(response.data.payload);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
     FindDamageTypeByEquipmentID_ITAction({ commit }, id) {
       return new Promise((resolve, reject) => {
         CustomizedAxios.get("damages/getDamagesByEquipmentsIT/" + id)

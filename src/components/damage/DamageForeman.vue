@@ -100,7 +100,7 @@
                     active-class="bg-active"
                     color="#fff"
                   >
-                    <div class="hamzatec d-flex flex-wrap">
+                    <div>
                       <v-list-item
                         v-for="(item, i) in modelDamageIT"
                         :key="i"
@@ -111,7 +111,7 @@
                           color: #f54;
                         "
                       >
-                        <v-list-item-content class="item-content">
+                        <v-list-item-content class="d-flex flex-wrap">
                           <v-list-item-title
                             name="modelDamageIT"
                             class="itemName"
@@ -121,7 +121,7 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
-                    <div class="hamzatec d-flex flex-wrap">
+                    <div>
                       <v-list-item
                         v-for="(item, i) in confirmedDamageIT"
                         :key="i"
@@ -129,7 +129,7 @@
                         style="background-color: #76ba99; color: #fff"
                         :disabled="true"
                       >
-                        <v-list-item-content class="item-content">
+                        <v-list-item-content>
                           <v-list-item-title
                             name="modelDamageTEC"
                             class="itemName"
@@ -139,14 +139,14 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
-                    <div class="hamzatec d-flex flex-wrap">
+                    <div>
                       <v-list-item
                         v-for="(item, i) in damageTypesIT"
                         :key="i"
                         class="item"
-                        @click="valider(item, i)"
+                        @click="dialogValideFunction(item, i)"
                       >
-                        <v-list-item-content class="item-content">
+                        <v-list-item-content class="">
                           <v-list-item-title
                             name="damageTypesIT"
                             class="itemName"
@@ -183,7 +183,7 @@
                     active-class="bg-active"
                     color="#fff"
                   >
-                    <div class="hamzatec d-flex flex-wrap">
+                    <div>
                       <v-list-item
                         v-for="(item, i) in modelDamageTEC"
                         :key="i"
@@ -194,7 +194,7 @@
                         "
                         :disabled="true"
                       >
-                        <v-list-item-content class="item-content">
+                        <v-list-item-content>
                           <v-list-item-title
                             name="modelDamageTEC"
                             class="itemName"
@@ -203,7 +203,7 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
-                    <div class="hamzatec d-flex flex-wrap">
+                    <div>
                       <v-list-item
                         v-for="(item, i) in confirmedDamageTEC"
                         :key="i"
@@ -211,7 +211,7 @@
                         style="background-color: #76ba99; color: #fff"
                         :disabled="true"
                       >
-                        <v-list-item-content class="item-content">
+                        <v-list-item-content>
                           <v-list-item-title
                             name="modelDamageTEC"
                             class="itemName"
@@ -225,7 +225,7 @@
                         v-for="(item, i) in damageTypesTEC"
                         :key="i"
                         class="item"
-                        @click="valider(item, i)"
+                        @click="dialogValideFunction(item)"
                       >
                         <v-list-item-content class="item-content">
                           <v-list-item-title
@@ -557,16 +557,7 @@ export default {
       console.log("initialize");
 
       this.setPROFILEDROUPSAction().then(() => {
-        this.setUsersbyIDAction(this.getUserActive.id).then(() => {
-          this.userFiltre = this.getUsers;
-          if (this.userFiltre.profileGroups.length == 0) {
-            swal("warning !!", "You don't have any group !", "warning");
-            this.disabled = true;
-            // this.profile_groupe = [...this.getprofilegroups];
-          } else if (this.userFiltre.profileGroups.length != 0) {
-            this.profile_groupe = [...this.userFiltre.profileGroups];
-          }
-        });
+        this.profile_groupe = [...this.getprofilegroups];
       });
       this.setequipmentsAction().then(() => {
         this.equipments = [...this.getequipments];
@@ -600,13 +591,7 @@ export default {
       "setUsersbyIDAction",
       "presenceChecksAction",
     ]),
-    valider(item, i) {
-      this.damageCourent.declaredBy_id = this.getUserActive.id;
-      this.damageCourent.damage_type_id = item.id;
-      this.damageCourent.equipment_id = this.equipments_id;
-      this.damage_type_id = item.id;
-      this.modelIT_id_Courent = i;
-
+    valider(item) {
       var Damage = {
         declaredBy_id: null,
         equipment_id: null,
@@ -620,8 +605,9 @@ export default {
 
       this.Data.push(Damage);
 
-      
       console.log(this.Data);
+
+      this.dialogValide = false;
     },
 
     cancel() {
@@ -688,27 +674,6 @@ export default {
           console.log("validerDamages");
           var IT = this.departmentIT.id;
           var TEC = this.departmentTEC.id;
-
-          /* this.Data.map((item) => {
-          if (item.department_id == IT) {
-            item.damage = this.DamageSelect;
-
-            item.damage.status = "on progress";
-            this.modelDamageIT.push(item);
-            this.damageTypesIT = this.damageTypesIT.filter((e) => {
-              return e.id != item.id;
-            });
-            this.modelIT = [];
-          } else if (item.department_id == TEC) {
-            item.damage = this.DamageSelect;
-            item.damage.status = "on progress";
-            this.modelDamageTEC.push(item);
-            this.damageTypesTEC = this.damageTypesTEC.filter((e) => {
-              return e.id != item.id;
-            });
-            this.modelTEC = [];
-          }
-        }); */
 
           this.Data = [];
 

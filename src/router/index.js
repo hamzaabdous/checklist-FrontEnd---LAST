@@ -4,6 +4,8 @@ import Users from "../components/user/Users.vue";
 import Departments from "../components/department/Departments.vue";
 import DamageType from "../components/damage_Type/DamageType.vue";
 import Damage from "../components/damage/Damage.vue";
+import DamageForeman from "../components/damage/DamageForeman.vue";
+
 import profile_groupe from "../components/profile_group/profile_groupe.vue";
 import ViewEquipement from "../components/ViewEquipement.vue";
 import userGestion from "../components/user/userGestion.vue";
@@ -20,6 +22,13 @@ const routes = [
     path: "/Login",
     name: "Login",
     component: Login,
+    params: true,
+
+  },
+  {
+    path: "/DamageForeman",
+    name: "DamageForeman",
+    component: DamageForeman,
     params: true,
 
   },

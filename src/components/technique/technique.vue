@@ -1,14 +1,14 @@
 <template>
   <div style="padding: 50px; padding-top: 8%">
     <v-col cols="6" md="6">
-      <v-select
-        :items="departements"
-        item-text="name"
-        item-value="id"
-        v-model="departementId"
-        label="Departements"
-        @change="changeDepartment"
-      ></v-select>
+      <v-btn
+          color="primary"
+          class="pa-2  white--text"
+          @click="changeDepartment"
+        >
+        Declare Defictive<v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
+         
+        </v-btn>
     </v-col>
     <v-data-table
       :headers="headers"
@@ -32,10 +32,10 @@
         </v-toolbar>
       </template>
       <template v-slot:item.NonFunctionalEquipement="{ item }">
-      <p>
-        {{  item.equipmentsCount - item.functionalEquipmnet }}
-      </p>
-    </template>
+        <p>
+          {{ item.equipmentsCount - item.functionalEquipmnet }}
+        </p>
+      </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
           color="teal"
@@ -64,16 +64,16 @@ export default {
       { text: "Name", value: "name", sortable: true },
       { text: "Total equipment", value: "equipmentsCount", sortable: true },
       {
-        text: "Functional Equipement",
+        text: "Equipment with non defictive items",
         value: "functionalEquipmnet",
         sortable: true,
       },
       {
-        text: "Non Functional Equipement",
+        text: "Equipment with defictive items",
         value: "NonFunctionalEquipement",
         sortable: true,
       },
-      { text: "Total damage", value: "damagedCount", sortable: true },
+      { text: "Total defictive items", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
       { text: "Closed", value: "closedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
@@ -122,7 +122,11 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    ...mapGetters(["getProfileGroupsByCounters", "getdepartements"]),
+    ...mapGetters([
+      "getProfileGroupsByCounters",
+      "getdepartements",
+      "getUserActive",
+    ]),
   },
   watch: {
     dialog(val) {
@@ -148,9 +152,26 @@ export default {
   methods: {
     initialize() {
       this.profilegroupsBydepartements = [];
-      this.getProfileGroupsByCountersAction().then(() => {
-        this.profilegroupsBydepartements = [...this.getProfileGroupsByCounters];
-      });
+      if (this.getUserActive.fonction.department_id == 1) {
+        this.getProfileGroupsByCountersITAction().then(() => {
+          this.profilegroupsBydepartements = [
+            ...this.getProfileGroupsByCounters,
+          ];
+        });
+      } else if (this.getUserActive.fonction.department_id == 2) {
+        this.getProfileGroupsByCountersTECAction().then(() => {
+          this.profilegroupsBydepartements = [
+            ...this.getProfileGroupsByCounters,
+          ];
+        });
+      } else {
+        this.getProfileGroupsByCountersAction().then(() => {
+          this.profilegroupsBydepartements = [
+            ...this.getProfileGroupsByCounters,
+          ];
+        });
+      }
+
       this.setDepartementsAction().then(() => {
         this.departements = [...this.getdepartements];
       });
@@ -167,19 +188,15 @@ export default {
     ...mapActions([
       "getProfileGroupsByCountersAction",
       "setDepartementsAction",
+       "getProfileGroupsByCountersITAction",
+      "getProfileGroupsByCountersTECAction",
+      "getProfileGroupsByCountersAction"
     ]),
     changeDepartment() {
-      this.profilegroupsBydepartements = [];
-      this.profilegroups = [];
-      this.getProfileGroupsByCountersAction().then(() => {
-        //this.profilegroupsBydepartements = [...this.getProfileGroupsByCounters];
-        this.getProfileGroupsByCounters.map((item) => {
-          if (item.department_id == this.departementId) {
-            this.profilegroupsBydepartements.push(item);
-          }
-        });
+      
+      this.$router.push({
+        name: "DamageForeman",
       });
-      console.log("this.profilegroupsBydepartements", this.profilegroupsBydepartements);
     },
   },
 };

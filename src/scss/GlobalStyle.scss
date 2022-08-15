@@ -14,17 +14,15 @@
 }
 .ITpanell {
   width: 320px;
-  height: 400px;
+  height: 450px;
   border: 1.5px solid rgb(151, 151, 151);
   border-radius: 15px;
-  margin-top: 30px;
 }
 .TECpanell {
   width: 320px;
-  height: 400px;
+  height: 450px;
   border: 1.5px solid rgb(151, 151, 151);
   border-radius: 15px;
-  margin-top: 30px;
 }
 .spaceIT {
   height: 10px;
@@ -56,18 +54,34 @@
 }
 .scroll {
   overflow: scroll;
-  height: 300px;
+  height: 400px;
   background-color: #fff;
   border-radius: 8px;
   border: 1.5px solid #000000d4;
 }
 
-.item {
+.v-list-item{
+  flex: none;
+}
+
+ .item {
   margin-bottom: 5px;
-  height: 60px;
+  height: 50px;
+  width: 100px;
   border: 1.5px solid #353535a8;
   border-radius: 8px;
-}
+  font-size: 12px;
+  padding: 2px;
+  margin-right: 4px;
+  .itemName{
+    font-size: 10px;
+    font-weight: bold;
+
+  }
+  .item-content{
+    
+  }
+} 
 
 .backgroundLogin {
   padding: 0px;

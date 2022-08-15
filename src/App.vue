@@ -29,21 +29,7 @@
                   <v-row>
                     <v-col cols="12" sm="12" md="12">
                       <v-text-field
-                        v-model="model.Oldpassword"
-                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
-                        :rules="[rules.required, rules.min]"
-                        :type="show1 ? 'text' : 'password'"
-                        name="input-10-1"
-                        hint="At least 8 characters"
-                        counter
-                        @click:append="show1 = !show1"
-                        label="Old password"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="12" md="12">
-                      <v-text-field
-                        v-model="model.Newpassword"
+                        v-model="model.password"
                         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                         :rules="[rules.required, rules.min]"
                         :type="show1 ? 'text' : 'password'"
@@ -58,14 +44,14 @@
                     </v-col>
                     <v-col cols="12" sm="12" md="12">
                       <v-text-field
-                        v-model="model.Validpassword"
-                        :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                        v-model="Validpassword"
+                        :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                         :rules="[rules.required, rules.min]"
-                        :type="show1 ? 'text' : 'password'"
+                        :type="show2 ? 'text' : 'password'"
                         name="input-10-1"
                         hint="At least 8 characters"
                         counter
-                        @click:append="show1 = !show1"
+                        @click:append="show2 = !show2"
                         label="Valider new password"
                         persistent-hint
                         required
@@ -95,7 +81,7 @@
           origin="center center"
           transition="scale-transition"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template class="pa-2" v-slot:activator="{ on, attrs }">
             <v-btn v-bind="attrs" v-on="on">
               <v-icon> mdi-account-cog </v-icon>
             </v-btn>
@@ -153,10 +139,10 @@
             </div>
           </div>
 
-          <div
-            v-else-if="fonction == 'SUPERVISOR' && department == 'IT'"
-            class="admin"
-          >
+          <div class="admin" v-if="fonction == 'ADMIN'">
+            <div class="itemdrawer">
+              <router-link class="itemd" to="/technique">Technique</router-link>
+            </div>
             <div class="itemdrawer">
               <router-link class="itemd" to="/userGestion"
                 >Gestion Users</router-link
@@ -168,14 +154,18 @@
                 >Equipment Profile</router-link
               >
             </div>
+          </div>
+          <div
+            v-else-if="department == 'IT'"
+            class="admin"
+          >
             
+
             <div class="itemdrawer">
               <router-link class="itemd" to="/technique">Technique</router-link>
             </div>
             <div class="itemdrawer">
-              <router-link class="itemd" to="/Rapport"
-                >Rapport</router-link
-              >
+              <router-link class="itemd" to="/Rapport">Rapport</router-link>
             </div>
           </div>
 
@@ -207,11 +197,12 @@ export default {
       logged: false,
       dialog: false,
       show1: false,
-      model:{
-        id:0,
-        Oldpassword: "",
-        Newpassword: "",
-        Validpassword: "",
+      show2: false,
+
+      Validpassword: "",
+      model: {
+        id: 0,
+        password: "",
       },
       rules: {
         required: (value) => !!value || "Required.",
@@ -252,8 +243,23 @@ export default {
       window.location.reload();
     },
     changepassword() {
-      this.model.id=this.getUserActive.id;
-      console.log("changepassword",this.model);
+      this.model.id = this.getUserActive.id;
+      if (this.model.password == this.Validpassword) {
+        this.changePasswordAction(this.model).then(() => {
+          swal(
+            "success !!",
+            "Please can you chose equipment you use it!",
+            "success"
+          );
+          this.dialog = false;
+        });
+      } else {
+        swal(
+          "warning !!",
+          "Please your password not matched with valide password!",
+          "warning"
+        );
+      }
       //this.changePasswordAction().then(() => {});
     },
     ...mapActions(["changePasswordAction"]),

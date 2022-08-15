@@ -3,7 +3,7 @@
     <v-row style="text-align: center">
       <v-col cols="12" md="12">
         <h3>
-          Profile group :
+          Equipment group :
           <span class="red--text"> {{ this.ProfileGroupsByCounter.name }}</span>
         </h3>
       </v-col>
@@ -15,14 +15,14 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
-                  Pending Damage Tickets
+                  Total defictive items
                 </div>
                 <v-list-item-title class="text-h5 mb-1 red--text">
                   {{ this.ProfileGroupsByCounter.damagedCount }}
                 </v-list-item-title>
               </v-list-item-content>
 
-              <v-list-item-avatar tile size="60" color="white">
+              <v-list-item-avatar tile size="35" color="white">
                 <v-icon color="red" large>
                   mdi-alarm-light
                 </v-icon></v-list-item-avatar
@@ -37,14 +37,14 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
-                  RESOLVED DAMAGE TICKETS
+                  RESOLVED defictive items
                 </div>
                 <v-list-item-title class="text-h5 mb-1 deep-orange--text">
                   {{ this.ProfileGroupsByCounter.confirmedCount }}
                 </v-list-item-title>
               </v-list-item-content>
 
-              <v-list-item-avatar tile size="60" color="white">
+              <v-list-item-avatar tile size="35" color="white">
                 <v-icon color="deep-orange" large>
                   mdi-bell-check
                 </v-icon></v-list-item-avatar
@@ -59,14 +59,14 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
-                  Closed Damage Tickets
+                  Closed defictive items
                 </div>
                 <v-list-item-title class="text-h5 mb-1 blue--text">
                   {{ this.ProfileGroupsByCounter.closedCount }}
                 </v-list-item-title>
               </v-list-item-content>
 
-              <v-list-item-avatar tile size="60" color="white">
+              <v-list-item-avatar tile size="35" color="white">
                 <v-icon color="blue" large>
                   mdi-lock-open
                 </v-icon></v-list-item-avatar
@@ -89,7 +89,7 @@
                 </v-list-item-title>
               </v-list-item-content>
 
-              <v-list-item-avatar tile size="60" color="white">
+              <v-list-item-avatar tile size="35" color="white">
                 <v-icon color="green" large>
                   mdi-check-bold
                 </v-icon></v-list-item-avatar
@@ -139,7 +139,7 @@
         </template>
         <template v-slot:[`item.actions`]="{ item }">
           <v-btn
-            color="teal"
+            color="primary"
             class="mr-2 btn white--text"
             @click="pageView(item)"
           >
@@ -162,7 +162,7 @@ export default {
     search: "",
     headers: [
       { text: "Name", value: "nameEquipment", sortable: true },
-      { text: "Total damage", value: "damagedCount", sortable: true },
+      { text: "Total defictive items", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
       { text: "Closed", value: "closedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
@@ -237,8 +237,11 @@ export default {
   },
   methods: {
     getColor(damagedCount) {
-      if (damagedCount > 0) return "red lighten-1 white--text";
-      else if ((damagedCount = 0)) return "";
+      var color = "";
+      if (damagedCount > 0) color = "red lighten-1 white--text";
+      else if (damagedCount == 0) color = "green lighten-1 white--text";
+
+      return color;
     },
     initialize() {
       this.idgrp = localStorage.getItem("idDomainGroupes");
@@ -247,7 +250,7 @@ export default {
           localStorage.getItem("idDomainGroupesid")
         ).then((resolve) => {
           this.equipments = [...this.getEquipmentsByCounters];
-        //  console.log("this.equipments",this.equipments);
+          //  console.log("this.equipments",this.equipments);
         });
         this.getProfileGroupsByCounterITAction(
           localStorage.getItem("idDomainGroupesid")
@@ -271,9 +274,33 @@ export default {
           localStorage.getItem("idDomainGroupesid")
         ).then((resolve) => {
           this.equipments = [...this.getEquipmentsByCounters];
-          console.log("this.equipments",this.equipments);
+          console.log("this.equipments", this.equipments);
         });
         this.getProfileGroupsByCounterTECAction(
+          localStorage.getItem("idDomainGroupesid")
+        ).then(() => {
+          this.ProfileGroupsByCounter.id = this.getProfileGroupsByCounter.id;
+          this.ProfileGroupsByCounter.name =
+            this.getProfileGroupsByCounter.name;
+          this.ProfileGroupsByCounter.equipmentsCount =
+            this.getProfileGroupsByCounter.equipmentsCount;
+          this.ProfileGroupsByCounter.functionalEquipmnet =
+            this.getProfileGroupsByCounter.functionalEquipmnet;
+          this.ProfileGroupsByCounter.damagedCount =
+            this.getProfileGroupsByCounter.damagedCount;
+          this.ProfileGroupsByCounter.confirmedCount =
+            this.getProfileGroupsByCounter.confirmedCount;
+          this.ProfileGroupsByCounter.closedCount =
+            this.getProfileGroupsByCounter.closedCount;
+        });
+      } else {
+        this.getEquipmentsByCountersAction(
+          localStorage.getItem("idDomainGroupesid")
+        ).then((resolve) => {
+          this.equipments = [...this.getEquipmentsByCounters];
+          //  console.log("this.equipments",this.equipments);
+        });
+        this.getProfileGroupsByCounterITAction(
           localStorage.getItem("idDomainGroupesid")
         ).then(() => {
           this.ProfileGroupsByCounter.id = this.getProfileGroupsByCounter.id;
@@ -308,7 +335,7 @@ export default {
         name: "techniqueEquipment",
         params: { name: item.name },
       });
-
+      console.log("item.id", item.id);
       localStorage.removeItem("idEquipment");
       localStorage.setItem("idEquipment", item.id);
     },

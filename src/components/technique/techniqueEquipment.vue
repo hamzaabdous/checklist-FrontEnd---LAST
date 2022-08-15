@@ -579,6 +579,16 @@
           >
             <v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
           </v-btn>
+          <v-btn class="mr-2 btn" color="primary" @click="opendialogresolve(item)">
+            Resolved
+          </v-btn>
+          <v-btn class="mr-2 btn" color="error" @click="opendialogreverted(item)">
+            Rejected
+          </v-btn>
+          <v-btn class="mr-2 btn" color="primary" @click="dialogclose = true">
+            Close
+          </v-btn>
+
           <v-btn
             v-if="userDepartment == 'IT'"
             color="red"
@@ -808,6 +818,7 @@ export default {
   methods: {
     initialize() {
       this.idEquipment = localStorage.getItem("idEquipment");
+      console.log("this.idEquipment", this.idEquipment);
       console.log(
         "department_id: " + this.getUserActive.fonction.department_id
       );
@@ -841,6 +852,30 @@ export default {
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
             this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
             this.EquipmentsByCounter.closedCount = resolve.closedCount;
+            console.log("resolve", resolve);
+          }
+        );
+      } else {
+        this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
+          (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+            this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltre.push(item);
+              }
+            });
+            this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+              this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+              this.EquipmentsByCounter.nameEquipment =
+                this.getEquipmentsByCounter.nameEquipment;
+              this.EquipmentsByCounter.damagedCount =
+                this.getEquipmentsByCounter.damagedCount;
+              this.EquipmentsByCounter.confirmedCount =
+                this.getEquipmentsByCounter.confirmedCount;
+              this.EquipmentsByCounter.closedCount =
+                this.getEquipmentsByCounter.closedCount;
+            });
+
             console.log("resolve", resolve);
           }
         );
@@ -884,10 +919,14 @@ export default {
       this.showdetails = false;
       this.dialog = false;
     },
-    opendialogresolve() {
+    opendialogresolve(item) {
+      this.damageSelect = item;
+
       this.dialogresolve = true;
     },
-    opendialogreverted() {
+    opendialogreverted(item) {
+      this.damageSelect = item;
+
       this.dialogreverted = true;
     },
     opendialogDelete(item) {
