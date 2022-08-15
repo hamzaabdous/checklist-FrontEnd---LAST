@@ -35,12 +35,13 @@ const damageTypeModule = {
     },
     sendDamagePhotosStoragePath(state, damage) {
       state.damages = state.damages.map((c) => {
-        if (c.id == damage.id){
-          c.photos=damage.photos;
-          c.description=damage.description;
+        if (c.id == damage.id) {
+          c.photos = damage.photos;
+          c.description = damage.description;
         }
         return c;
-      });    },
+      });
+    },
   },
   actions: {
     setDAMAGEAction({ commit }) {
@@ -58,7 +59,7 @@ const damageTypeModule = {
     declareDamageAction({ commit }, damagesList) {
       return new Promise((resolve, reject) => {
         CustomizedAxios.post("damages/declareDamage", {
-          damages:damagesList
+          damages: damagesList,
         })
           .then((response) => {
             console.log("res add ", response);
@@ -75,7 +76,7 @@ const damageTypeModule = {
         CustomizedAxios.post("damages/confirmDamage", {
           id: damage.id,
           confirmedBy_id: damage.confirmedBy_id,
-          resolveDescription:damage.resolveDescription,
+          resolveDescription: damage.resolveDescription,
         })
           .then((response) => {
             console.log("res confirmDamage ", response.data.payload);
@@ -108,8 +109,8 @@ const damageTypeModule = {
       return new Promise((resolve, reject) => {
         CustomizedAxios.post("damages/revertDamage", {
           id: damage.id,
-          revertedBy_id: damage.revertedBy_id,
-          revertedDescription:damage.revertedDescription,
+          rejectedBy_id: damage.rejectedBy_id,
+          rejectedDescription: damage.rejectedDescription,
         })
           .then((response) => {
             console.log("res revertDamage ", response.data.payload);
@@ -135,7 +136,7 @@ const damageTypeModule = {
     },
     deleteDAMAGEAction({ commit }, damage) {
       return new Promise((resolve, reject) => {
-        CustomizedAxios.post("damages/delete/",damage)
+        CustomizedAxios.post("damages/delete/", damage)
           .then((response) => {
             commit("DELETE_DAMAGE", damage.id);
             resolve(response.data.payload);
@@ -183,7 +184,7 @@ const damageTypeModule = {
       return new Promise((resolve, reject) => {
         CustomizedAxios.get("damages/getDamagesByEquipmentsRapport/" + id)
           .then((response) => {
-           // commit("FindDamageTypeByEquipmentID", response.data.payload);
+            // commit("FindDamageTypeByEquipmentID", response.data.payload);
             resolve(response.data.payload);
           })
           .catch((error) => {
@@ -247,7 +248,7 @@ const damageTypeModule = {
     },
     presenceChecksAction({ commit }, presenceCheck) {
       return new Promise((resolve, reject) => {
-        CustomizedAxios.post("/presence_checks/create",presenceCheck)
+        CustomizedAxios.post("/presence_checks/create", presenceCheck)
           .then((response) => {
             resolve(response.data.payload);
           })

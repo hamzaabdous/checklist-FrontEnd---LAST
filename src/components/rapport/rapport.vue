@@ -212,7 +212,7 @@ export default {
         { title: "equipment", dataKey: "name" },
         { title: "Description", dataKey: "Description" },
         { title: "damage_type", dataKey: "damage_type" },
-        { title: "Reverted Times", dataKey: "revertedTimes" },
+        { title: "rejected Times", dataKey: "rejectedTimes" },
         { title: "Declared by", dataKey: "declared_by" },
         { title: "Declared aT", dataKey: "declaredAt" },
         {
@@ -222,11 +222,7 @@ export default {
       ];
       const d = new Date();
       var doc = new jsPDF("p", "pt");
-      doc.text(
-        "" + d.toLocaleString(),
-        30,
-        20
-      );
+      doc.text("" + d.toLocaleString(), 30, 20);
 
       doc.text(
         "Report damages of equipment " + this.equipments_id.name + " :",
@@ -243,7 +239,11 @@ export default {
         columns: columns,
       });
       doc.save(
-        "rapport :" + this.equipments_id.name + "_" + d.toLocaleString() + ".pdf"
+        "rapport :" +
+          this.equipments_id.name +
+          "_" +
+          d.toLocaleString() +
+          ".pdf"
       );
     },
     ...mapActions([

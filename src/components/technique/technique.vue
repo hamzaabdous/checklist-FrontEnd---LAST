@@ -2,13 +2,13 @@
   <div style="padding: 50px; padding-top: 8%">
     <v-col cols="6" md="6">
       <v-btn
-          color="primary"
-          class="pa-2  white--text"
-          @click="changeDepartment"
-        >
+        v-if="fonction == 'FOREMAN'"
+        color="primary"
+        class="pa-2 white--text"
+        @click="changeDepartment"
+      >
         Declare Defictive<v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
-         
-        </v-btn>
+      </v-btn>
     </v-col>
     <v-data-table
       :headers="headers"
@@ -59,6 +59,7 @@ export default {
   data: () => ({
     loading: false,
     search: "",
+    fonction:"",
     confirmAddSave: false,
     headers: [
       { text: "Name", value: "name", sortable: true },
@@ -111,6 +112,7 @@ export default {
   }),
   mounted() {
     document.title = "checklist";
+    this.fonction = this.getUserActive.fonction.name;
 
     this.loading = true;
     setTimeout(() => {
@@ -188,12 +190,11 @@ export default {
     ...mapActions([
       "getProfileGroupsByCountersAction",
       "setDepartementsAction",
-       "getProfileGroupsByCountersITAction",
+      "getProfileGroupsByCountersITAction",
       "getProfileGroupsByCountersTECAction",
-      "getProfileGroupsByCountersAction"
+      "getProfileGroupsByCountersAction",
     ]),
     changeDepartment() {
-      
       this.$router.push({
         name: "DamageForeman",
       });

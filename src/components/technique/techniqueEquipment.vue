@@ -161,10 +161,10 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialogreverted" max-width="700px">
+          <v-dialog v-model="dialogrejected" max-width="700px">
             <v-card>
               <v-toolbar dark color="primary">
-                <v-btn icon dark @click="dialogreverted = false">
+                <v-btn icon dark @click="dialogrejected = false">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
                 <v-toolbar-title>Settings</v-toolbar-title>
@@ -178,13 +178,13 @@
                   solo
                   name="input-7-4"
                   label="Description"
-                  v-model="revertDamage.revertedDescription"
+                  v-model="revertDamage.rejectedDescription"
                 ></v-textarea>
               </v-col>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn depressed color="" @click="dialogreverted = false">
+                <v-btn depressed color="" @click="dialogrejected = false">
                   Close
                 </v-btn>
                 <v-btn depressed color="primary" @click="revert()">
@@ -369,46 +369,46 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>Reverted By</h3></td>
+                          <td><h3>rejected By</h3></td>
                           <td class="valueColumn">
-                            <h5 v-if="damageSelect.reverted_by == null">
+                            <h5 v-if="damageSelect.rejected_by == null">
                               Empty
                             </h5>
 
                             <h4 v-else>
-                              {{ damageSelect.reverted_by.username }}
+                              {{ damageSelect.rejected_by.username }}
                             </h4>
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>reverted At</h3></td>
+                          <td><h3>rejected At</h3></td>
                           <td class="valueColumn">
-                            <h5 v-if="damageSelect.revertedAt == null">
+                            <h5 v-if="damageSelect.rejectedAt == null">
                               Empty
                             </h5>
 
-                            <h4 v-else>{{ damageSelect.revertedAt }}</h4>
+                            <h4 v-else>{{ damageSelect.rejectedAt }}</h4>
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>Reverted Times</h3></td>
+                          <td><h3>rejected Times</h3></td>
                           <td class="valueColumn">
-                            <h5 v-if="damageSelect.revertedTimes == null">
+                            <h5 v-if="damageSelect.rejectedTimes == null">
                               Empty
                             </h5>
 
-                            <h4 v-else>{{ damageSelect.revertedTimes }}</h4>
+                            <h4 v-else>{{ damageSelect.rejectedTimes }}</h4>
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>Reverted Description</h3></td>
+                          <td><h3>rejected Description</h3></td>
                           <td class="valueColumn">
-                            <h5 v-if="damageSelect.revertedDescription == null">
+                            <h5 v-if="damageSelect.rejectedDescription == null">
                               Empty
                             </h5>
 
                             <h4 v-else>
-                              {{ damageSelect.revertedDescription }}
+                              {{ damageSelect.rejectedDescription }}
                             </h4>
                           </td>
                         </tr>
@@ -510,7 +510,7 @@
                     fonction == 'FOREMAN' && damageSelect.status == 'resolved'
                   "
                   color="error"
-                  @click="opendialogreverted"
+                  @click="opendialogrejected"
                 >
                   Revert damage
                 </v-btn>
@@ -579,10 +579,18 @@
           >
             <v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
           </v-btn>
-          <v-btn class="mr-2 btn" color="primary" @click="opendialogresolve(item)">
+          <v-btn
+            class="mr-2 btn"
+            color="primary"
+            @click="opendialogresolve(item)"
+          >
             Resolved
           </v-btn>
-          <v-btn class="mr-2 btn" color="error" @click="opendialogreverted(item)">
+          <v-btn
+            class="mr-2 btn"
+            color="error"
+            @click="opendialogrejected(item)"
+          >
             Rejected
           </v-btn>
           <v-btn class="mr-2 btn" color="primary" @click="dialogclose = true">
@@ -616,7 +624,7 @@ export default {
     dialogimage: false,
     dialogresolve: false,
     dialogclose: false,
-    dialogreverted: false,
+    dialogrejected: false,
     dialogDelete: false,
     dialogimageShow: false,
     search: "",
@@ -658,9 +666,9 @@ export default {
       confirmedAt: null,
       closedBy_id: null,
       closedAt: null,
-      revertedBy_id: null,
-      revertedAt: null,
-      revertedTimes: null,
+      rejectedBy_id: null,
+      rejectedAt: null,
+      rejectedTimes: null,
       equipment_id: null,
       damage_type_id: null,
       created_at: "",
@@ -691,7 +699,7 @@ export default {
       },
       confirmed_by: null,
       closed_by: null,
-      reverted_by: null,
+      rejected_by: null,
       equipment: {
         id: null,
         name: "",
@@ -770,8 +778,8 @@ export default {
     },
     revertDamage: {
       id: null,
-      revertedBy_id: null,
-      revertedDescription: "",
+      rejectedBy_id: null,
+      rejectedDescription: "",
     },
     Damagedelete: {
       id: null,
@@ -924,10 +932,10 @@ export default {
 
       this.dialogresolve = true;
     },
-    opendialogreverted(item) {
+    opendialogrejected(item) {
       this.damageSelect = item;
 
-      this.dialogreverted = true;
+      this.dialogrejected = true;
     },
     opendialogDelete(item) {
       this.dialogDelete = true;
@@ -984,7 +992,7 @@ export default {
     },
     revert() {
       this.revertDamage.id = this.damageSelect.id;
-      this.revertDamage.revertedBy_id = this.getUserActive.id;
+      this.revertDamage.rejectedBy_id = this.getUserActive.id;
       this.damageSelect.status = this.revertDamage.status;
 
       this.revertDamageAction(this.revertDamage).then((resolve) => {
@@ -996,18 +1004,18 @@ export default {
           return item;
         });
         this.damageSelect.status = resolve.status;
-        this.damageSelect.revertedTimes = resolve.revertedTimes;
-        this.damageSelect.revertedDescription =
-          this.revertDamage.revertedDescription;
+        this.damageSelect.rejectedTimes = resolve.rejectedTimes;
+        this.damageSelect.rejectedDescription =
+          this.revertDamage.rejectedDescription;
         this.revertDamage.id = null;
-        this.revertDamage.revertedBy_id = null;
-        this.revertDamage.revertedDescription = "";
+        this.revertDamage.rejectedBy_id = null;
+        this.revertDamage.rejectedDescription = "";
       });
       setTimeout(() => {
         this.counters();
       }, 2000);
       this.showdetails = false;
-      this.dialogreverted = false;
+      this.dialogrejected = false;
     },
     deleteDamage() {
       this.deleteDAMAGEAction(this.Damagedelete).then(() => {
