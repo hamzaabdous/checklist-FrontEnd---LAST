@@ -101,6 +101,7 @@
             <td class="">{{ item.confirmedAt }}</td>
             <td>
               <v-btn
+                v-if="item.status != 'closed'"
                 color="primary"
                 class="mr-2 btn white--text"
                 @click.stop="clickImage(item)"
@@ -110,7 +111,7 @@
                 <v-icon medium class="mr-2"> mdi-comment </v-icon>
               </v-btn>
               <v-btn
-                v-if="item.status != 'resolve'"
+                v-if="item.status != 'resolved' && item.status != 'closed'"
                 class="mr-2 btn white--text"
                 color="#FF8F56"
                 @click.stop="opendialogresolve(item)"
@@ -118,7 +119,7 @@
                 Resolved
               </v-btn>
               <v-btn
-                v-if="item.status != 'on progress'"
+                v-if="item.status != 'on progress' && item.status != 'closed'"
                 class="mr-2 btn white--text"
                 color="#f54"
                 @click.stop="opendialogrejected(item)"

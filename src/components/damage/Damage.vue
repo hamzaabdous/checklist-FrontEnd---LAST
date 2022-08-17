@@ -118,8 +118,7 @@
                   <span>IT </span>
                   <span class="red--text"
                     >({{
-                      this.modelDamageIT.length +
-                      this.confirmedDamageIT.length
+                      this.modelDamageIT.length + this.confirmedDamageIT.length
                     }})</span
                   ></v-col
                 >
@@ -167,6 +166,8 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
+                    <v-divider class="ma-3"></v-divider>
+
                     <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in damageTypesIT"
@@ -245,6 +246,8 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
+                    <v-divider class="ma-3"></v-divider>
+
                     <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in damageTypesTEC"
@@ -486,6 +489,13 @@ export default {
     },
     resolveditem: [],
     defecteditem: [],
+    defectsChange: {
+      item: [],
+      damagetypeOld: [],
+      statusOld: null,
+      statusNew: "",
+    },
+    listDefectsChange: [],
     DamageTypeByEquipmentID: [],
     DamagesMergedWithDamageTypes: [],
     damageSelect: [],
@@ -705,9 +715,30 @@ export default {
       this.resolveditem = [];
       this.defectedDialoge = true;
       this.resolveditem.push(item);
-     /*  this.defecteditem = [];
+      /*  this.defecteditem = [];
       this.defectedDialoge = true;
       this.defecteditem.push(item); */
+    },
+    changeDefectsFunction() {
+      this.defectsChange.item = this.resolveditem[0];
+      this.defectsChange.damagetypeOld = this.resolveditem[0].damage;
+      this.defectsChange.statusOld = this.resolveditem[0].damage.status;
+      this.defectsChange.statusNew = "closed";
+
+      this.listDefectsChange.push(this.defectsChange);
+      if (this.resolveditem[0].department.name == "IT") {
+        this.damageTypesIT.push(this.resolveditem[0]);
+        this.modelDamageIT = this.modelDamageIT.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      } else if (this.resolveditem[0].department.name == "TECHNIQUE") {
+        this.damageTypesTEC.push(this.resolveditem[0]);
+        this.modelDamageTEC = this.modelDamageTEC.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      }
+      console.log("listDefectsChange", this.listDefectsChange);
+      this.defectedDialoge = false;
     },
     confirmed() {
       console.log("resolveditem closed :", this.resolveditem);

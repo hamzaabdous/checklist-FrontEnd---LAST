@@ -82,7 +82,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 green--text">
-                  Total Functional Equipement
+                  Total Equipement With non defects items
                 </div>
                 <v-list-item-title class="text-h5 mb-1 green--text">
                   {{ this.ProfileGroupsByCounter.functionalEquipmnet }}
