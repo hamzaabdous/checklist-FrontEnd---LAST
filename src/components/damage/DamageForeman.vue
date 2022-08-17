@@ -9,7 +9,7 @@
               item-text="name"
               item-value="id"
               v-model="profile_groupe_id"
-              label="Equipment groupe :"
+              label="Equipment groups :"
               :disabled="disabled"
               @change="changeProfile_groupeSELECT"
             ></v-select>
@@ -75,6 +75,41 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        <v-dialog v-model="resolvedDialoge" persistent max-width="490">
+          <v-card>
+            <v-card-title class="text-h5"> Actions : </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn class="mr-2" color="#76ba99" @click="closed">
+                Not-Defected
+              </v-btn>
+              <v-btn class="mr-2" color="#f54" @click="revert">
+                Defected
+              </v-btn>
+
+              <v-btn color="blue darken-1" @click="resolvedDialoge = false">
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <v-dialog v-model="defectedDialoge" persistent max-width="490">
+          <v-card>
+            <v-card-title class="text-h5"> Actions : </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn class="mr-2" color="#76ba99" @click="confirmed">
+                Not-Defected
+              </v-btn>
+              <v-spacer></v-spacer>
+
+              <v-btn color="blue darken-1" @click="defectedDialoge = false">
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
         <v-container>
           <v-row>
             <v-col cols="4" class="ITpanell">
@@ -83,9 +118,7 @@
                   <span>IT </span>
                   <span class="red--text"
                     >({{
-                      this.modelDamageIT.length +
-                      this.modelIT.length +
-                      this.confirmedDamageIT.length
+                      this.modelDamageIT.length + this.confirmedDamageIT.length
                     }})</span
                   ></v-col
                 >
@@ -97,56 +130,52 @@
                     name="it"
                     v-model="modelIT"
                     multiple
-                    active-class="bg-active"
                     color="#fff"
                   >
-                    <div>
+                    <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in modelDamageIT"
                         :key="i"
                         class="item itemDamaged d-flex flex-wrap"
-                        :disabled="true"
-                        style="
-                          background-color: rgb(255, 235, 234);
-                          color: #f54;
-                        "
+                        @click="defectedFunction(item, i)"
+                        style="background-color: #f54; color: #fff"
                       >
-                        <v-list-item-content class="d-flex flex-wrap">
+                        <v-list-item-content class="item-content">
                           <v-list-item-title
                             name="modelDamageIT"
                             class="itemName"
                             >{{ item.name }}</v-list-item-title
                           >
-                          <h4>{{ item.damage.status }}</h4>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
-                    <div>
+                    <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in confirmedDamageIT"
                         :key="i"
                         class="item"
-                        style="background-color: #76ba99; color: #fff"
-                        :disabled="true"
+                        style="background-color: #ff8f56; color: #fff"
+                        @click="resolvedFunction(item, i)"
                       >
-                        <v-list-item-content>
+                        <v-list-item-content class="item-content">
                           <v-list-item-title
                             name="modelDamageTEC"
                             class="itemName"
                             >{{ item.name }}</v-list-item-title
                           >
-                          <h4>{{ item.damage.status }}</h4>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
-                    <div>
+                    <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in damageTypesIT"
                         :key="i"
                         class="item"
-                        @click="dialogValideFunction(item, i)"
+                        active-class="bg-active"
+                        style="background-color: #76ba99; color: #fff"
+                        @click="valider(item, i)"
                       >
-                        <v-list-item-content class="">
+                        <v-list-item-content class="item-content">
                           <v-list-item-title
                             name="damageTypesIT"
                             class="itemName"
@@ -167,7 +196,6 @@
                   <span class="red--text">
                     ({{
                       this.modelDamageTEC.length +
-                      this.modelTEC.length +
                       this.confirmedDamageTEC.length
                     }})</span
                   ></v-col
@@ -180,21 +208,17 @@
                     name="TEC"
                     v-model="modelTEC"
                     multiple
-                    active-class="bg-active"
                     color="#fff"
                   >
-                    <div>
+                    <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in modelDamageTEC"
                         :key="i"
                         class="item"
-                        style="
-                          background-color: rgb(255, 235, 234);
-                          color: #f54;
-                        "
-                        :disabled="true"
+                        style="background-color: #f54; color: #fff"
+                        @click="defectedFunction(item, i)"
                       >
-                        <v-list-item-content>
+                        <v-list-item-content class="item-content">
                           <v-list-item-title
                             name="modelDamageTEC"
                             class="itemName"
@@ -203,15 +227,15 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
-                    <div>
+                    <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in confirmedDamageTEC"
                         :key="i"
                         class="item"
-                        style="background-color: #76ba99; color: #fff"
-                        :disabled="true"
+                        style="background-color: #ff8f56; color: #fff"
+                        @click="resolvedFunction(item, i)"
                       >
-                        <v-list-item-content>
+                        <v-list-item-content class="item-content">
                           <v-list-item-title
                             name="modelDamageTEC"
                             class="itemName"
@@ -225,7 +249,9 @@
                         v-for="(item, i) in damageTypesTEC"
                         :key="i"
                         class="item"
-                        @click="dialogValideFunction(item)"
+                        active-class="bg-active"
+                        style="background-color: #76ba99; color: #fff"
+                        @click="valider(item, i)"
                       >
                         <v-list-item-content class="item-content">
                           <v-list-item-title
@@ -244,17 +270,17 @@
           <v-row class="d-flex justify-center">
             <v-col cols="4">
               <v-sheet
-                color="red"
+                color="#f54"
                 elevation="1"
                 height="20"
                 width="20"
                 rounded
               ></v-sheet>
-              Defective
+              Defected
             </v-col>
             <v-col cols="4">
               <v-sheet
-                color="green"
+                color="#FF8F56"
                 elevation="1"
                 height="20"
                 width="20"
@@ -264,13 +290,13 @@
             </v-col>
             <v-col cols="3">
               <v-sheet
-                color="white"
+                color="#76ba99"
                 elevation="1"
                 height="20"
                 width="20"
                 rounded
               ></v-sheet>
-              3
+              Not-Defected
             </v-col>
           </v-row>
         </v-container>
@@ -300,6 +326,8 @@ export default {
   data: () => ({
     userFiltre: [],
     disabled: false,
+    resolvedDialoge: false,
+    defectedDialoge: false,
     damageTypesIT: [],
     damageTypesTEC: [],
     modelDamageIT: [],
@@ -441,9 +469,26 @@ export default {
       equipment_id: 0,
       validation_presence_At: "",
     },
+    confirmDamage: {
+      id: null,
+      confirmedBy_id: null,
+      resolveDescription: "",
+    },
+    closeDamage: {
+      id: null,
+      closedBy_id: null,
+    },
+    revertDamage: {
+      id: null,
+      rejectedBy_id: null,
+      rejectedDescription: "",
+    },
+    resolveditem: [],
+    defecteditem: [],
     DamageTypeByEquipmentID: [],
     DamagesMergedWithDamageTypes: [],
     damageSelect: [],
+    isvalide: false,
     equipments_id: "",
     dialog: false,
     dialogValide: false,
@@ -581,6 +626,9 @@ export default {
       "editDAMAGEAction",
       "deleteDAMAGEAction",
       "declareDamageAction",
+      "confirmDamageAction",
+      "closeDamageAction",
+      "revertDamageAction",
       "setDAMAGETYPESAction",
       "setPROFILEDROUPSAction",
       "setequipmentsAction",
@@ -591,25 +639,124 @@ export default {
       "setUsersbyIDAction",
       "presenceChecksAction",
     ]),
-    valider(item) {
-      var Damage = {
-        declaredBy_id: null,
-        equipment_id: null,
-        damage_type_id: null,
-      };
-      Damage.declaredBy_id = this.getUserActive.id;
-      Damage.damage_type_id = this.damage_type_id;
-      Damage.equipment_id = this.equipments_id;
+    valider(item, i) {
+      this.damageCourent.declaredBy_id = this.getUserActive.id;
+      this.damageCourent.damage_type_id = item.id;
+      this.damageCourent.equipment_id = this.equipments_id;
+      this.damage_type_id = item.id;
+      this.modelIT_id_Courent = i;
 
-      this.damageSelect.push(Damage);
+      if (this.Data.length == 0) {
+        var Damage = {
+          declaredBy_id: null,
+          equipment_id: null,
+          damage_type_id: null,
+        };
+        Damage.declaredBy_id = this.getUserActive.id;
+        Damage.damage_type_id = this.damage_type_id;
+        Damage.equipment_id = this.equipments_id;
 
-      this.Data.push(Damage);
+        this.damageSelect.push(Damage);
+
+        this.Data.push(Damage);
+      } else if (this.Data.length > 0) {
+        this.isvalide = false;
+        this.Data.map((e) => {
+          if (e.damage_type_id == this.damage_type_id) {
+            this.isvalide = true;
+          }
+        });
+        if (this.isvalide == true) {
+          this.Data = this.Data.filter((c) => c.damage_type_id != item.id);
+        } else {
+          var Damage = {
+            declaredBy_id: null,
+            equipment_id: null,
+            damage_type_id: null,
+          };
+          Damage.declaredBy_id = this.getUserActive.id;
+          Damage.damage_type_id = this.damage_type_id;
+          Damage.equipment_id = this.equipments_id;
+
+          this.damageSelect.push(Damage);
+
+          this.Data.push(Damage);
+        }
+      }
 
       console.log(this.Data);
-
-      this.dialogValide = false;
     },
+    resolvedFunction(item, i) {
+      this.resolveditem = [];
+      this.resolvedDialoge = true;
+      this.resolveditem.push(item);
+    },
+    defectedFunction(item, i) {
+      this.resolveditem = [];
+      this.defectedDialoge = true;
+      this.resolveditem.push(item);
+      /*  this.defecteditem = [];
+      this.defectedDialoge = true;
+      this.defecteditem.push(item); */
+    },
+    confirmed() {
+      console.log("resolveditem closed :", this.resolveditem);
+      this.closeDamage.id = this.resolveditem[0].damage.id;
+      this.closeDamage.closedBy_id = this.getUserActive.id;
+      this.closeDamageAction(this.closeDamage).then((resolve) => {});
 
+      if (this.resolveditem[0].department.name == "IT") {
+        this.damageTypesIT.push(this.resolveditem[0]);
+        this.modelDamageIT = this.modelDamageIT.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      } else if (this.resolveditem[0].department.name == "TECHNIQUE") {
+        this.damageTypesTEC.push(this.resolveditem[0]);
+        this.modelDamageTEC = this.modelDamageTEC.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      }
+
+      this.defectedDialoge = false;
+    },
+    closed() {
+      console.log("resolveditem closed :", this.resolveditem);
+      this.closeDamage.id = this.resolveditem[0].damage.id;
+      this.closeDamage.closedBy_id = this.getUserActive.id;
+      this.closeDamageAction(this.closeDamage).then((resolve) => {});
+
+      if (this.resolveditem[0].department.name == "IT") {
+        this.damageTypesIT.push(this.resolveditem[0]);
+        this.confirmedDamageIT = this.confirmedDamageIT.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      } else if (this.resolveditem[0].department.name == "TECHNIQUE") {
+        this.damageTypesTEC.push(this.resolveditem[0]);
+        this.confirmedDamageTEC = this.confirmedDamageTEC.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      }
+      this.resolvedDialoge = false;
+    },
+    revert() {
+      console.log("resolveditem closed :", this.resolveditem);
+      this.revertDamage.id = this.resolveditem[0].damage.id;
+      this.revertDamage.rejectedBy_id = this.getUserActive.id;
+      this.revertDamageAction(this.revertDamage).then((resolve) => {});
+
+      if (this.resolveditem[0].department.name == "IT") {
+        this.modelDamageIT.push(this.resolveditem[0]);
+        this.confirmedDamageIT = this.confirmedDamageIT.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      } else if (this.resolveditem[0].department.name == "TECHNIQUE") {
+        this.modelDamageTEC.push(this.resolveditem[0]);
+        this.confirmedDamageTEC = this.confirmedDamageTEC.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      }
+      this.resolvedDialoge = false;
+    },
     cancel() {
       this.dialog = false;
     },
@@ -674,6 +821,27 @@ export default {
           console.log("validerDamages");
           var IT = this.departmentIT.id;
           var TEC = this.departmentTEC.id;
+
+          /* this.Data.map((item) => {
+          if (item.department_id == IT) {
+            item.damage = this.DamageSelect;
+
+            item.damage.status = "on progress";
+            this.modelDamageIT.push(item);
+            this.damageTypesIT = this.damageTypesIT.filter((e) => {
+              return e.id != item.id;
+            });
+            this.modelIT = [];
+          } else if (item.department_id == TEC) {
+            item.damage = this.DamageSelect;
+            item.damage.status = "on progress";
+            this.modelDamageTEC.push(item);
+            this.damageTypesTEC = this.damageTypesTEC.filter((e) => {
+              return e.id != item.id;
+            });
+            this.modelTEC = [];
+          }
+        }); */
 
           this.Data = [];
 

@@ -17,7 +17,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
-                  Pending Damage Tickets
+                  Pending Defect Tickets
                 </div>
                 <v-list-item-title class="text-h5 mb-1 red--text">
                   {{ this.EquipmentsByCounter.damagedCount }}
@@ -39,7 +39,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
-                  RESOLVED DAMAGE TICKETS
+                  RESOLVED Defect TICKETS
                 </div>
                 <v-list-item-title class="text-h5 mb-1 deep-orange--text">
                   {{ this.EquipmentsByCounter.confirmedCount }}
@@ -61,7 +61,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
-                  Closed Damage Tickets
+                  Closed Defect Tickets
                 </div>
                 <v-list-item-title class="text-h5 mb-1 blue--text">
                   {{ this.EquipmentsByCounter.closedCount }}
@@ -86,9 +86,76 @@
         :loading="loading"
         sort-by="item.id"
         class="elevation-1"
-        @click:row="pageView"
       >
+        <template v-slot:item="{ item }">
+          <tr @click="pageView(item)">
+            <td class="">{{ item.damage_type.name }}</td>
+
+            <td>
+              <v-chip class="white--text" :color="getColor(item.status)">
+                {{ item.status }}
+              </v-chip>
+            </td>
+            <td class="">{{ item.declared_by.username }}</td>
+            <td class="">{{ item.created_at }}</td>
+            <td class="">{{ item.confirmedAt }}</td>
+            <td>
+              <v-btn
+                color="primary"
+                class="mr-2 btn white--text"
+                @click.stop="clickImage(item)"
+              >
+                <v-icon medium class="mr-2"> mdi-camera </v-icon>
+                /
+                <v-icon medium class="mr-2"> mdi-comment </v-icon>
+              </v-btn>
+              <v-btn
+                v-if="item.status != 'resolve'"
+                class="mr-2 btn white--text"
+                color="#FF8F56"
+                @click.stop="opendialogresolve(item)"
+              >
+                Resolved
+              </v-btn>
+              <v-btn
+                v-if="item.status != 'on progress'"
+                class="mr-2 btn white--text"
+                color="#f54"
+                @click.stop="opendialogrejected(item)"
+              >
+                Rejected
+              </v-btn>
+              <v-btn
+                v-if="item.status != 'closed'"
+                class="mr-2 btn white--text"
+                color="#76ba99"
+                @click.stop="dialogclose = true"
+              >
+                Close
+              </v-btn>
+
+              <v-btn
+                v-if="userDepartment == 'IT'"
+                color="red"
+                class="mr-2 btn white--text"
+                @click.stop="opendialogDelete(item)"
+              >
+                <v-icon medium class="mr-2"> mdi-delete </v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </template>
+
         <template v-slot:top>
+          <template>
+            <v-btn
+              color="primary"
+              @click="isHistorique == false ? showHistorique() : initialize()"
+              class="white--text"
+            >
+              Historique Defecte
+            </v-btn>
+          </template>
           <v-dialog v-model="dialogimage" max-width="700px">
             <v-card>
               <v-toolbar dark color="primary">
@@ -238,10 +305,6 @@
                 </v-btn>
                 <v-toolbar-title>Settings</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn color="blue-grey" @click="dialogimage = true">
-                  <v-icon color="white" medium> mdi-camera </v-icon>
-                  Add pictures
-                </v-btn>
               </v-toolbar>
               <v-card-title class="text-h5 blue--text text--darken-3">
                 Damage Details:
@@ -495,35 +558,6 @@
               </v-container>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  v-if="
-                    fonction == 'SUPERVISOR' &&
-                    userDepartment == 'TECHNIQUE' &&
-                    damageSelect.status == 'on progress'
-                  "
-                  color="primary"
-                  @click="opendialogresolve"
-                >
-                  Confirme damage
-                </v-btn>
-                <v-btn
-                  v-if="
-                    fonction == 'FOREMAN' && damageSelect.status == 'resolved'
-                  "
-                  color="error"
-                  @click="opendialogrejected"
-                >
-                  Revert damage
-                </v-btn>
-                <v-btn
-                  v-if="
-                    fonction == 'FOREMAN' && damageSelect.status == 'resolved'
-                  "
-                  color="primary"
-                  @click="dialogclose = true"
-                >
-                  Close damage
-                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -576,9 +610,11 @@
           <v-btn
             color="teal"
             class="mr-2 btn white--text"
-            @click="pageView(item)"
+            @click.stop="clickImage(item)"
           >
-            <v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
+            <v-icon medium class="mr-2"> mdi-camera </v-icon>
+            /
+            <v-icon medium class="mr-2"> mdi-comment </v-icon>
           </v-btn>
           <v-btn
             class="mr-2 btn"
@@ -594,7 +630,11 @@
           >
             Rejected
           </v-btn>
-          <v-btn class="mr-2 btn" color="primary" @click..stop="dialogclose = true">
+          <v-btn
+            class="mr-2 btn"
+            color="primary"
+            @click.stop="dialogclose = true"
+          >
             Close
           </v-btn>
 
@@ -619,6 +659,7 @@ import { mapActions, mapGetters } from "vuex";
 
 export default {
   data: () => ({
+    isHistorique: false,
     dialog: false,
     dialogDelete: false,
     loading: false,
@@ -640,7 +681,7 @@ export default {
       { text: "Actions", value: "actions", sortable: false },
     ],
     damageByEquipments: [],
-    equipmentsFiltre: [],
+    equipmentsFiltreByid: [],
     showdetails: false,
     PhotoShow: {
       id: null,
@@ -825,20 +866,122 @@ export default {
     // this.initialize();
   },
   methods: {
+    getColor(status) {
+      var color = "";
+      if (status == "on progress") color = "#f54 ";
+      else if (status == "closed") color = "#76ba99";
+      else if (status == "resolved") color = "#FF8F56";
+
+      return color;
+    },
     initialize() {
+      this.damageByEquipments = [];
+      this.equipmentsFiltreByid = [];
       this.idEquipment = localStorage.getItem("idEquipment");
       console.log("this.idEquipment", this.idEquipment);
       console.log(
         "department_id: " + this.getUserActive.fonction.department_id
       );
 
-      if (this.getUserActive.fonction.department_id == 1) {
+      if (this.getUserActive.fonction.department_id == 1) 
+      {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
             this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltre.push(item);
+                this.equipmentsFiltreByid.push(item);
+              }
+            });
+            this.damageByEquipments = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+            this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
+            this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
+            this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
+            this.EquipmentsByCounter.closedCount = 0;
+            console.log("resolve", resolve);
+          }
+        );
+      } else if (this.getUserActive.fonction.department_id == 2) {
+        this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
+          (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+            this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
+              }
+            });
+            this.damageByEquipments = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+            this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
+            this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
+            this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
+            this.EquipmentsByCounter.closedCount = 0;
+          }
+        );
+      } else {
+        console.log("ccccccc filtre");
+        this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
+          (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+            this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
+              }
+            });
+            this.damageByEquipments = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+
+            this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+              this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+              this.EquipmentsByCounter.nameEquipment =
+                this.getEquipmentsByCounter.nameEquipment;
+              this.EquipmentsByCounter.damagedCount =
+                this.getEquipmentsByCounter.damagedCount;
+              this.EquipmentsByCounter.confirmedCount =
+                this.getEquipmentsByCounter.confirmedCount;
+              this.EquipmentsByCounter.closedCount = 0;
+            });
+          }
+        );
+      }
+      this.isHistorique = false;
+      console.log("EquipmentsByCounter", this.EquipmentsByCounter);
+    },
+    ...mapActions([
+      "FindDamageTypeByEquipmentIDAction",
+      "getEquipmentsByCounterAction",
+      "confirmDamageAction",
+      "closeDamageAction",
+      "revertDamageAction",
+      "sendDamagePhotosStoragePathAction",
+      "deleteDAMAGEAction",
+      "FindDamageTypeByEquipmentID_ITAction",
+      "FindDamageTypeByEquipmentID_TECAction",
+    ]),
+    pageView(item, row) {
+      this.damageSelect = item;
+      this.photo.id = item.id;
+
+      console.log("this.damageSelect", this.damageSelect);
+      this.dialog = true;
+      this.showdetails = true;
+    },
+    showHistorique() {
+      this.damageByEquipments = [];
+      this.equipmentsFiltreByid = [];
+
+      if (this.getUserActive.fonction.department_id == 1) 
+      {
+        this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
+          (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+            this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
               }
             });
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
@@ -854,25 +997,27 @@ export default {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
             this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltre.push(item);
+                this.equipmentsFiltreByid.push(item);
               }
             });
+
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
             this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
             this.EquipmentsByCounter.closedCount = resolve.closedCount;
-            console.log("resolve", resolve);
           }
         );
       } else {
+        console.log("ccccccc filtre");
         this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
             this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltre.push(item);
+                this.equipmentsFiltreByid.push(item);
               }
             });
+
             this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
               this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
               this.EquipmentsByCounter.nameEquipment =
@@ -881,53 +1026,18 @@ export default {
                 this.getEquipmentsByCounter.damagedCount;
               this.EquipmentsByCounter.confirmedCount =
                 this.getEquipmentsByCounter.confirmedCount;
-              this.EquipmentsByCounter.closedCount =
-                this.getEquipmentsByCounter.closedCount;
+              this.EquipmentsByCounter.closedCount = this.getEquipmentsByCounter.closedCount;
             });
-
-            console.log("resolve", resolve);
           }
         );
       }
-
-      /* this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
-        this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
-        this.EquipmentsByCounter.nameEquipment =
-          this.getEquipmentsByCounter.nameEquipment;
-
-        this.EquipmentsByCounter.damagedCount =
-          this.getEquipmentsByCounter.damagedCount;
-        this.EquipmentsByCounter.confirmedCount =
-          this.getEquipmentsByCounter.confirmedCount;
-        this.EquipmentsByCounter.closedCount =
-          this.getEquipmentsByCounter.closedCount;
-      }); */
-
-      console.log("EquipmentsByCounter", this.EquipmentsByCounter);
+      this.isHistorique = true;
     },
-    ...mapActions([
-      "FindDamageTypeByEquipmentIDAction",
-      "getEquipmentsByCounterAction",
-      "confirmDamageAction",
-      "closeDamageAction",
-      "revertDamageAction",
-      "sendDamagePhotosStoragePathAction",
-      "deleteDAMAGEAction",
-      "FindDamageTypeByEquipmentID_ITAction",
-      "FindDamageTypeByEquipmentID_TECAction",
-    ]),
-    pageView(item,row) {
+    clickImage(item) {
       this.damageSelect = item;
       this.photo.id = item.id;
 
-      console.log("this.damageSelect", this.damageSelect);
-      this.dialog = true;
-      this.showdetails = true;
-    },
-    clickrow(item, row){
-      console.log('row clicked',row);
-      console.log('item clicked',item);
-
+      this.dialogimage = true;
     },
     closedtailedialoge() {
       this.showdetails = false;
@@ -1079,6 +1189,8 @@ export default {
           }
           return c;
         });
+        swal("Good job!", "Add photo and description success ", "success");
+
         console.log("done");
       });
       this.dialogimage = false;
