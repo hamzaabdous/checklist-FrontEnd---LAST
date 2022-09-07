@@ -53,30 +53,9 @@
           </v-card>
         </template>
       </v-col>
-      <v-col cols="3" md="3">
-        <template>
-          <v-card class="mx-auto" max-width="200" outlined>
-            <v-list-item three-line>
-              <v-list-item-content>
-                <div class="text-overline mb-4 blue--text">
-                  Closed defictive items
-                </div>
-                <v-list-item-title class="text-h5 mb-1 blue--text">
-                  {{ this.ProfileGroupsByCounter.closedCount }}
-                </v-list-item-title>
-              </v-list-item-content>
+ 
 
-              <v-list-item-avatar tile size="35" color="white">
-                <v-icon color="blue" large>
-                  mdi-lock-open
-                </v-icon></v-list-item-avatar
-              >
-            </v-list-item>
-          </v-card>
-        </template>
-      </v-col>
-
-      <v-col cols="3" md="3">
+      <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="200" outlined>
             <v-list-item three-line>
@@ -113,7 +92,6 @@
             <td class="">{{ item.nameEquipment }}</td>
             <td class="">{{ item.damagedCount }}</td>
             <td class="">{{ item.confirmedCount }}</td>
-            <td class="">{{ item.closedCount }}</td>
             <td>
               <v-btn
                 color="teal"
@@ -164,7 +142,6 @@ export default {
       { text: "Name", value: "nameEquipment", sortable: true },
       { text: "Total defects items", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
-      { text: "Closed", value: "closedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     equipments: [],
@@ -300,7 +277,7 @@ export default {
           this.equipments = [...this.getEquipmentsByCounters];
           //  console.log("this.equipments",this.equipments);
         });
-        this.getProfileGroupsByCounterITAction(
+        this.getProfileGroupsByCounterAction(
           localStorage.getItem("idDomainGroupesid")
         ).then(() => {
           this.ProfileGroupsByCounter.id = this.getProfileGroupsByCounter.id;

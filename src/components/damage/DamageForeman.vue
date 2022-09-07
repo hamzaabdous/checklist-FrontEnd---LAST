@@ -32,7 +32,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this Damages ?
+              Are you sure you want to valide this defected ?
             </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -77,8 +77,19 @@
         </v-dialog>
         <v-dialog v-model="resolvedDialoge" persistent max-width="490">
           <v-card>
-            <v-card-title class="text-h5"> Actions : </v-card-title>
+            <v-card-title class="text-h5 red lighten-1 white--text">
+              Warning !!
+            </v-card-title>
+            <v-spacer></v-spacer>
+
+            <v-card-text class="pa-4 black--text">
+              Warning this is a resolved item, are you sure you want to turn it
+              not-defected or defected ?
+            </v-card-text>
             <v-card-actions>
+              <v-btn color="#fff " @click="resolvedDialoge = false">
+                Cancel
+              </v-btn>
               <v-spacer></v-spacer>
               <v-btn class="mr-2" color="#76ba99" @click="closed">
                 Not-Defected
@@ -86,34 +97,114 @@
               <v-btn class="mr-2" color="#f54" @click="revert">
                 Defected
               </v-btn>
-
-              <v-btn color="blue darken-1" @click="resolvedDialoge = false">
-                Cancel
-              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-dialog v-model="defectedDialoge" persistent max-width="490">
           <v-card>
-            <v-card-title class="text-h5"> Actions : </v-card-title>
+            <v-card-title class="text-h5 red lighten-1 white--text">
+              Warning !!
+            </v-card-title>
+            <v-spacer></v-spacer>
+
+            <v-card-text class="pa-4 black--text">
+              Warning this is a defected item, are you sure you want to turn it
+              not-defected ?
+            </v-card-text>
             <v-card-actions>
+              <v-btn color="#fff" @click="defectedDialoge = false">
+                Cancel
+              </v-btn>
               <v-spacer></v-spacer>
 
               <v-btn class="mr-2" color="#76ba99" @click="confirmed">
                 Not-Defected
-              </v-btn>
-              <v-spacer></v-spacer>
-
-              <v-btn color="blue darken-1" @click="defectedDialoge = false">
-                Cancel
               </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-container>
           <v-row>
+            <v-col cols="4" class="ITpanell">
+              <v-row>
+                <v-col cols="12" class="d-flex justify-center">
+                  <span>IT </span>
+                  <span class="red--text"
+                    >({{
+                      this.modelDamageIT.length + this.confirmedDamageIT.length
+                    }})</span
+                  ></v-col
+                >
+              </v-row>
 
-            <v-col cols="12" class="TECpanell">
+              <v-col cols="12" sm="12" class="scroll">
+                <v-list flat>
+                  <v-list-item-group
+                    name="it"
+                    v-model="modelIT"
+                    multiple
+                    color="#fff"
+                  >
+                    <div class="hamzatec d-flex flex-wrap">
+                      <v-list-item
+                        v-for="(item, i) in modelDamageIT"
+                        :key="i"
+                        class="item itemDamaged d-flex flex-wrap"
+                        @click="defectedFunction(item, i)"
+                        style="background-color: #f54; color: #fff"
+                      >
+                        <v-list-item-content class="item-content">
+                          <v-list-item-title
+                            name="modelDamageIT"
+                            class="itemName"
+                            >{{ item.name }}</v-list-item-title
+                          >
+                        </v-list-item-content>
+                      </v-list-item>
+                    </div>
+                    <div class="hamzatec d-flex flex-wrap">
+                      <v-list-item
+                        v-for="(item, i) in confirmedDamageIT"
+                        :key="i"
+                        class="item"
+                        style="background-color: #ff8f56; color: #fff"
+                        @click="resolvedFunction(item, i)"
+                      >
+                        <v-list-item-content class="item-content">
+                          <v-list-item-title
+                            name="modelDamageTEC"
+                            class="itemName"
+                            >{{ item.name }}</v-list-item-title
+                          >
+                        </v-list-item-content>
+                      </v-list-item>
+                    </div>
+                    <v-divider class="ma-3"></v-divider>
+
+                    <div class="hamzatec d-flex flex-wrap">
+                      <v-list-item
+                        v-for="(item, i) in damageTypesIT"
+                        :key="i"
+                        class="item"
+                        active-class="bg-active"
+                        style="background-color: #76ba99; color: #fff"
+                        @click="valider(item, i)"
+                      >
+                        <v-list-item-content class="item-content">
+                          <v-list-item-title
+                            name="damageTypesIT"
+                            class="itemName"
+                            >{{ item.name }}</v-list-item-title
+                          >
+                        </v-list-item-content>
+                      </v-list-item>
+                    </div>
+                  </v-list-item-group>
+                </v-list>
+              </v-col>
+            </v-col>
+
+            <v-col cols="8" class="TECpanell">
               <v-row>
                 <v-col cols="12" class="d-flex justify-center">
                   <span>Technique </span>
@@ -168,6 +259,8 @@
                         </v-list-item-content>
                       </v-list-item>
                     </div>
+                    <v-divider class="ma-3"></v-divider>
+
                     <div class="hamzatec d-flex flex-wrap">
                       <v-list-item
                         v-for="(item, i) in damageTypesTEC"
@@ -409,6 +502,13 @@ export default {
     },
     resolveditem: [],
     defecteditem: [],
+    defectsChange: {
+      item: [],
+      damagetypeOld: [],
+      statusOld: null,
+      statusNew: "",
+    },
+    listDefectsChange: [],
     DamageTypeByEquipmentID: [],
     DamagesMergedWithDamageTypes: [],
     damageSelect: [],
@@ -526,7 +626,16 @@ export default {
       console.log("initialize");
 
       this.setPROFILEDROUPSAction().then(() => {
-        this.profile_groupe = [...this.getprofilegroups];
+        this.setUsersbyIDAction(this.getUserActive.id).then(() => {
+          this.userFiltre = this.getUsers;
+          if (this.userFiltre.profileGroups.length == 0) {
+            swal("warning !!", "You don't have any group !", "warning");
+            this.disabled = true;
+            // this.profile_groupe = [...this.getprofilegroups];
+          } else if (this.userFiltre.profileGroups.length != 0) {
+            this.profile_groupe = [...this.userFiltre.profileGroups];
+          }
+        });
       });
       this.setequipmentsAction().then(() => {
         this.equipments = [...this.getequipments];
@@ -622,6 +731,27 @@ export default {
       /*  this.defecteditem = [];
       this.defectedDialoge = true;
       this.defecteditem.push(item); */
+    },
+    changeDefectsFunction() {
+      this.defectsChange.item = this.resolveditem[0];
+      this.defectsChange.damagetypeOld = this.resolveditem[0].damage;
+      this.defectsChange.statusOld = this.resolveditem[0].damage.status;
+      this.defectsChange.statusNew = "closed";
+
+      this.listDefectsChange.push(this.defectsChange);
+      if (this.resolveditem[0].department.name == "IT") {
+        this.damageTypesIT.push(this.resolveditem[0]);
+        this.modelDamageIT = this.modelDamageIT.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      } else if (this.resolveditem[0].department.name == "TECHNIQUE") {
+        this.damageTypesTEC.push(this.resolveditem[0]);
+        this.modelDamageTEC = this.modelDamageTEC.filter(
+          (c) => c.id != this.resolveditem[0].id
+        );
+      }
+      console.log("listDefectsChange", this.listDefectsChange);
+      this.defectedDialoge = false;
     },
     confirmed() {
       console.log("resolveditem closed :", this.resolveditem);
@@ -731,7 +861,7 @@ export default {
             console.log("presenceCheck DONE");
             swal(
               "success !!",
-              "Please can you chose equipment you use it!",
+              "Presence check  success",
               "success"
             );
           });

@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+
 import usersModule from "./models/userModule";
 import departementModule from "./models/departementModule";
 import functionModule from "./models/functionModule";

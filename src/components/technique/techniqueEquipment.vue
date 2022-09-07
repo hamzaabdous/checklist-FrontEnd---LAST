@@ -57,7 +57,7 @@
       </v-col>
       <v-col cols="4" md="4">
         <template>
-          <v-card class="mx-auto" max-width="200" outlined>
+          <v-card class="mx-auto " v-if="isHistorique"  max-width="200" outlined>
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
@@ -84,6 +84,7 @@
         :items="damageByEquipments"
         :search="search"
         :loading="loading"
+
         sort-by="item.id"
         class="elevation-1"
       >
@@ -111,7 +112,7 @@
                 <v-icon medium class="mr-2"> mdi-comment </v-icon>
               </v-btn>
               <v-btn
-                v-if="item.status != 'resolved' && item.status != 'closed'"
+                v-if="item.status != 'resolved' && item.status != 'closed' && fonction!='FOREMAN' && fonction!='ADMIN'"
                 class="mr-2 btn white--text"
                 color="#FF8F56"
                 @click.stop="opendialogresolve(item)"
@@ -119,7 +120,7 @@
                 Resolved
               </v-btn>
               <v-btn
-                v-if="item.status != 'on progress' && item.status != 'closed'"
+                v-if="item.status != 'on progress' && item.status != 'closed' && fonction!='SUPERVISOR' && fonction!='ADMIN'"
                 class="mr-2 btn white--text"
                 color="#f54"
                 @click.stop="opendialogrejected(item)"
@@ -127,16 +128,16 @@
                 Rejected
               </v-btn>
               <v-btn
-                v-if="item.status != 'closed'"
+                v-if="item.status != 'closed' && fonction!='TECHNICIEN' && fonction!='SUPERVISOR' && fonction!='ADMIN'"
                 class="mr-2 btn white--text"
                 color="#76ba99"
-                @click.stop="dialogclose = true"
+                @click.stop="opendialogclosed(item)"
               >
                 Close
               </v-btn>
 
               <v-btn
-                v-if="userDepartment == 'IT'"
+                v-if="fonction=='ADMIN'"
                 color="red"
                 class="mr-2 btn white--text"
                 @click.stop="opendialogDelete(item)"
@@ -150,7 +151,7 @@
         <template v-slot:top>
           <template>
             <v-btn
-              color="primary"
+              :color="iscolor"
               @click="isHistorique == false ? showHistorique() : initialize()"
               class="white--text"
             >
@@ -308,7 +309,7 @@
                 <v-spacer></v-spacer>
               </v-toolbar>
               <v-card-title class="text-h5 blue--text text--darken-3">
-                Damage Details:
+                Defect Details:
               </v-card-title>
               <v-container>
                 <v-row>
@@ -316,7 +317,7 @@
                     <table class="DamageDetails">
                       <tbody>
                         <tr>
-                          <td><h3>DamageType</h3></td>
+                          <td><h3>Defect</h3></td>
                           <td class="valueColumn">
                             <h4>{{ damageSelect.damage_type.name }}</h4>
                           </td>
@@ -803,6 +804,7 @@ export default {
     },
     equipment: null,
     idEquipment: null,
+    iscolor:"black",
     EquipmentsByCounter: {
       id: null,
       nameEquipment: "",
@@ -949,6 +951,7 @@ export default {
           }
         );
       }
+            this.iscolor="black";
       this.isHistorique = false;
       console.log("EquipmentsByCounter", this.EquipmentsByCounter);
     },
@@ -1032,6 +1035,7 @@ export default {
           }
         );
       }
+      this.iscolor="teal";
       this.isHistorique = true;
     },
     clickImage(item) {
@@ -1043,6 +1047,11 @@ export default {
     closedtailedialoge() {
       this.showdetails = false;
       this.dialog = false;
+    },
+    opendialogclosed(item) {
+      this.damageSelect = item;
+
+      this.dialogclose = true;
     },
     opendialogresolve(item) {
       this.damageSelect = item;

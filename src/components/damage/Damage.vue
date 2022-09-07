@@ -32,7 +32,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this Damages ?
+              Are you sure you want to valide this defected ?
             </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -77,8 +77,19 @@
         </v-dialog>
         <v-dialog v-model="resolvedDialoge" persistent max-width="490">
           <v-card>
-            <v-card-title class="text-h5"> Actions : </v-card-title>
+            <v-card-title class="text-h5 red lighten-1 white--text">
+              Warning !!
+            </v-card-title>
+            <v-spacer></v-spacer>
+
+            <v-card-text class="pa-4 black--text">
+              Warning this is a resolved item, are you sure you want to turn it
+              not-defected or defected ?
+            </v-card-text>
             <v-card-actions>
+              <v-btn color="#fff " @click="resolvedDialoge = false">
+                Cancel
+              </v-btn>
               <v-spacer></v-spacer>
               <v-btn class="mr-2" color="#76ba99" @click="closed">
                 Not-Defected
@@ -86,26 +97,28 @@
               <v-btn class="mr-2" color="#f54" @click="revert">
                 Defected
               </v-btn>
-
-              <v-btn color="blue darken-1" @click="resolvedDialoge = false">
-                Cancel
-              </v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
         <v-dialog v-model="defectedDialoge" persistent max-width="490">
           <v-card>
-            <v-card-title class="text-h5"> Actions : </v-card-title>
+            <v-card-title class="text-h5 red lighten-1 white--text">
+              Warning !!
+            </v-card-title>
+            <v-spacer></v-spacer>
+
+            <v-card-text class="pa-4 black--text">
+              Warning this is a defected item, are you sure you want to turn it
+              not-defected ?
+            </v-card-text>
             <v-card-actions>
+              <v-btn color="#fff" @click="defectedDialoge = false">
+                Cancel
+              </v-btn>
               <v-spacer></v-spacer>
 
               <v-btn class="mr-2" color="#76ba99" @click="confirmed">
                 Not-Defected
-              </v-btn>
-              <v-spacer></v-spacer>
-
-              <v-btn color="blue darken-1" @click="defectedDialoge = false">
-                Cancel
               </v-btn>
             </v-card-actions>
           </v-card>

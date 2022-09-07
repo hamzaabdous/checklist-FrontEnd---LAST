@@ -123,7 +123,7 @@ export default {
             window.location.reload();
           } else {
             this.$router.push({
-              name: "userGestion",
+              name: "technique",
             });
             window.location.reload();
           }

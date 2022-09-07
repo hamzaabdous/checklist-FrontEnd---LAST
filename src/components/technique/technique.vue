@@ -76,7 +76,6 @@ export default {
       },
       { text: "Total of defects", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
-      { text: "Closed", value: "closedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     profilegroups: [],
