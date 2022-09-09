@@ -119,6 +119,7 @@
     >
       <v-list style="padding: 0px; align-items: center" nav dense>
         <v-list-item-group active-class="deep-purple--text text--accent-4">
+          <br/>
           <v-img
             contain
             lazy-src="./assets/TangerAlliance.png"
@@ -126,7 +127,6 @@
             max-width="250"
             src="./assets/TangerAlliance.png"
           ></v-img>
-
           <div
             class="foremanandTechnique"
             v-if="

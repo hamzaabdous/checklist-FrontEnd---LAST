@@ -104,6 +104,30 @@ const equipmentModule = {
           });
       });
     },
+    getEquipmentsByCounterITAction({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.get("equipments/getEquipmentsByCounterIT/" + id)
+          .then((response) => {
+            commit("SET_EquipmentsByCounter", response.data.payload);
+            resolve(response);
+          })
+          .catch((error) => {
+            console.log("error :", error);
+          });
+      });
+    },
+    getEquipmentsByCounterTECAction({ commit }, id) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.get("equipments/getEquipmentsByCounterTEC/" + id)
+          .then((response) => {
+            commit("SET_EquipmentsByCounter", response.data.payload);
+            resolve(response);
+          })
+          .catch((error) => {
+            console.log("error :", error);
+          });
+      });
+    },
     addEQUIPMENTAction({ commit }, EQUIPMENT) {
       return new Promise((resolve, reject) => {
         CustomizedAxios.post("equipments/create", {

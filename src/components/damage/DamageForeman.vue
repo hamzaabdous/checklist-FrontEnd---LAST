@@ -32,7 +32,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this defected ?
+              Are you sure you want to valide this defecte(s) ?
             </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -47,7 +47,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this Damages ?
+              Are you sure you want to valide this defecte(s) ?
             </v-card-title>
             <v-card-text class="font-weight-bold"></v-card-text>
             <v-card-actions>
@@ -63,7 +63,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this Damages ?
+              Are you sure you want to valide this defecte(s) ?
             </v-card-title>
             <v-card-text class="font-weight-bold"></v-card-text>
             <v-card-actions>
@@ -324,7 +324,7 @@
                 depressed
                 color="primary"
                 :disabled="disabled"
-                @click="dialogValideDamage = true"
+                @click="test()"
               >
                 Valider
               </v-btn>
@@ -553,6 +553,42 @@ export default {
     //this.initialize();
   },
   methods: {
+    test() {
+      if (this.Data.length == 0) {
+        if (this.equipments_id == "") {
+          swal(
+            "warning !!",
+            "Please can you chose equipment you use it!",
+            "warning"
+          );
+          this.dialogValide = false;
+          this.dialogValideDamage = false;
+        } else {
+          swal({
+            title: "Are you sure?",
+            text: "you want make Presence check!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          }).then((willDelete) => {
+            if (willDelete) {
+              this.presenceCheck.user_id = this.getUserActive.id;
+              this.presenceCheck.equipment_id = this.equipments_id;
+              this.presenceChecksAction(this.presenceCheck).then((resolve) => {
+                console.log("presenceCheck DONE");
+                swal("success !!", "Presence check  success", "success");
+              });
+              this.dialogValide = false;
+              this.dialogValideDamage = false;
+            } else {
+              swal("Presence check cancel");
+            }
+          });
+        }
+      } else {
+        this.dialogValideDamage = true;
+      }
+    },
     changeProfile_groupeSELECT() {
       this.modelDamageIT = [];
       this.modelDamageTEC = [];
@@ -859,11 +895,7 @@ export default {
           this.presenceCheck.equipment_id = this.equipments_id;
           this.presenceChecksAction(this.presenceCheck).then((resolve) => {
             console.log("presenceCheck DONE");
-            swal(
-              "success !!",
-              "Presence check  success",
-              "success"
-            );
+            swal("success !!", "Presence check  success", "success");
           });
           this.dialogValide = false;
           this.dialogValideDamage = false;

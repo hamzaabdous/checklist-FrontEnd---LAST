@@ -15,10 +15,11 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
-                  Total defictive items
+                  Total Equipement With  defects items
+
                 </div>
                 <v-list-item-title class="text-h5 mb-1 red--text">
-                  {{ this.ProfileGroupsByCounter.damagedCount }}
+                  {{ this.ProfileGroupsByCounter.nonFunctionalEquipmnet }}
                 </v-list-item-title>
               </v-list-item-content>
 
@@ -37,7 +38,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
-                  RESOLVED defictive items
+                  RESOLVED defective items
                 </div>
                 <v-list-item-title class="text-h5 mb-1 deep-orange--text">
                   {{ this.ProfileGroupsByCounter.confirmedCount }}
@@ -88,7 +89,7 @@
         class="elevation-1"
       >
         <template v-slot:item="{ item }">
-          <tr :class="getColor(item.damagedCount)">
+          <tr :class="getColor(item)">
             <td class="">{{ item.nameEquipment }}</td>
             <td class="">{{ item.damagedCount }}</td>
             <td class="">{{ item.confirmedCount }}</td>
@@ -155,6 +156,7 @@ export default {
       damagedCount: null,
       confirmedCount: null,
       closedCount: null,
+      nonFunctionalEquipmnet:null,
     },
     EquipmentsByCounters: {
       id: null,
@@ -213,11 +215,10 @@ export default {
     // this.initialize();
   },
   methods: {
-    getColor(damagedCount) {
+    getColor(item) {
       var color = "";
-      if (damagedCount > 0) color = "red lighten-1 white--text";
-      else if (damagedCount == 0) color = "green lighten-1 white--text";
-
+      if (item.damagedCount > 0 || item.confirmedCount > 0) color = "red lighten-1 white--text";
+      else if (item.damagedCount == 0 || item.confirmedCount == 0) color = "green lighten-1 white--text";
       return color;
     },
     initialize() {
@@ -245,6 +246,8 @@ export default {
             this.getProfileGroupsByCounter.confirmedCount;
           this.ProfileGroupsByCounter.closedCount =
             this.getProfileGroupsByCounter.closedCount;
+            this.ProfileGroupsByCounter.nonFunctionalEquipmnet =
+            this.getProfileGroupsByCounter.nonFunctionalEquipmnet;
         });
       } else if (this.getUserActive.fonction.department_id == 2) {
         this.getEquipmentsByCountersTECAction(
@@ -269,6 +272,8 @@ export default {
             this.getProfileGroupsByCounter.confirmedCount;
           this.ProfileGroupsByCounter.closedCount =
             this.getProfileGroupsByCounter.closedCount;
+            this.ProfileGroupsByCounter.nonFunctionalEquipmnet =
+            this.getProfileGroupsByCounter.nonFunctionalEquipmnet;
         });
       } else {
         this.getEquipmentsByCountersAction(
@@ -293,6 +298,8 @@ export default {
             this.getProfileGroupsByCounter.confirmedCount;
           this.ProfileGroupsByCounter.closedCount =
             this.getProfileGroupsByCounter.closedCount;
+            this.ProfileGroupsByCounter.nonFunctionalEquipmnet =
+            this.getProfileGroupsByCounter.nonFunctionalEquipmnet;
         });
       }
 

@@ -13,6 +13,7 @@ const profilegroupModule = {
       damagedCount: null,
       confirmedCount: null,
       closedCount: null,
+      nonFunctionalEquipmnet:null,
     },
   },
   mutations: {
@@ -33,6 +34,7 @@ const profilegroupModule = {
       state.ProfileGroupsByCounter.damagedCount = ProfileGroupsByCounter.damagedCount;
       state.ProfileGroupsByCounter.confirmedCount = ProfileGroupsByCounter.confirmedCount;
       state.ProfileGroupsByCounter.closedCount = ProfileGroupsByCounter.closedCount;
+      state.ProfileGroupsByCounter.nonFunctionalEquipmnet = ProfileGroupsByCounter.nonFunctionalEquipmnet;
 
     },
     ADD_PROFILEDROUP(state, profilegroups) {

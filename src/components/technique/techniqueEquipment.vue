@@ -17,7 +17,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
-                  Pending Defect Tickets
+                  Pending Defects Tickets
                 </div>
                 <v-list-item-title class="text-h5 mb-1 red--text">
                   {{ this.EquipmentsByCounter.damagedCount }}
@@ -39,7 +39,7 @@
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
-                  RESOLVED Defect TICKETS
+                  RESOLVED Defects TICKETS
                 </div>
                 <v-list-item-title class="text-h5 mb-1 deep-orange--text">
                   {{ this.EquipmentsByCounter.confirmedCount }}
@@ -393,7 +393,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>resolved At</h3></td>
+                          <td><h3>Resolved At</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.confirmedAt == null">
                               Empty
@@ -415,7 +415,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>resolved By</h3></td>
+                          <td><h3>Resolved By</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.confirmed_by == null">
                               Empty
@@ -435,7 +435,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>rejected By</h3></td>
+                          <td><h3>Rejected By</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.rejected_by == null">
                               Empty
@@ -447,7 +447,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>rejected At</h3></td>
+                          <td><h3>Rejected At</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.rejectedAt == null">
                               Empty
@@ -457,7 +457,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>rejected Times</h3></td>
+                          <td><h3>Rejected Times</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.rejectedTimes == null">
                               Empty
@@ -467,7 +467,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>rejected Description</h3></td>
+                          <td><h3>Rejected Description</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.rejectedDescription == null">
                               Empty
@@ -500,7 +500,7 @@
                           </td>
                         </tr>
                         <tr>
-                          <td><h3>driver Out</h3></td>
+                          <td><h3>Last driver</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.driverOut == null">Empty</h5>
 
@@ -947,7 +947,7 @@ export default {
               this.EquipmentsByCounter.confirmedCount =
                 this.getEquipmentsByCounter.confirmedCount;
               this.EquipmentsByCounter.closedCount = 0;
-            });
+            }); 
           }
         );
       }
@@ -958,6 +958,8 @@ export default {
     ...mapActions([
       "FindDamageTypeByEquipmentIDAction",
       "getEquipmentsByCounterAction",
+      "getEquipmentsByCounterITAction",
+      "getEquipmentsByCounterTECAction",
       "confirmDamageAction",
       "closeDamageAction",
       "revertDamageAction",
@@ -1089,7 +1091,7 @@ export default {
       });
       setTimeout(() => {
         this.counters();
-      }, 2000);
+      }, 1000);
       this.showdetails = false;
       this.dialogresolve = false;
     },
@@ -1112,7 +1114,7 @@ export default {
       });
       setTimeout(() => {
         this.counters();
-      }, 2000);
+      }, 1000);
       this.dialogclose = false;
       this.showdetails = false;
     },
@@ -1139,7 +1141,7 @@ export default {
       });
       setTimeout(() => {
         this.counters();
-      }, 2000);
+      }, 1000);
       this.showdetails = false;
       this.dialogrejected = false;
     },
@@ -1160,7 +1162,8 @@ export default {
       this.dialogimageShow = true;
     },
     counters() {
-      this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+      if (this.getUserActive.fonction.department_id == 1) {
+        this.getEquipmentsByCounterITAction(this.idEquipment).then(() => {
         this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
         this.EquipmentsByCounter.nameEquipment =
           this.getEquipmentsByCounter.nameEquipment;
@@ -1172,6 +1175,34 @@ export default {
         this.EquipmentsByCounter.closedCount =
           this.getEquipmentsByCounter.closedCount;
       });
+      }else if (this.getUserActive.fonction.department_id == 2){
+        this.getEquipmentsByCounterTECAction(this.idEquipment).then(() => {
+        this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+        this.EquipmentsByCounter.nameEquipment =
+          this.getEquipmentsByCounter.nameEquipment;
+
+        this.EquipmentsByCounter.damagedCount =
+          this.getEquipmentsByCounter.damagedCount;
+        this.EquipmentsByCounter.confirmedCount =
+          this.getEquipmentsByCounter.confirmedCount;
+        this.EquipmentsByCounter.closedCount =
+          this.getEquipmentsByCounter.closedCount;
+      });
+      }else{
+        this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+        this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+        this.EquipmentsByCounter.nameEquipment =
+          this.getEquipmentsByCounter.nameEquipment;
+
+        this.EquipmentsByCounter.damagedCount =
+          this.getEquipmentsByCounter.damagedCount;
+        this.EquipmentsByCounter.confirmedCount =
+          this.getEquipmentsByCounter.confirmedCount;
+        this.EquipmentsByCounter.closedCount =
+          this.getEquipmentsByCounter.closedCount;
+      });
+      }
+      
     },
     sendImage() {
       this.photo.foreman_id = this.getUserActive.id;

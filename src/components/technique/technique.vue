@@ -7,7 +7,7 @@
         class="pa-2 white--text"
         @click="changeDepartment"
       >
-        Declare Defect<v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
+        Fill in checklist<v-icon medium class="mr-2"> mdi-eye-outline </v-icon>
       </v-btn>
     </v-col>
     <v-data-table
