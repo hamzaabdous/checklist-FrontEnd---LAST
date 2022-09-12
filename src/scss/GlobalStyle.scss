@@ -60,29 +60,81 @@
   border: 1.5px solid #000000d4;
 }
 
-.v-list-item{
-  flex: none;
+.v-list-item {
+  display: block;
+}
+.v-list-item__title,
+.v-list-item__subtitle {
+  white-space: initial;
 }
 
- .item {
-  margin-bottom: 5px;
-  height: 50px;
-  width: 100px;
-  border: 1.5px solid #353535a8;
-  border-radius: 8px;
-  font-size: 12px;
-  padding: 2px;
-  margin-right: 4px;
+.bg-active {
+  color: #fff !important;
+  background-color: rgb(251, 125, 114) !important;
+  border-radius: 6px !important;
+}
+.resolved{
   .itemName{
+    background-color:#ff8f56 !important;
+  }
+  .itemSubtitle{
+    color: #ff8f56 !important;
+  }
+}
+
+.item:has( .resolved,.defects) { 
+      background-color:#ffffff00 !important;
+  
+}
+
+
+.item-content {
+  padding: 5px 0px;
+  display: inline;
+}
+.v-item-group {
+  column-count: 3;
+}
+.ITcol{
+  column-count: 1;
+
+}
+.itSubtitle{
+  width:140px !important;
+}
+.item {
+  padding: 0px 6px 0px 0px;
+  display: block;
+  .itemName {
+    height: 20px;
+    width: 20px;
     font-size: 10px;
     font-weight: bold;
-
+    color: #fff;
+    border: 1.5px solid #353535a8;
+    border-radius: 4px;
+    font-size: 12px;
+    padding: 2px;
+    margin-right: 4px;
   }
-  .item-content{
-    
-  }
-} 
 
+  .itemSubtitle {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width:98px;
+  }
+  .itemSubtitle,
+  .itemName {
+    display: inline-block;
+  }
+}
+.v-list-item__content > *:not(:last-child){
+  margin-bottom:0px;
+}
+.v-list--two-line .v-list-item, .v-list-item--two-line{
+  min-height:0px;
+}
 .backgroundLogin {
   padding: 0px;
   height: 106vh;
@@ -124,11 +176,6 @@
 }
 .data {
   color: #000;
-}
-
-.bg-active {
-  color: #fff !important;
-  background-color: rgb(251, 125, 114) !important;
 }
 
 .DamageDetails {
