@@ -118,7 +118,7 @@
       style="background-color: #fff"
     >
       <v-list style="padding: 0px; align-items: center" nav dense>
-        <v-list-item-group active-class="deep-purple--text text--accent-4">
+        <v-list-item-group class="itemDrawer" active-class="deep-purple--text text--accent-4">
           <br/>
           <v-img
             contain

@@ -586,6 +586,8 @@ export default {
     editeUserToProfilegroupItem(item) {
       this.profilegroupsActive = [];
       this.UserToProfile.user_id = item.id;
+     
+      console.log("item user",item);
 
       this.editedIndex = this.users.indexOf(item) + 1;
       this.editedItem = Object.assign({}, item);
@@ -598,6 +600,7 @@ export default {
         });
         return exist.length == 0;
       });
+         
 
       this.dialogediteUserToProfilegroup = true;
     },
@@ -683,8 +686,10 @@ export default {
       if (this.editedIndex == -1) {
         console.log("add");
         this.addUserAction(this.editedItem).then(() => {
-          this.users = [...this.getUsers];
-          this.closemodifier();
+          this.setUsersAction().then(() => {
+        this.users = [...this.getUsers];
+      });
+                this.closemodifier();
         });
       } else {
         console.log("edite");
