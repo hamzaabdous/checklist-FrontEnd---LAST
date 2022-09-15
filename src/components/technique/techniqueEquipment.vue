@@ -57,7 +57,7 @@
       </v-col>
       <v-col cols="4" md="4">
         <template>
-          <v-card class="mx-auto " v-if="isHistorique"  max-width="200" outlined>
+          <v-card class="mx-auto" v-if="isHistorique" max-width="200" outlined>
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
@@ -84,7 +84,6 @@
         :items="damageByEquipments"
         :search="search"
         :loading="loading"
-
         sort-by="item.id"
         class="elevation-1"
       >
@@ -112,7 +111,12 @@
                 <v-icon medium class="mr-2"> mdi-comment </v-icon>
               </v-btn>
               <v-btn
-                v-if="item.status != 'resolved' && item.status != 'closed' && fonction!='FOREMAN' && fonction!='ADMIN'"
+                v-if="
+                  item.status != 'resolved' &&
+                  item.status != 'closed' &&
+                  fonction != 'FOREMAN' &&
+                  fonction != 'ADMIN'
+                "
                 class="mr-2 btn white--text"
                 color="#FF8F56"
                 @click.stop="opendialogresolve(item)"
@@ -120,7 +124,12 @@
                 Resolved
               </v-btn>
               <v-btn
-                v-if="item.status != 'on progress' && item.status != 'closed' && fonction!='SUPERVISOR' && fonction!='ADMIN'"
+                v-if="
+                  item.status != 'on progress' &&
+                  item.status != 'closed' &&
+                  fonction != 'SUPERVISOR' &&
+                  fonction != 'ADMIN'
+                "
                 class="mr-2 btn white--text"
                 color="#f54"
                 @click.stop="opendialogrejected(item)"
@@ -128,7 +137,12 @@
                 Rejected
               </v-btn>
               <v-btn
-                v-if="item.status != 'closed' && fonction!='TECHNICIEN' && fonction!='SUPERVISOR' && fonction!='ADMIN'"
+                v-if="
+                  item.status != 'closed' &&
+                  fonction != 'TECHNICIEN' &&
+                  fonction != 'SUPERVISOR' &&
+                  fonction != 'ADMIN'
+                "
                 class="mr-2 btn white--text"
                 color="#76ba99"
                 @click.stop="opendialogclosed(item)"
@@ -137,7 +151,7 @@
               </v-btn>
 
               <v-btn
-                v-if="fonction=='ADMIN'"
+                v-if="fonction == 'ADMIN'"
                 color="red"
                 class="mr-2 btn white--text"
                 @click.stop="opendialogDelete(item)"
@@ -299,7 +313,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialog" max-width="1200px">
+          <v-dialog v-model="dialog" fullscreen hide-overlay>
             <v-card>
               <v-toolbar dark color="primary">
                 <v-btn icon dark @click="closedtailedialoge">
@@ -804,7 +818,7 @@ export default {
     },
     equipment: null,
     idEquipment: null,
-    iscolor:"black",
+    iscolor: "black",
     EquipmentsByCounter: {
       id: null,
       nameEquipment: "",
@@ -886,8 +900,7 @@ export default {
         "department_id: " + this.getUserActive.fonction.department_id
       );
 
-      if (this.getUserActive.fonction.department_id == 1) 
-      {
+      if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
@@ -947,11 +960,11 @@ export default {
               this.EquipmentsByCounter.confirmedCount =
                 this.getEquipmentsByCounter.confirmedCount;
               this.EquipmentsByCounter.closedCount = 0;
-            }); 
+            });
           }
         );
       }
-            this.iscolor="black";
+      this.iscolor = "black";
       this.isHistorique = false;
       console.log("EquipmentsByCounter", this.EquipmentsByCounter);
     },
@@ -980,8 +993,7 @@ export default {
       this.damageByEquipments = [];
       this.equipmentsFiltreByid = [];
 
-      if (this.getUserActive.fonction.department_id == 1) 
-      {
+      if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
@@ -1032,12 +1044,13 @@ export default {
                 this.getEquipmentsByCounter.damagedCount;
               this.EquipmentsByCounter.confirmedCount =
                 this.getEquipmentsByCounter.confirmedCount;
-              this.EquipmentsByCounter.closedCount = this.getEquipmentsByCounter.closedCount;
+              this.EquipmentsByCounter.closedCount =
+                this.getEquipmentsByCounter.closedCount;
             });
           }
         );
       }
-      this.iscolor="teal";
+      this.iscolor = "teal";
       this.isHistorique = true;
     },
     clickImage(item) {
@@ -1164,45 +1177,44 @@ export default {
     counters() {
       if (this.getUserActive.fonction.department_id == 1) {
         this.getEquipmentsByCounterITAction(this.idEquipment).then(() => {
-        this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
-        this.EquipmentsByCounter.nameEquipment =
-          this.getEquipmentsByCounter.nameEquipment;
+          this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+          this.EquipmentsByCounter.nameEquipment =
+            this.getEquipmentsByCounter.nameEquipment;
 
-        this.EquipmentsByCounter.damagedCount =
-          this.getEquipmentsByCounter.damagedCount;
-        this.EquipmentsByCounter.confirmedCount =
-          this.getEquipmentsByCounter.confirmedCount;
-        this.EquipmentsByCounter.closedCount =
-          this.getEquipmentsByCounter.closedCount;
-      });
-      }else if (this.getUserActive.fonction.department_id == 2){
+          this.EquipmentsByCounter.damagedCount =
+            this.getEquipmentsByCounter.damagedCount;
+          this.EquipmentsByCounter.confirmedCount =
+            this.getEquipmentsByCounter.confirmedCount;
+          this.EquipmentsByCounter.closedCount =
+            this.getEquipmentsByCounter.closedCount;
+        });
+      } else if (this.getUserActive.fonction.department_id == 2) {
         this.getEquipmentsByCounterTECAction(this.idEquipment).then(() => {
-        this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
-        this.EquipmentsByCounter.nameEquipment =
-          this.getEquipmentsByCounter.nameEquipment;
+          this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+          this.EquipmentsByCounter.nameEquipment =
+            this.getEquipmentsByCounter.nameEquipment;
 
-        this.EquipmentsByCounter.damagedCount =
-          this.getEquipmentsByCounter.damagedCount;
-        this.EquipmentsByCounter.confirmedCount =
-          this.getEquipmentsByCounter.confirmedCount;
-        this.EquipmentsByCounter.closedCount =
-          this.getEquipmentsByCounter.closedCount;
-      });
-      }else{
+          this.EquipmentsByCounter.damagedCount =
+            this.getEquipmentsByCounter.damagedCount;
+          this.EquipmentsByCounter.confirmedCount =
+            this.getEquipmentsByCounter.confirmedCount;
+          this.EquipmentsByCounter.closedCount =
+            this.getEquipmentsByCounter.closedCount;
+        });
+      } else {
         this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
-        this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
-        this.EquipmentsByCounter.nameEquipment =
-          this.getEquipmentsByCounter.nameEquipment;
+          this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+          this.EquipmentsByCounter.nameEquipment =
+            this.getEquipmentsByCounter.nameEquipment;
 
-        this.EquipmentsByCounter.damagedCount =
-          this.getEquipmentsByCounter.damagedCount;
-        this.EquipmentsByCounter.confirmedCount =
-          this.getEquipmentsByCounter.confirmedCount;
-        this.EquipmentsByCounter.closedCount =
-          this.getEquipmentsByCounter.closedCount;
-      });
+          this.EquipmentsByCounter.damagedCount =
+            this.getEquipmentsByCounter.damagedCount;
+          this.EquipmentsByCounter.confirmedCount =
+            this.getEquipmentsByCounter.confirmedCount;
+          this.EquipmentsByCounter.closedCount =
+            this.getEquipmentsByCounter.closedCount;
+        });
       }
-      
     },
     sendImage() {
       this.photo.foreman_id = this.getUserActive.id;
