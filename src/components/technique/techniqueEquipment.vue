@@ -516,10 +516,10 @@
                         <tr>
                           <td><h3>Last driver</h3></td>
                           <td class="valueColumn">
-                            <h5 v-if="damageSelect.driverOut == null">Empty</h5>
+                            <h5 v-if="damageSelect.driver_out == null">Empty</h5>
 
                             <h4 v-else>
-                              {{ damageSelect.driverOut.username }}
+                              {{ damageSelect.driver_out.username }}
                             </h4>
                           </td>
                         </tr>
