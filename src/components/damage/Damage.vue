@@ -171,7 +171,7 @@
                         <v-list-item-content
                           @click="resolvedFunction(item, i)"
                           v-else-if="item.damage.status == 'resolved'"
-                          class="item-content resolved" 
+                          class="item-content resolved"
                         >
                           <v-list-item-title
                             name="damageTypesTEC"
@@ -256,28 +256,24 @@
                         >
                           <v-list-item-title
                             name="damageTypesTEC"
-                            class="itemName "
+                            class="itemName"
                           ></v-list-item-title>
-                          <v-list-item-subtitle
-                            class="itemSubtitle"
-                            >{{ item.name }}</v-list-item-subtitle
-                          >
+                          <v-list-item-subtitle class="itemSubtitle">{{
+                            item.name
+                          }}</v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-content
                           v-else-if="item.damage.status == 'on progress'"
-                          class="item-content"
+                          class="item-content defects"
                           @click="defectedFunction(item, i)"
                         >
                           <v-list-item-title
                             name="damageTypesTEC"
-                            class="itemName defects"
-                            style="background-color: #f54"
+                            class="itemName"
                           ></v-list-item-title>
-                          <v-list-item-subtitle
-                            class="itemSubtitle"
-                            style="color: #f54"
-                            >{{ item.name }}</v-list-item-subtitle
-                          >
+                          <v-list-item-subtitle class="itemSubtitle">{{
+                            item.name
+                          }}</v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -335,16 +331,23 @@
         </v-container>
       </v-container>
     </div>
+
+    <LoadingPage v-if="LoadingPage==true" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import CustomizedAxios from "../../plugins/axios";
+import LoadingPage from "../LoadingPage.vue";
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     userFiltre: [],
     disabled: false,
+    LoadingPage: false,
     resolvedDialoge: false,
     defectedDialoge: false,
     damageTypesIT: [],
@@ -523,8 +526,8 @@ export default {
     dialogValideDamage: false,
     countDefects: 0,
     countResolved: 0,
-    countDefectsTEC:0,
-    countResolvedTEC:0,
+    countDefectsTEC: 0,
+    countResolvedTEC: 0,
   }),
   mounted() {
     document.title = "damage";
@@ -623,6 +626,9 @@ export default {
       this.modelDamageIT = [];
       this.damageTypesTEC = [];
       this.damageTypesIT = [];
+      this.modelTEC=[];
+      this.modelIT=[];
+      this.Data=[];
       this.confirmedDamageTEC = [];
       this.confirmedDamageIT = [];
       this.FindDamageTypeByEquipmentID = [];
@@ -804,7 +810,7 @@ export default {
       this.closeDamage.closedBy_id = this.getUserActive.id;
       this.closeDamageAction(this.closeDamage).then((resolve) => {});
 
-    /*   if (this.resolveditem[0].department.name == "IT") {
+      /*   if (this.resolveditem[0].department.name == "IT") {
         this.damageTypesIT.push(this.resolveditem[0]);
         this.modelDamageIT = this.modelDamageIT.filter(
           (c) => c.id != this.resolveditem[0].id
@@ -818,6 +824,14 @@ export default {
       this.changeEquipmentsFiltreSELECT();
 
       this.defectedDialoge = false;
+      this.modelTEC=[];
+      this.modelIT=[];
+     
+      this.LoadingPage=true;
+
+      setTimeout(() => {
+          this.LoadingPage=false;
+      }, 2000);
     },
     closed() {
       console.log("resolveditem closed :", this.resolveditem);
@@ -837,8 +851,14 @@ export default {
         );
       } */
       this.changeEquipmentsFiltreSELECT();
-
+      this.modelTEC=[];
+      this.modelIT=[];
       this.resolvedDialoge = false;
+      this.LoadingPage=true;
+
+      setTimeout(() => {
+          this.LoadingPage=false;
+      }, 2000);
     },
     revert() {
       console.log("resolveditem closed :", this.resolveditem);
@@ -858,8 +878,14 @@ export default {
         );
       } */
       this.changeEquipmentsFiltreSELECT();
-
+      this.modelTEC=[];
+      this.modelIT=[];
       this.resolvedDialoge = false;
+      this.LoadingPage=true;
+
+      setTimeout(() => {
+          this.LoadingPage=false;
+      }, 2000);
     },
     cancel() {
       this.dialog = false;
@@ -927,18 +953,23 @@ export default {
           var IT = this.departmentIT.id;
           var TEC = this.departmentTEC.id;
 
-  
           this.Data = [];
           this.presenceCheck.user_id = this.getUserActive.id;
-              this.presenceCheck.equipment_id = this.equipments_id;
-              this.presenceChecksAction(this.presenceCheck).then((resolve) => {
-                console.log("presenceCheck DONE");
-              });
+          this.presenceCheck.equipment_id = this.equipments_id;
+          this.presenceChecksAction(this.presenceCheck).then((resolve) => {
+            console.log("presenceCheck DONE");
+          });
           this.damageSelect = [];
           this.changeEquipmentsFiltreSELECT();
           this.dialogValide = false;
           this.dialogValideDamage = false;
         });
+        
+        this.LoadingPage=true;
+        setTimeout(() => {
+          this.LoadingPage=false;
+      }, 2000);
+      
       }
     },
   },

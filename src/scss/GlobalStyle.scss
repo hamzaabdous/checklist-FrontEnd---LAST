@@ -81,12 +81,20 @@
     color: #ff8f56 !important;
   }
 }
+.defects{
+  .itemName{
+    background-color:#f54 !important;
+  }
+  .itemSubtitle{
+    color: #f54 !important;
+  }
+}
 
-.item:has( .resolved,.defects) { 
+
+.item:has(.defects , .resolved) { 
       background-color:#ffffff00 !important;
   
 }
-
 
 .item-content {
   padding: 5px 0px;
