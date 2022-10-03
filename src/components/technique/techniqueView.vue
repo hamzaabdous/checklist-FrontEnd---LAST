@@ -11,7 +11,7 @@
     <v-row>
       <v-col cols="3" md="3">
         <template>
-          <v-card class="mx-auto" max-width="200" outlined>
+          <v-card class="mx-auto" max-width="240" max-height="200" min-height="200" outlined>
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
@@ -34,7 +34,7 @@
       </v-col>
       <v-col cols="3" md="3">
         <template>
-          <v-card class="mx-auto" max-width="200" outlined>
+          <v-card class="mx-auto" max-width="240" max-height="200"  min-height="200" outlined>
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
@@ -58,7 +58,7 @@
 
       <v-col cols="4" md="4">
         <template>
-          <v-card class="mx-auto" max-width="200" outlined>
+          <v-card class="mx-auto" max-width="240" max-height="200" min-width="130" min-height="200" outlined>
             <v-list-item three-line>
               <v-list-item-content>
                 <div class="text-overline mb-4 green--text">

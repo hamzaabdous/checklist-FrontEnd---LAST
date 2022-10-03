@@ -1,18 +1,18 @@
 import axios from "axios";
-const CustomizedAxios = axios;
-CustomizedAxios.defaults.baseURL = "http://localhost:8000/api/";
+
+const AxiosSendEmail = axios;
+//AxiosSendEmail.baseURL = "http://localhost:8082/";
 var token;
-CustomizedAxios.defaults.headers.common["Content-Type"] = "multipart/form-data";
-CustomizedAxios.defaults.headers.common["Accept"] = "application/json";
+AxiosSendEmail.defaults.headers.common["Content-Type"] = "multipart/form-data";
+AxiosSendEmail.defaults.headers.common["Accept"] = "application/json";
 
 if (localStorage.checklistCach) {
   token = JSON.parse(localStorage.checklistCach);
-  CustomizedAxios.defaults.headers.common = {
+  AxiosSendEmail.defaults.headers.common = {
     Authorization: `Bearer ${token.usersModule.token}`,
     Accept: "application/json",
   };
 }
-
 /* CustomizedAxios.defaults.headers.common["Accept"] = "application/json";
 CustomizedAxios.defaults.headers.common = {
   Authorization: `Bearer ` + token,
@@ -40,4 +40,4 @@ CustomizedAxios.defaults.headers.common = {
   }
 );*/
 
-export default CustomizedAxios;
+export default AxiosSendEmail;

@@ -283,7 +283,7 @@
                 <v-toolbar-title>Warning !</v-toolbar-title>
               </v-toolbar>
               <v-card-title class="text-h5"
-                >Are you sure you want to close this damage ?</v-card-title
+                >Are you sure you want to close this Defecte ?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -299,7 +299,7 @@
                 <v-toolbar-title>Warning !</v-toolbar-title>
               </v-toolbar>
               <v-card-title class="text-h5"
-                >Are you sure you want to delete this Damage ?</v-card-title
+                >Are you sure you want to delete this Defecte ?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -516,7 +516,7 @@
                         <tr>
                           <td><h3>Last driver</h3></td>
                           <td class="valueColumn">
-                            <h5 v-if="damageSelect.driver_out == null">Empty</h5>
+                            <h5 v-if="damageSelect.driverOut == null">Empty</h5>
 
                             <h4 v-else>
                               {{ damageSelect.driver_out.username }}
@@ -589,9 +589,10 @@
               </v-btn>
               <v-toolbar-title>Picture</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn class="mr-2 white--text" color="red">
+              <v-btn class="mr-2 white--text " color="red">
                 <v-icon medium class="mr-2">mdi-folder-image</v-icon>
                 <a
+                class="downloadpicture"
                   :href="`http://localhost:8000/storage/cdn/damagePhotos/${PhotoShow.filename}`"
                   download
                   target="_blank"
@@ -755,6 +756,30 @@ export default {
           },
         },
       },
+      driver_out: {
+        id: null,
+        username: "",
+        lastName: "",
+        firstName: "",
+        email: "",
+        phoneNumber: "",
+        fonction_id: null,
+        created_at: "",
+        updated_at: "",
+        fonction: {
+          id: null,
+          name: "",
+          department_id: null,
+          created_at: "",
+          updated_at: "",
+          department: {
+            id: null,
+            name: "",
+            created_at: "",
+            updated_at: "",
+          },
+        },
+      },
       confirmed_by: null,
       closed_by: null,
       rejected_by: null,
@@ -854,6 +879,22 @@ export default {
       name: "",
       description: "",
     },
+    EmailModel: {
+      payload: {
+        Equipment: "Empty",
+        Groupe: "Empty",
+        Defects: 0,
+        Status: "on progress",
+        DriverOut: "Empty",
+        DeclaredBy: "Empty",
+        DeclaredAt: "Empty",
+      },
+      email: "tetete",
+      department: "IT",
+    },
+    damageByEquipmentsClose:[],
+    damageByEquipmentsWithOutClose:[],
+
   }),
   mounted() {
     document.title = "checklist";
@@ -911,6 +952,9 @@ export default {
             });
             this.damageByEquipments = this.equipmentsFiltreByid.filter(
               (c) => c.status != "closed"
+            );
+            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status == "closed"
             );
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
@@ -980,6 +1024,7 @@ export default {
       "deleteDAMAGEAction",
       "FindDamageTypeByEquipmentID_ITAction",
       "FindDamageTypeByEquipmentID_TECAction",
+      "SendEmailAction"
     ]),
     pageView(item, row) {
       this.damageSelect = item;
@@ -992,50 +1037,74 @@ export default {
     showHistorique() {
       this.damageByEquipments = [];
       this.equipmentsFiltreByid = [];
-
+      this.loading=true;
       if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
+            this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status == "closed"
+            );
+            this.damageByEquipments=[];
+            this.damageByEquipments=[...this.damageByEquipmentsClose];
+            this.damageByEquipmentsWithOutClose.map((item) => {
+                this.damageByEquipments.push(item);
+            }); 
+            
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
             this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
             this.EquipmentsByCounter.closedCount = resolve.closedCount;
             console.log("resolve", resolve);
+            this.loading=false;
           }
         );
       } else if (this.getUserActive.fonction.department_id == 2) {
         this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
           (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
+            this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status == "closed"
+            );
+            this.damageByEquipments=[];
+            this.damageByEquipments=[...this.damageByEquipmentsClose];
+            this.damageByEquipmentsWithOutClose.map((item) => {
+                this.damageByEquipments.push(item);
+            }); 
 
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
             this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
             this.EquipmentsByCounter.closedCount = resolve.closedCount;
           }
+          
         );
+        this.loading=false;
       } else {
         console.log("ccccccc filtre");
         this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
+             this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
                 this.equipmentsFiltreByid.push(item);
               }
-            });
-
+            }); 
+            this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status == "closed"
+            );
+            this.damageByEquipments=[];
+            this.damageByEquipments=[...this.damageByEquipmentsClose];
+            this.damageByEquipmentsWithOutClose.map((item) => {
+                this.damageByEquipments.push(item);
+            }); 
             this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
               this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
               this.EquipmentsByCounter.nameEquipment =
@@ -1049,6 +1118,8 @@ export default {
             });
           }
         );
+        this.loading=false;
+        
       }
       this.iscolor = "teal";
       this.isHistorique = true;
@@ -1101,6 +1172,23 @@ export default {
         this.confirmDamage.id = null;
         this.confirmDamage.confirmedBy_id = null;
         this.confirmDamage.resolveDescription = "";
+        this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.Status = "resolved";
+        this.EmailModel.payload.confirmed_by = this.getUserActive.username;
+        this.EmailModel.payload.confirmedAt = resolve.declaredAt;
+        if (resolve.driver_out != null) {
+          this.damageSelect.driver_out = resolve.driver_out.username;
+          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+        } else {
+          console.error("test DriverOut");
+        }
+        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
+
+        this.SendEmailAction(this.EmailModel).then(() => {
+          console.log("DONE");
+        });
       });
       setTimeout(() => {
         this.counters();
@@ -1120,8 +1208,25 @@ export default {
           }
           return item;
         });
+        
         this.damageSelect.status = resolve.status;
+        this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.Status = "closed";
+        this.EmailModel.payload.ClosedBy = this.getUserActive.username;
+        this.EmailModel.payload.ClosedAt = resolve.declaredAt;
+        if (resolve.driver_out != null) {
+          this.damageSelect.driver_out = resolve.driver_out.username;
+          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+        } else {
+          console.error("test DriverOut");
+        }
+        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
 
+        this.SendEmailAction(this.EmailModel).then(() => {
+          console.log("DONE");
+        });
         this.closeDamage.id = null;
         this.closeDamage.closedBy_id = null;
       });
@@ -1151,6 +1256,25 @@ export default {
         this.revertDamage.id = null;
         this.revertDamage.rejectedBy_id = null;
         this.revertDamage.rejectedDescription = "";
+
+        this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.Status = "on progress";
+        this.EmailModel.payload.rejected_by = this.getUserActive.username;
+        this.EmailModel.payload.rejectedAt = resolve.declaredAt;
+        if (resolve.driver_out != null) {
+          this.damageSelect.driver_out = resolve.driver_out.username;
+
+          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+        } else {
+          console.error("test DriverOut");
+        }
+        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
+
+        this.SendEmailAction(this.EmailModel).then(() => {
+          console.log("DONE");
+        });
       });
       setTimeout(() => {
         this.counters();

@@ -15,7 +15,8 @@
           src="./assets/TangerAlliance.png"
         ></v-img>
       </v-toolbar-title>
-      <h4>CHECKLIST</h4>
+
+      <h4 class="title">CHECKLIST</h4>
       <v-spacer></v-spacer>
       <template>
         <v-row justify="center">
@@ -73,6 +74,11 @@
           </v-dialog>
         </v-row>
       </template>
+      <div class="settingContainer">
+        <h4 class="username">
+        {{ getUserActive.lastName }} <br/>{{ getUserActive.firstName }}
+      </h4>
+
       <div class="text-center">
         <v-menu
           min-width="180px"
@@ -89,8 +95,8 @@
           <v-list class="text-center">
             <div class="pa-4">
               <v-icon x-large>mdi-account-circle-outline</v-icon>
-              <h4 class="text-uppercase">
-                {{ getUserActive.firstName }} {{ getUserActive.lastName }}
+              <h4 class="text-uppercase title">
+                {{ getUserActive.username }}
               </h4>
             </div>
             <v-divider></v-divider>
@@ -108,6 +114,8 @@
           </v-list>
         </v-menu>
       </div>
+      </div>
+      
     </v-app-bar>
 
     <v-navigation-drawer
@@ -118,8 +126,11 @@
       style="background-color: #fff"
     >
       <v-list style="padding: 0px; align-items: center" nav dense>
-        <v-list-item-group class="itemDrawer" active-class="deep-purple--text text--accent-4">
-          <br/>
+        <v-list-item-group
+          class="itemDrawer"
+          active-class="deep-purple--text text--accent-4"
+        >
+          <br />
           <v-img
             contain
             lazy-src="./assets/TangerAlliance.png"
@@ -127,53 +138,66 @@
             max-width="250"
             src="./assets/TangerAlliance.png"
           ></v-img>
-          <div
-            class="foremanandTechnique"
+
+          <v-list
             v-if="
               department == 'TECHNIQUE' ||
               (department == 'OPERATIONS' && fonction != 'DRIVER')
             "
           >
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/technique">Defects</router-link>
-            </div>
-          </div>
+            <v-list-item-group active-class="activeDrawer" class="itemDrawer">
+              
+              <router-link class="linktext" to="/technique">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Defects </v-list-item>
+                </div>
+              </router-link>
+            </v-list-item-group>
+          </v-list>
 
-          <div class="admin" v-if="fonction == 'ADMIN'">
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/technique">Defects</router-link>
-            </div>
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/userGestion"
-                >Gestion Users</router-link
-              >
-            </div>
-
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/profile_groupe"
-                >Equipment Profile</router-link
-              >
-            </div>
-          </div>
-          <div
-            v-else-if="department == 'IT'"
-            class="admin"
-          >
-            
-
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/technique">Technique</router-link>
-            </div>
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/Rapport">Rapport</router-link>
-            </div>
-          </div>
-
-          <div v-else-if="fonction == 'DRIVER'" class="foremanandTechnique">
-            <div class="itemdrawer">
-              <router-link class="itemd" to="/Damage">Damage</router-link>
-            </div>
-          </div>
+          <v-list class="" v-if="fonction == 'ADMIN'">
+            <v-list-item-group active-class="activeDrawer" class="itemDrawer">
+              <router-link class="linktext" to="/userGestion">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Gestion Users </v-list-item>
+                </div>
+              </router-link>
+              <router-link class="linktext" to="/profile_groupe">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Equipement </v-list-item>
+                </div>
+              </router-link>
+              <router-link class="linktext" to="/technique">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Technique </v-list-item>
+                </div>
+              </router-link>
+              <router-link class="linktext" to="/Rapport">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Rapport </v-list-item>
+                </div>
+              </router-link>
+           
+            </v-list-item-group>
+          </v-list>
+          <v-list v-else-if="department == 'IT'" class="">
+            <v-list-item-group active-class="activeDrawer" class="itemDrawer">
+              <router-link class="linktext" to="/technique">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Technique </v-list-item>
+                </div>
+              </router-link>
+            </v-list-item-group>
+          </v-list>
+          <v-list v-else-if="fonction == 'DRIVER'" class="foremanandTechnique">
+            <v-list-item-group active-class="activeDrawer" class="itemDrawer">        
+              <router-link class="linktext" to="/Damage">
+                <div class="itemdrawer">
+                  <v-list-item class="itemd"> Damage </v-list-item>
+                </div>
+              </router-link>
+            </v-list-item-group>
+          </v-list>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>
@@ -246,11 +270,7 @@ export default {
       this.model.id = this.getUserActive.id;
       if (this.model.password == this.Validpassword) {
         this.changePasswordAction(this.model).then(() => {
-          swal(
-            "success !!",
-            "Please can you chose equipment you use it!",
-            "success"
-          );
+          swal("success", "Password has been changed successfully", "success");
           this.dialog = false;
         });
       } else {

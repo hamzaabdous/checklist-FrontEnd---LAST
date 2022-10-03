@@ -78,7 +78,7 @@
                 <v-toolbar-title>Warning !</v-toolbar-title>
               </v-toolbar>
               <v-card-title  class="text-h5"
-                >Are you sure you want to Delete this Profilegroup?</v-card-title
+                >Are you sure you want to Delete this Equipment group?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -105,7 +105,7 @@
                 <v-toolbar-title>Warning !</v-toolbar-title>
               </v-toolbar>
               <v-card-title  class="text-h5"
-                >Are you sure you want to add this Profilegroup?</v-card-title
+                >Are you sure you want to add this Equipment group?</v-card-title
               >
               </div>
               <div v-else>
@@ -113,7 +113,7 @@
                 <v-toolbar-title>Warning !</v-toolbar-title>
               </v-toolbar>
               <v-card-title class="text-h5"
-                >Are you sure you want to update this Profilegroup?</v-card-title
+                >Are you sure you want to update this Equipment group?</v-card-title
               >
               </div>
               
@@ -231,8 +231,8 @@ export default {
     dialogView: false,
     loading: "false",
     headers: [
-      { text: "name", value: "name", sortable: true },
-      { text: "department", value: "department.name", sortable: true },
+      { text: "Name", value: "name", sortable: true },
+      { text: "Department", value: "department.name", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     profilegroups: [],
@@ -251,7 +251,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "profilegroups";
+    document.title = "Equipment group";
     this.loading = true;
     setTimeout(() => {
       this.initialize();
@@ -260,7 +260,7 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Profilegroups" : "Edit Profilegroups";
+      return this.editedIndex === -1 ? "New Equipment group" : "Edit Equipment group";
     },
     ...mapGetters(["getprofilegroups", "getdepartements"]),
   },

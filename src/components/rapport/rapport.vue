@@ -29,7 +29,7 @@
             item-text="name"
             item-value="id"
             v-model="equipments_id"
-            label="Damage type :"
+            label="Defect item :"
             @change="changeEquipmentsFiltreSELECT"
           ></v-select>
         </v-col>
@@ -82,14 +82,14 @@ export default {
       equipments_id: 0,
       Data: [],
       headers: [
+        { text: "Defect item", value: "damage_type" },
         { text: "Status", value: "status" },
-        { text: "equipment", value: "name" },
+        { text: "Equipment", value: "name" },
         { text: "Description", value: "Description" },
         { text: "Declared by", value: "declared_by" },
         { text: "Declared aT", value: "declaredAt" },
-        { text: "damage_type", value: "damage_type" },
         {
-          text: "damage_type departement",
+          text: "Defects items departement",
           value: "damage_type_departement",
         },
       ],

@@ -102,7 +102,7 @@ export default {
     dialogDelete: false,
     search: "",
     headers: [
-      { text: "name", value: "name", sortable: true },
+      { text: "Name", value: "name", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     equipments: [],

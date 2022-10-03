@@ -56,6 +56,19 @@ const equipmentModule = {
           });
       });
     },
+    setequipmentsByIDAction({ commit },id) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.get("equipments/"+id)
+          .then((response) => {
+            commit("SET_EQUIPMENTS", response.data.payload);
+            console.log("set EQUIPMENT 1");
+            resolve(response.data.payload);
+          })
+          .catch((error) => {
+            console.log("error :", error);
+          });
+      });
+    },
     getEquipmentsByCountersAction({ commit }, id) {
       return new Promise((resolve, reject) => {
         CustomizedAxios.get("equipments/getEquipmentsByCounters/" + id)

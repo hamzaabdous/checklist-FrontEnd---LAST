@@ -140,16 +140,6 @@
                       class="elevation-1"
                     >
                       <template v-slot:top>
-                        <v-col cols="6" md="6">
-                          <v-select
-                            :items="departments"
-                            item-text="name"
-                            item-value="id"
-                            v-model="departmentid"
-                            label="departements"
-                            @change="changeDepartmentinDialogeProfilgroup"
-                          ></v-select>
-                        </v-col>
                         <v-dialog
                           v-model="dialogprofilgroupToUser"
                           max-width="700px"
@@ -454,7 +444,7 @@ export default {
     ],
     headersProfilegroup: [
       { text: "Name", value: "name", align: "start", sortable: true },
-      { text: "Created at", value: "pivot.created_at", sortable: true },
+      { text: "Created at", value: "created_at", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     users: [],
@@ -533,9 +523,29 @@ export default {
       val || this.close();
     },
     dialogDelete(val) {
+      if (!val) {
+        this.editedIndex = -1;
+        this.editedItem = {
+          id: "",
+          name: "",
+          departmentID: "",
+          fonction_id:"",
+          fonction: {
+            id: "",
+            department: {
+              id: "",
+            },
+          },
+        };
+      }
       val || this.closeDelete();
     },
     dialogModifier(val) {
+      if (!val) {
+        this.closemodifier();
+      }
+    },
+    dialogediteUserToProfilegroup(val) {
       if (!val) {
         this.closemodifier();
       }
@@ -586,8 +596,8 @@ export default {
     editeUserToProfilegroupItem(item) {
       this.profilegroupsActive = [];
       this.UserToProfile.user_id = item.id;
-     
-      console.log("item user",item);
+
+      console.log("item user", item);
 
       this.editedIndex = this.users.indexOf(item) + 1;
       this.editedItem = Object.assign({}, item);
@@ -600,7 +610,6 @@ export default {
         });
         return exist.length == 0;
       });
-         
 
       this.dialogediteUserToProfilegroup = true;
     },
@@ -630,6 +639,7 @@ export default {
     closemodifier() {
       this.dialogModifier = false;
       this.editedIndex = -1;
+      this.departmentID="";
       this.editedItem = {
         id: "",
         created_date: "",
@@ -687,9 +697,9 @@ export default {
         console.log("add");
         this.addUserAction(this.editedItem).then(() => {
           this.setUsersAction().then(() => {
-        this.users = [...this.getUsers];
-      });
-                this.closemodifier();
+            this.users = [...this.getUsers];
+          });
+          this.closemodifier();
         });
       } else {
         console.log("edite");

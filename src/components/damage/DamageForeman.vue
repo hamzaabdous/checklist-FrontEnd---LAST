@@ -130,9 +130,7 @@
                 <v-col cols="12" class="d-flex justify-center">
                   <span>IT </span>
                   <span class="red--text"
-                    >({{
-                      this.modelDamageIT.length + this.confirmedDamageIT.length
-                    }})</span
+                    >({{ this.countDefects + this.countResolved }})</span
                   ></v-col
                 >
               </v-row>
@@ -159,48 +157,99 @@
                           class="item-content"
                           @click="valider(item, i)"
                         >
-                          <v-list-item-title
-                            name="damageTypesTEC"
-                            class="itemName"
-                            style="background-color: #76ba99"
-                          ></v-list-item-title>
-                          <v-list-item-subtitle
-                            class="itemSubtitle itSubtitle"
-                            style="color: #76ba99"
-                            >{{ item.name }}</v-list-item-subtitle
-                          >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #76ba99"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="itemSubtitle"
+                              style="color: #76ba99"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-else-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #76ba99"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="itemSubtitle"
+                              style="
+                                color: rgb(0, 171, 88);
+                                font-weight: bolder !important;
+                              "
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
                         </v-list-item-content>
                         <v-list-item-content
                           @click="resolvedFunction(item, i)"
                           v-else-if="item.damage.status == 'resolved'"
                           class="item-content resolved"
                         >
-                          <v-list-item-title
-                            name="damageTypesTEC"
-                            class="itemName"
-                            style="background-color: #ff8f56"
-                          ></v-list-item-title>
-                          <v-list-item-subtitle
-                            class="itemSubtitle"
-                            style="color: #ff8f56"
-                            >{{ item.name }}</v-list-item-subtitle
-                          >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #ff8f56"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="color: #ff8f56"
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-else-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #ff8f56"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="
+                                color: #ff8f56;
+                                font-weight: bolder !important;
+                              "
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
                         </v-list-item-content>
                         <v-list-item-content
                           v-else-if="item.damage.status == 'on progress'"
-                          class="item-content"
+                          class="item-content defects"
                           @click="defectedFunction(item, i)"
                         >
-                          <v-list-item-title
-                            name="damageTypesTEC"
-                            class="itemName defects"
-                            style="background-color: #f54"
-                          ></v-list-item-title>
-                          <v-list-item-subtitle
-                            class="itemSubtitle"
-                            style="color: #f54"
-                            >{{ item.name }}</v-list-item-subtitle
-                          >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #f54"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="color: #f54"
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #f54"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="
+                                color: #f54;
+                                font-weight: bolder !important;
+                              "
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -214,10 +263,7 @@
                 <v-col cols="12" class="d-flex justify-center">
                   <span>Technique </span>
                   <span class="red--text">
-                    ({{
-                      this.modelDamageTEC.length +
-                      this.confirmedDamageTEC.length
-                    }})</span
+                    ({{ this.countDefectsTEC + this.countResolvedTEC }})</span
                   ></v-col
                 >
               </v-row>
@@ -243,42 +289,102 @@
                           class="item-content"
                           @click="valider(item, i)"
                         >
-                          <v-list-item-title
-                            name="damageTypesTEC"
-                            class="itemName"
-                            style="background-color: #76ba99"
-                          ></v-list-item-title>
-                          <v-list-item-subtitle
-                            class="itemSubtitle"
-                            style="color: #76ba99"
-                            >{{ item.name }}</v-list-item-subtitle
-                          >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #76ba99"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="itemSubtitle"
+                              style="color: #76ba99; width: 160px !important"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-else-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #76ba99"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="itemSubtitle"
+                              style="
+                                color: rgb(0, 171, 88);
+                                font-weight: bolder !important;
+                                width: 160px !important;
+                              "
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
                         </v-list-item-content>
                         <v-list-item-content
                           @click="resolvedFunction(item, i)"
                           v-else-if="item.damage.status == 'resolved'"
                           class="item-content resolved"
                         >
-                          <v-list-item-title
-                            name="damageTypesTEC"
-                            class="itemName"
-                          ></v-list-item-title>
-                          <v-list-item-subtitle class="itemSubtitle">{{
-                            item.name
-                          }}</v-list-item-subtitle>
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #ff8f56"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="color: #ff8f56; width: 160px !important"
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-else-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #ff8f56"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="
+                                color: #ff8f56;
+                                width: 160px !important;
+                                font-weight: bolder !important;
+                              "
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
                         </v-list-item-content>
                         <v-list-item-content
                           v-else-if="item.damage.status == 'on progress'"
                           class="item-content defects"
                           @click="defectedFunction(item, i)"
                         >
-                          <v-list-item-title
-                            name="damageTypesTEC"
-                            class="itemName"
-                          ></v-list-item-title>
-                          <v-list-item-subtitle class="itemSubtitle">{{
-                            item.name
-                          }}</v-list-item-subtitle>
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #f54"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="color: #f54; width: 160px !important"
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #f54"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="
+                                color: #f54;
+                                font-weight: bolder !important;
+                                width: 160px !important;
+                              "
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
                         </v-list-item-content>
                       </v-list-item>
                     </div>
@@ -336,16 +442,23 @@
         </v-container>
       </v-container>
     </div>
+
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
 import CustomizedAxios from "../../plugins/axios";
+import LoadingPage from "../LoadingPage.vue";
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     userFiltre: [],
     disabled: false,
+    LoadingPage: false,
     resolvedDialoge: false,
     defectedDialoge: false,
     damageTypesIT: [],
@@ -511,6 +624,20 @@ export default {
       statusOld: null,
       statusNew: "",
     },
+    EmailModel: {
+      payload: {
+        Equipment: "",
+        EquipmentGroupe: "",
+        Defects: 0,
+        Status: "on progress",
+        ForemanIn: "",
+        ForemanOut: "",
+        DeclaredBy: "",
+        DeclaredAt: "",
+      },
+      email: "tetete",
+      department: "IT",
+    },
     listDefectsChange: [],
     DamageTypeByEquipmentID: [],
     DamagesMergedWithDamageTypes: [],
@@ -526,6 +653,9 @@ export default {
     countResolved: 0,
     countDefectsTEC: 0,
     countResolvedTEC: 0,
+    countImportantTEC: 0,
+    countImportantIT: 0,
+    EquipmentName: "",
   }),
   mounted() {
     document.title = "damage";
@@ -604,6 +734,7 @@ export default {
       this.confirmedDamageIT = [];
       this.damageTypesIT.length = 0;
       this.damageTypesTEC.length = 0;
+      this.equipments_id = 0;
       this.disabledEquipmentsFiltre = false;
       var count = 0;
       console.log("equipments", this.equipments);
@@ -624,9 +755,15 @@ export default {
       this.modelDamageIT = [];
       this.damageTypesTEC = [];
       this.damageTypesIT = [];
+      this.modelTEC = [];
+      this.modelIT = [];
+      this.Data = [];
       this.confirmedDamageTEC = [];
       this.confirmedDamageIT = [];
       this.FindDamageTypeByEquipmentID = [];
+      this.setequipmentsByIDAction(this.equipments_id).then(() => {
+        this.EquipmentName = [this.getequipments];
+      });
       this.getEquipmentDamagesMergedWithDamageTypesAction(
         this.equipments_id
       ).then(() => {
@@ -644,16 +781,27 @@ export default {
         this.damageTypesIT = this.DamagesMergedWithDamageTypes.filter(
           (c) => c.department_id == IT
         );
-
         this.countDefects = 0;
         this.countResolved = 0;
         this.countDefectsTEC = 0;
         this.countResolvedTEC = 0;
+        this.countImportantTEC = 0;
+        this.countImportantIT = 0;
         this.damageTypesIT.map((e) => {
           if (e.damage == null) {
             console.log("null");
           } else if (e.damage.status == "on progress") {
             this.countDefects = this.countDefects + 1;
+            if (e.important == true) {
+              this.countImportantIT = this.countImportantIT + 1;
+              swal(
+                "warning !",
+                `*** ${e.name} *** ` +
+                  " is important for working this Equipment :" +
+                  ` ${this.EquipmentName[0].name}`,
+                "warning"
+              );
+            }
           } else if (e.damage.status == "resolved") {
             this.countResolved = this.countResolved + 1;
           }
@@ -663,11 +811,24 @@ export default {
             console.log("null");
           } else if (e.damage.status == "on progress") {
             this.countDefectsTEC = this.countDefectsTEC + 1;
+            if (e.important == true) {
+              this.countImportantTEC = this.countImportantTEC + 1;
+              swal(
+                "warning !",
+                `*** ${e.name} *** ` +
+                  " is important for working this Equipment :" +
+                  ` ${this.EquipmentName[0].name}`,
+                "warning"
+              );
+            }
           } else if (e.damage.status == "resolved") {
             this.countResolvedTEC = this.countResolvedTEC + 1;
           }
         });
       });
+      if (parseInt(this.countImportantTEC) >= 1) {
+        console.log("test");
+      }
     },
     initialize() {
       console.log("initialize");
@@ -718,6 +879,8 @@ export default {
       "setDepartementsAction",
       "setUsersbyIDAction",
       "presenceChecksAction",
+      "setequipmentsByIDAction",
+      "SendEmailAction",
     ]),
     valider(item, i) {
       this.damageCourent.declaredBy_id = this.getUserActive.id;
@@ -727,27 +890,27 @@ export default {
       this.modelIT_id_Courent = i;
 
       if (this.Data.length == 0) {
-        var Damage = {
-          declaredBy_id: null,
-          equipment_id: null,
-          damage_type_id: null,
-        };
-        Damage.declaredBy_id = this.getUserActive.id;
-        Damage.damage_type_id = this.damage_type_id;
-        Damage.equipment_id = this.equipments_id;
+        if (item.important == true) {
+          swal(
+            "warning !",
+            "this item " +
+              `*** ${item.name} *** ` +
+              " must be immediately reported to the hierarchy and the machine must not in any case be in operation ",
+            "warning"
+          );
+          console.log("1");
+          var Damage = {
+            declaredBy_id: null,
+            equipment_id: null,
+            damage_type_id: null,
+          };
+          Damage.declaredBy_id = this.getUserActive.id;
+          Damage.damage_type_id = this.damage_type_id;
+          Damage.equipment_id = this.equipments_id;
 
-        this.damageSelect.push(Damage);
+          this.damageSelect.push(Damage);
 
-        this.Data.push(Damage);
-      } else if (this.Data.length > 0) {
-        this.isvalide = false;
-        this.Data.map((e) => {
-          if (e.damage_type_id == this.damage_type_id) {
-            this.isvalide = true;
-          }
-        });
-        if (this.isvalide == true) {
-          this.Data = this.Data.filter((c) => c.damage_type_id != item.id);
+          this.Data.push(Damage);
         } else {
           var Damage = {
             declaredBy_id: null,
@@ -762,9 +925,53 @@ export default {
 
           this.Data.push(Damage);
         }
-      }
+      } else if (this.Data.length > 0) {
+        this.isvalide = false;
+        this.Data.map((e) => {
+          if (e.damage_type_id == this.damage_type_id) {
+            this.isvalide = true;
+          }
+        });
+        if (this.isvalide == true) {
+          this.Data = this.Data.filter((c) => c.damage_type_id != item.id);
+        } else {
+          if (item.important == true) {
+            swal(
+              "warning !",
+              "this item " +
+                `*** ${item.name} *** ` +
+                " must be immediately reported to the hierarchy and the machine must not in any case be in operation ",
+              "warning"
+            );
+            console.log("2");
+            var Damage = {
+              declaredBy_id: null,
+              equipment_id: null,
+              damage_type_id: null,
+            };
+            Damage.declaredBy_id = this.getUserActive.id;
+            Damage.damage_type_id = this.damage_type_id;
+            Damage.equipment_id = this.equipments_id;
 
-      console.log(this.Data);
+            this.damageSelect.push(Damage);
+
+            this.Data.push(Damage);
+          } else {
+            var Damage = {
+              declaredBy_id: null,
+              equipment_id: null,
+              damage_type_id: null,
+            };
+            Damage.declaredBy_id = this.getUserActive.id;
+            Damage.damage_type_id = this.damage_type_id;
+            Damage.equipment_id = this.equipments_id;
+
+            this.damageSelect.push(Damage);
+
+            this.Data.push(Damage);
+          }
+        }
+      }
     },
     resolvedFunction(item, i) {
       this.resolveditem = [];
@@ -775,9 +982,6 @@ export default {
       this.resolveditem = [];
       this.defectedDialoge = true;
       this.resolveditem.push(item);
-      /*  this.defecteditem = [];
-      this.defectedDialoge = true;
-      this.defecteditem.push(item); */
     },
     changeDefectsFunction() {
       this.defectsChange.item = this.resolveditem[0];
@@ -804,53 +1008,115 @@ export default {
       console.log("resolveditem closed :", this.resolveditem);
       this.closeDamage.id = this.resolveditem[0].damage.id;
       this.closeDamage.closedBy_id = this.getUserActive.id;
-      this.closeDamageAction(this.closeDamage).then((resolve) => {});
+      this.closeDamageAction(this.closeDamage).then((resolve) => {
+        this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
+        this.EmailModel.payload.EquipmentGroupe =
+          this.resolveditem[0].department.name;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.Status = "closed";
+        this.EmailModel.payload.ClosedBy = this.getUserActive.username;
+        this.EmailModel.payload.ClosedAt = resolve.declaredAt;
+        this.EmailModel.payload.ForemanIn = this.getUserActive.username;
+        if (resolve != null) {
+          this.EmailModel.payload.ForemanOut = resolve.driver_out.username;
+        } else {
+          console.error("test DriverOut");
+        }
+        this.EmailModel.payload.DeclaredBy = this.getUserActive.username;
+        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
 
-      
+        this.SendEmailAction(this.EmailModel).then(() => {
+          console.log("DONE");
+        });
+      });
+
       this.changeEquipmentsFiltreSELECT();
 
       this.defectedDialoge = false;
-      this.modelTEC=[];
-      this.modelIT=[];
-     
-      this.LoadingPage=true;
+      this.modelTEC = [];
+      this.modelIT = [];
+
+      this.LoadingPage = true;
 
       setTimeout(() => {
-          this.LoadingPage=false;
+        this.LoadingPage = false;
       }, 2000);
     },
+    // close defect
     closed() {
       console.log("resolveditem closed :", this.resolveditem);
       this.closeDamage.id = this.resolveditem[0].damage.id;
       this.closeDamage.closedBy_id = this.getUserActive.id;
-      this.closeDamageAction(this.closeDamage).then((resolve) => {});
+      this.closeDamageAction(this.closeDamage).then((resolve) => {
+        this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
+        this.EmailModel.payload.EquipmentGroupe =
+          this.resolveditem[0].department.name;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.Status = "closed";
+        this.EmailModel.payload.ClosedBy = this.getUserActive.username;
+        this.EmailModel.payload.ClosedAt = resolve.declaredAt;
+        this.EmailModel.payload.ForemanIn = this.getUserActive.username;
+        if (resolve != null) {
+          this.EmailModel.payload.ForemanOut = resolve.driver_out.username;
+        } else {
+          console.error("test ForemanOut");
+        }
+        this.EmailModel.payload.DeclaredBy = this.getUserActive.username;
+        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
+
+        this.SendEmailAction(this.EmailModel).then(() => {
+          console.log("DONE");
+        });
+      });
 
       this.changeEquipmentsFiltreSELECT();
-
+      this.modelTEC = [];
+      this.modelIT = [];
       this.resolvedDialoge = false;
-      this.modelTEC=[];
-      this.modelIT=[];
-     
-      this.LoadingPage=true;
+      this.LoadingPage = true;
 
       setTimeout(() => {
-          this.LoadingPage=false;
+        this.LoadingPage = false;
       }, 2000);
     },
     revert() {
       console.log("resolveditem closed :", this.resolveditem);
       this.revertDamage.id = this.resolveditem[0].damage.id;
       this.revertDamage.rejectedBy_id = this.getUserActive.id;
-      this.revertDamageAction(this.revertDamage).then((resolve) => {});
+      this.revertDamageAction(this.revertDamage).then((resolve) => {
+        this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
+        this.EmailModel.payload.EquipmentGroupe =
+          this.resolveditem[0].department.name;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.Status = "on progress";
+        this.EmailModel.payload.Rejected_by = this.getUserActive.username;
+        this.EmailModel.payload.RejectedAt = resolve.declaredAt;
+        this.EmailModel.payload.RejectedTimes = resolve.rejectedTimes;
+        this.EmailModel.payload.Confirmed_by = resolve.confirmed_by.username;
+        this.EmailModel.payload.ConfirmedAt = resolve.declaredAt;
+
+        this.EmailModel.payload.ForemanIn = this.getUserActive.username;
+        if (resolve != null) {
+          this.EmailModel.payload.ForemanOut = resolve.driver_out.username;
+        } else {
+          console.error("test DriverOut");
+        }
+        this.EmailModel.payload.DeclaredBy = this.getUserActive.username;
+        this.EmailModel.payload.declaredAt = resolve.declaredAt;
+
+        this.SendEmailAction(this.EmailModel).then(() => {
+          console.log("DONE");
+        });
+      });
 
       this.changeEquipmentsFiltreSELECT();
-      this.modelTEC=[];
-      this.modelIT=[];
+      this.modelTEC = [];
+      this.modelIT = [];
       this.resolvedDialoge = false;
-      this.LoadingPage=true;
+      this.LoadingPage = true;
 
       setTimeout(() => {
-          this.LoadingPage=false;
+        this.LoadingPage = false;
       }, 2000);
     },
     cancel() {
@@ -884,6 +1150,9 @@ export default {
       this.modelIT_id_Courent = i;
       //this.dialogValide = true;
     },
+    testcc() {
+      console.log("ddddd");
+    },
     validerDamages() {
       console.log("this.modelTEC", this.modelTEC);
       console.log("this.modelIT", this.modelIT);
@@ -901,33 +1170,52 @@ export default {
           this.presenceCheck.equipment_id = this.equipments_id;
           this.presenceChecksAction(this.presenceCheck).then((resolve) => {
             console.log("presenceCheck DONE");
-            swal("success !!", "Presence check  success", "success");
+            swal(
+              "success !!",
+              "Please can you chose equipment you use it!",
+              "success"
+            );
           });
+
           this.dialogValide = false;
           this.dialogValideDamage = false;
         }
       } else if (this.Data.length > 0) {
-        this.declareDamageAction(this.Data).then(() => {
+        this.declareDamageAction(this.Data).then((resolve) => {
           this.modelTEC = [];
           this.modelIT = [];
           console.log("validerDamages");
           var IT = this.departmentIT.id;
           var TEC = this.departmentTEC.id;
+          this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
+          this.EmailModel.payload.Defects = this.Data.length;
+          this.EmailModel.payload.ForemanIn = this.getUserActive.username;
+          if (resolve != null) {
+            this.EmailModel.payload.ForemanOut = resolve.username;
+          } else {
+            console.error("test ForemanOut");
+          }
+          this.EmailModel.payload.DeclaredBy = this.getUserActive.username;
 
-         
-
+          this.SendEmailAction(this.EmailModel).then(() => {
+            console.log("DONE");
+          });
           this.Data = [];
-
+          this.presenceCheck.user_id = this.getUserActive.id;
+          this.presenceCheck.equipment_id = this.equipments_id;
+          this.presenceChecksAction(this.presenceCheck).then((resolve) => {
+            console.log("presenceCheck DONE");
+          });
           this.damageSelect = [];
           this.changeEquipmentsFiltreSELECT();
           this.dialogValide = false;
           this.dialogValideDamage = false;
         });
 
-        this.LoadingPage=true;
+        this.LoadingPage = true;
         setTimeout(() => {
-          this.LoadingPage=false;
-      }, 2000);
+          this.LoadingPage = false;
+        }, 2000);
       }
     },
   },

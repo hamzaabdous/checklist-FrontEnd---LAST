@@ -148,9 +148,9 @@ export default {
     confirmAddSave: false,
     search: "",
     headers: [
-      { text: "name", value: "name", sortable: true },
-      { text: "department", value: "department.name", sortable: true },
-      { text: "created date", value: "created_at", sortable: true },
+      { text: "Name", value: "name", sortable: true },
+      { text: "Department", value: "department.name", sortable: true },
+      { text: "Created date", value: "created_at", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     damageTypes: [],
@@ -188,10 +188,12 @@ export default {
       if (this.editedIndex == -1) {
         this.editedIndex = -1;
         this.editedItem = {
+          id: "",
           name: "",
           profile_group_id: "",
           department_id: "",
         };
+        this.closemodifier();
       }
 
       val || this.close();
@@ -204,6 +206,7 @@ export default {
           profile_group_id: "",
           department_id: "",
         };
+        this.closemodifier();
       }
       val || this.closeDelete();
     },
@@ -256,18 +259,31 @@ export default {
     },
     close() {
       this.dialog = false;
+      this.closemodifier();
     },
     closeDelete() {
       setTimeout(() => {
         this.editedIndex = -1;
+        this.closemodifier();
       }, "3000");
       this.dialogDelete = false;
     },
     closeAddSaveDialog() {
       this.confirmAddSave = false;
+      this.closemodifier();
     },
     openSave() {
       this.confirmAddSave = true;
+    },
+    closemodifier() {
+      this.dialogModifier = false;
+      this.editedIndex = -1;
+      this.editedItem = {
+        id: "",
+        name: "",
+        profile_group_id: "",
+        department_id: "",
+      };
     },
     save() {
       if (this.editedIndex == -1) {

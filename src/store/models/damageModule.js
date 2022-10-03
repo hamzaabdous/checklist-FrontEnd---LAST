@@ -1,4 +1,5 @@
-import CustomizedAxios from "../../plugins/axios";
+import CustomizedAxios  from "../../plugins/axios";
+import AxiosSendEmail  from "../../plugins/sendEmailAxios";
 
 const damageTypeModule = {
   state: {
@@ -64,7 +65,7 @@ const damageTypeModule = {
           .then((response) => {
             console.log("res add ", response);
             commit("ADD_DAMAGES", response.data.payload);
-            resolve(response.data);
+            resolve(response.data.driverOut);
           })
           .catch((error) => {
             reject(error);
@@ -249,6 +250,17 @@ const damageTypeModule = {
     presenceChecksAction({ commit }, presenceCheck) {
       return new Promise((resolve, reject) => {
         CustomizedAxios.post("/presence_checks/create", presenceCheck)
+          .then((response) => {
+            resolve(response.data.payload);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    SendEmailAction({ commit }, Data) {
+      return new Promise((resolve, reject) => {
+        AxiosSendEmail.post("http://localhost:8082/api", Data)
           .then((response) => {
             resolve(response.data.payload);
           })

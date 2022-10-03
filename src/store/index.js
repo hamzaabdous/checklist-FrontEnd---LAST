@@ -9,7 +9,6 @@ import damageTypeModule from "./models/damageTypeModule";
 import damageModule from "./models/damageModule";
 import equipmentModule from "./models/equipmentModule";
 import VuexPersist from "vuex-persist";
-
 Vue.use(Vuex);
  const vuexLocalStorage = new VuexPersist({
   key: "checklistCach",
@@ -21,6 +20,7 @@ Vue.use(Vuex);
   reducer: (state) => ({
     usersModule: state.usersModule,
   }),
+  filter: mutation => (true),
 }); 
 let store = null;
 export default function () {
