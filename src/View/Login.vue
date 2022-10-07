@@ -80,7 +80,7 @@ export default {
     };
   },
   mounted() {
-    document.title = "Login";
+    document.title = "Checklist";
 
     this.initialize();
   },

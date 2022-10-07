@@ -500,7 +500,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "user";
+    document.title = "Checklist";
     this.loading = true;
     setTimeout(() => {
       this.initialize();

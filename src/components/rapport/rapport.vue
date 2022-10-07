@@ -96,7 +96,7 @@ export default {
     };
   },
   mounted() {
-    document.title = "Rapport";
+    document.title = "Checklist";
     this.initialize();
   },
   computed: {

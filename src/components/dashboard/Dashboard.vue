@@ -262,7 +262,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "Dashboard";
+    document.title = "Checklist";
 
     this.initialize();
     this.labels = [];

@@ -628,15 +628,40 @@ export default {
       payload: {
         Equipment: "",
         EquipmentGroupe: "",
-        Defects: 0,
+        Department: "",
+        Defects: [],
         Status: "on progress",
         DriverOut: "",
         DeclaredBy: "",
         DeclaredAt: "",
       },
-      email: "tetete",
-      department: "IT",
+      status: "",
+      email: "hamza.abdous@tangeralliance.com",
+      department: [],
     },
+    EmailModelTEC: {
+      payload: {
+        Equipment: "",
+        EquipmentGroupe: "",
+        Department: "",
+        Defects: [],
+        Status: "on progress",
+        DriverOut: "",
+        DeclaredBy: "",
+        DeclaredAt: "",
+      },
+      status: "",
+      email: "hamza.abdous@tangeralliance.com",
+      department: [],
+    },
+    a: [],
+    b: [],
+    listdepartmentIT: [],
+    listDefectsNamesIT: [],
+    listdepartmentTEC: [],
+    listDefectsNamesTEC: [],
+    listDefectsNamesTECFinal: [],
+    listDefectsNamesITFinal: [],
     listDefectsChange: [],
     DamageTypeByEquipmentID: [],
     DamagesMergedWithDamageTypes: [],
@@ -657,7 +682,7 @@ export default {
     EquipmentName: "",
   }),
   mounted() {
-    document.title = "damage";
+    document.title = "Checklist";
 
     this.initialize();
   },
@@ -733,7 +758,7 @@ export default {
       this.confirmedDamageIT = [];
       this.damageTypesIT.length = 0;
       this.damageTypesTEC.length = 0;
-      this.equipments_id=0;
+      this.equipments_id = 0;
       this.disabledEquipmentsFiltre = false;
       var count = 0;
       console.log("equipments", this.equipments);
@@ -888,6 +913,14 @@ export default {
       this.damage_type_id = item.id;
       this.modelIT_id_Courent = i;
 
+      if (item.department.name == "IT") {
+        this.listdepartmentIT.push(item.department.name);
+        this.listDefectsNamesIT.push(item);
+      } else if (item.department.name == "TECHNIQUE") {
+        this.listdepartmentTEC.push(item.department.name);
+        this.listDefectsNamesTEC.push(item);
+      }
+
       if (this.Data.length == 0) {
         if (item.important == true) {
           swal(
@@ -981,7 +1014,7 @@ export default {
       this.resolveditem = [];
       this.defectedDialoge = true;
       this.resolveditem.push(item);
-      console.log("this.resolveditem[0]",this.resolveditem[0]);
+      console.log("this.resolveditem[0]", this.resolveditem[0]);
     },
     changeDefectsFunction() {
       this.defectsChange.item = this.resolveditem[0];
@@ -1010,7 +1043,9 @@ export default {
       this.closeDamage.closedBy_id = this.getUserActive.id;
       this.closeDamageAction(this.closeDamage).then((resolve) => {
         this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
-        this.EmailModel.payload.EquipmentGroupe = this.resolveditem[0].department.name;
+        this.EmailModel.status = "Closed ";
+        this.EmailModel.payload.EquipmentGroupe =
+          this.resolveditem[0].department.name;
         this.EmailModel.payload.Defects = resolve.damage_type.name;
         this.EmailModel.payload.Status = "closed";
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
@@ -1040,14 +1075,17 @@ export default {
         this.LoadingPage = false;
       }, 2000);
     },
-    // close defect 
+    // close defect
     closed() {
       console.log("resolveditem closed :", this.resolveditem);
       this.closeDamage.id = this.resolveditem[0].damage.id;
       this.closeDamage.closedBy_id = this.getUserActive.id;
       this.closeDamageAction(this.closeDamage).then((resolve) => {
         this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
-        this.EmailModel.payload.EquipmentGroupe = this.resolveditem[0].department.name;
+        this.EmailModel.status = "Closed ";
+
+        this.EmailModel.payload.EquipmentGroupe =
+          this.resolveditem[0].department.name;
         this.EmailModel.payload.Defects = resolve.damage_type.name;
         this.EmailModel.payload.Status = "closed";
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
@@ -1081,29 +1119,29 @@ export default {
       this.revertDamage.rejectedBy_id = this.getUserActive.id;
       this.revertDamageAction(this.revertDamage).then((resolve) => {
         this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
-        this.EmailModel.payload.EquipmentGroupe = this.resolveditem[0].department.name;
-          this.EmailModel.payload.Defects = resolve.damage_type.name;
-          this.EmailModel.payload.Status = "on progress";
-          this.EmailModel.payload.Rejected_by = this.getUserActive.username;
-          this.EmailModel.payload.RejectedAt = resolve.declaredAt;
-          this.EmailModel.payload.RejectedTimes = resolve.rejectedTimes;
-          this.EmailModel.payload.Confirmed_by = resolve.confirmed_by.username;
-          this.EmailModel.payload.ConfirmedAt = resolve.declaredAt;
+        this.EmailModel.payload.EquipmentGroupe =
+          this.resolveditem[0].department.name;
+        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.status = "Rejcted ";
+        this.EmailModel.payload.Status = "on progress";
+        this.EmailModel.payload.Rejected_by = this.getUserActive.username;
+        this.EmailModel.payload.RejectedAt = resolve.declaredAt;
+        this.EmailModel.payload.RejectedTimes = resolve.rejectedTimes;
+        this.EmailModel.payload.Confirmed_by = resolve.confirmed_by.username;
+        this.EmailModel.payload.ConfirmedAt = resolve.declaredAt;
 
-          if (resolve != null) {
-            this.EmailModel.payload.DriverOut = resolve.driver_out.username;
-          } else {
-            console.error("test DriverOut");
-          }
-          this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
-          this.EmailModel.payload.declaredAt = resolve.declaredAt;
+        if (resolve != null) {
+          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+        } else {
+          console.error("test DriverOut");
+        }
+        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+        this.EmailModel.payload.declaredAt = resolve.declaredAt;
 
         this.SendEmailAction(this.EmailModel).then(() => {
-            console.log("DONE");
-          });
-
+          console.log("DONE");
+        });
       });
-
 
       this.changeEquipmentsFiltreSELECT();
       this.modelTEC = [];
@@ -1146,10 +1184,51 @@ export default {
       this.modelIT_id_Courent = i;
       //this.dialogValide = true;
     },
-  
+    clearModelEmail() {
+      this.EmailModel.payload = {
+        Equipment: "",
+        EquipmentGroupe: "",
+        Department: "",
+        Defects: [],
+        Status: "on progress",
+        DriverOut: "",
+        DeclaredBy: "",
+        DeclaredAt: "",
+      };
+      this.EmailModel.status = "";
+      this.EmailModel.email = "hamza.abdous@tangeralliance.com";
+      this.EmailModel.department = [];
+
+      // TEC
+
+      this.EmailModelTEC.payload = {
+        Equipment: "",
+        EquipmentGroupe: "",
+        Department: "",
+        Defects: [],
+        Status: "on progress",
+        DriverOut: "",
+        DeclaredBy: "",
+        DeclaredAt: "",
+      };
+      this.EmailModelTEC.status = "";
+      this.EmailModelTEC.email = "hamza.abdous@tangeralliance.com";
+      this.EmailModelTEC.department = [];
+
+      this.listdepartmentIT = [];
+      this.listdepartmentIT = [];
+      this.listDefectsNamesIT = [];
+      this.listDefectsNamesITFinal = [];
+
+      this.listdepartmentTEC = [];
+      this.listdepartmentTEC = [];
+      this.listDefectsNamesTEC = [];
+      this.listDefectsNamesTECFinal = [];
+    },
     validerDamages() {
       console.log("this.modelTEC", this.modelTEC);
       console.log("this.modelIT", this.modelIT);
+      
       if (this.Data.length == 0) {
         if (this.equipments_id == "") {
           swal(
@@ -1178,21 +1257,95 @@ export default {
         this.declareDamageAction(this.Data).then((resolve) => {
           this.modelTEC = [];
           this.modelIT = [];
-          console.log("validerDamages");
+          this.EmailModel.payload.Defects=[];
+          this.EmailModelTEC.payload.Defects=[];
+          console.log("validerDamages", resolve);
           var IT = this.departmentIT.id;
           var TEC = this.departmentTEC.id;
-          this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
-          this.EmailModel.payload.Defects = this.Data.length;
-          if (resolve != null) {
-            this.EmailModel.payload.DriverOut = resolve.username;
-          } else {
-            console.error("test DriverOut");
-          }
-          this.EmailModel.payload.DeclaredBy = this.getUserActive.username;
 
-          this.SendEmailAction(this.EmailModel).then(() => {
-            console.log("DONE");
+          
+          this.Data.map((item) => {
+            this.a = [...new Set(this.listDefectsNamesTEC)];
+            console.log("this.a ", this.a);
+            
+            this.a.map((c) => {
+              if (c.id == item.damage_type_id) {
+                this.EmailModelTEC.payload.Defects.push(c.name);
+              }
+            });
           });
+          this.Data.map((item) => {
+            this.b = [...new Set(this.listDefectsNamesIT)];
+            console.log("this.b ", this.b);
+            
+             this.b.map((c) => {
+              if (c.id == item.damage_type_id) {
+                this.EmailModel.payload.Defects.push(c.name);
+              }
+            });
+          });
+          
+
+          if (this.listdepartmentIT.length != 0) {
+            this.EmailModel.department = "IT";
+            this.EmailModel.payload.Equipment = this.EquipmentName[0].name;
+            this.EmailModel.payload.EquipmentGroupe =
+              this.EquipmentName[0].profile_group.name;
+
+            this.EmailModel.payload.Department = "IT";
+            this.EmailModel.payload.Status = "on progress";
+            this.EmailModel.status = "Defected ";
+
+            
+            if (resolve[0].driver_out != null) {
+              this.EmailModel.payload.DriverOut =
+                resolve[0].driver_out.username;
+            } else {
+              console.error("test DriverOut");
+            }
+            this.EmailModel.payload.DeclaredBy = resolve[0].declaredBy.username;
+            this.EmailModel.payload.DeclaredAt = resolve[0].declaredAt;
+            console.log("this.EmailModel", this.EmailModel);
+            this.SendEmailAction(this.EmailModel).then(() => {
+              console.log("DONE");
+              this.listdepartmentIT = [];
+              this.listdepartmentIT = [];
+              this.listDefectsNamesIT = [];
+              this.listDefectsNamesITFinal = [];
+            });
+          }
+          if (this.listdepartmentTEC.length != 0) {
+            setTimeout(() => {
+              this.EmailModelTEC.department = "TECHNIQUE";
+              this.EmailModelTEC.payload.Equipment = this.EquipmentName[0].name;
+              this.EmailModelTEC.payload.EquipmentGroupe =
+                this.EquipmentName[0].profile_group.name;
+
+              this.EmailModelTEC.payload.Department = "TECHNIQUE";
+              this.EmailModelTEC.payload.Status = "on progress";
+              this.EmailModelTEC.status = "Defected ";
+
+              if (resolve[0].driver_out != null) {
+                this.EmailModelTEC.payload.DriverOut =
+                  resolve[0].driver_out.username;
+              } else {
+                console.error("test DriverOut");
+              }
+              this.EmailModelTEC.payload.DeclaredBy =
+                resolve[0].declaredBy.username;
+              this.EmailModelTEC.payload.DeclaredAt = resolve[0].declaredAt;
+
+              console.log("this.EmailModelTEC", this.EmailModelTEC);
+
+              this.SendEmailAction(this.EmailModelTEC).then(() => {
+                console.log("DONE");
+
+                this.listdepartmentTEC = [];
+                this.listDefectsNamesTEC = [];
+                this.listDefectsNamesTECFinal = [];
+              });
+            }, 1000);
+          }
           this.Data = [];
           this.presenceCheck.user_id = this.getUserActive.id;
           this.presenceCheck.equipment_id = this.equipments_id;

@@ -126,7 +126,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "user";
+    document.title = "Checklist";
     this.initialize();
   },
   computed: {

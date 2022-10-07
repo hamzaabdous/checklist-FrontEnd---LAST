@@ -65,7 +65,7 @@ const damageTypeModule = {
           .then((response) => {
             console.log("res add ", response);
             commit("ADD_DAMAGES", response.data.payload);
-            resolve(response.data.driverOut);
+            resolve(response.data.payload);
           })
           .catch((error) => {
             reject(error);

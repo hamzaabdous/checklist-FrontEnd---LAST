@@ -9,10 +9,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="3" md="3">
+      <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="240" max-height="200" min-height="200" outlined>
-            <v-list-item three-line>
+            <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
                   Total Equipement With  defects items
@@ -32,16 +32,16 @@
           </v-card>
         </template>
       </v-col>
-      <v-col cols="3" md="3">
+      <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="240" max-height="200"  min-height="200" outlined>
-            <v-list-item three-line>
+            <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
-                  RESOLVED defective items
+                  RESOLVED defective items 
                 </div>
                 <v-list-item-title class="text-h5 mb-1 deep-orange--text">
-                  {{ this.ProfileGroupsByCounter.confirmedCount }}
+                  <br/> {{ this.ProfileGroupsByCounter.confirmedCount }}
                 </v-list-item-title>
               </v-list-item-content>
 
@@ -59,7 +59,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="240" max-height="200" min-width="130" min-height="200" outlined>
-            <v-list-item three-line>
+            <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 green--text">
                   Total Equipement With non defects items
@@ -184,7 +184,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "checklist";
+    document.title = "Checklist";
 
     this.loading = true;
     setTimeout(() => {

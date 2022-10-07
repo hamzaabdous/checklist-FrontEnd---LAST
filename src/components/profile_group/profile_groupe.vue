@@ -251,7 +251,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "Equipment group";
+    document.title = "Checklist";
     this.loading = true;
     setTimeout(() => {
       this.initialize();

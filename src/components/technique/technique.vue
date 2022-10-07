@@ -110,7 +110,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "checklist";
+    document.title = "Checklist";
     this.fonction = this.getUserActive.fonction.name;
 
     this.loading = true;

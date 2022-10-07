@@ -14,7 +14,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="200" outlined>
-            <v-list-item three-line>
+            <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
                   Pending Defects Tickets
@@ -36,7 +36,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="200" outlined>
-            <v-list-item three-line>
+            <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
                   RESOLVED Defects TICKETS
@@ -58,7 +58,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" v-if="isHistorique" max-width="200" outlined>
-            <v-list-item three-line>
+            <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
                   Closed Defect Tickets
@@ -881,15 +881,16 @@ export default {
     },
     EmailModel: {
       payload: {
-        Equipment: "Empty",
-        Groupe: "Empty",
-        Defects: 0,
+        Equipment: "",
+        department: "",
+        Defect: "",
         Status: "on progress",
-        DriverOut: "Empty",
-        DeclaredBy: "Empty",
-        DeclaredAt: "Empty",
+        DriverOut: "",
+        DeclaredBy: "",
+        DeclaredAt: "",
       },
-      email: "tetete",
+      status:"",
+      email: "hamza.abdous@tangeralliance.com",
       department: "IT",
     },
     damageByEquipmentsClose:[],
@@ -897,7 +898,7 @@ export default {
 
   }),
   mounted() {
-    document.title = "checklist";
+    document.title = "Checklist";
     this.loading = true;
     this.fonction = this.getUserActive.fonction.name;
     this.userDepartment = this.getUserActive.fonction.department.name;
@@ -1041,6 +1042,12 @@ export default {
       if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+             this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
+              }
+            }); 
             this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
               (c) => c.status != "closed"
             );
@@ -1064,6 +1071,12 @@ export default {
       } else if (this.getUserActive.fonction.department_id == 2) {
         this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
           (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+             this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
+              }
+            }); 
             this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
               (c) => c.status != "closed"
             );
@@ -1173,7 +1186,9 @@ export default {
         this.confirmDamage.confirmedBy_id = null;
         this.confirmDamage.resolveDescription = "";
         this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.department = resolve.damage_type.department.name;
+        this.EmailModel.payload.Defect = resolve.damage_type.name;
+        this.EmailModel.status = "Resolved ";
         this.EmailModel.payload.Status = "resolved";
         this.EmailModel.payload.confirmed_by = this.getUserActive.username;
         this.EmailModel.payload.confirmedAt = resolve.declaredAt;
@@ -1211,7 +1226,9 @@ export default {
         
         this.damageSelect.status = resolve.status;
         this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.department = resolve.damage_type.department.name;
+        this.EmailModel.payload.Defect = resolve.damage_type.name;
+        this.EmailModel.status = "Closed ";
         this.EmailModel.payload.Status = "closed";
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
         this.EmailModel.payload.ClosedAt = resolve.declaredAt;
@@ -1258,7 +1275,9 @@ export default {
         this.revertDamage.rejectedDescription = "";
 
         this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.Defects = resolve.damage_type.name;
+        this.EmailModel.payload.department = resolve.damage_type.department.name;
+        this.EmailModel.payload.Defect = resolve.damage_type.name;
+        this.EmailModel.status = "Rejcted ";
         this.EmailModel.payload.Status = "on progress";
         this.EmailModel.payload.rejected_by = this.getUserActive.username;
         this.EmailModel.payload.rejectedAt = resolve.declaredAt;

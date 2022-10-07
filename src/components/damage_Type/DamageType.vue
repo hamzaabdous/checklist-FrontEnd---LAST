@@ -169,7 +169,7 @@ export default {
     },
   }),
   mounted() {
-    document.title = "damage type";
+    document.title = "Checklist";
 
     this.initialize();
   },

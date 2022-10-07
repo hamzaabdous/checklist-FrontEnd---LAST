@@ -125,7 +125,7 @@ export default {
     confirmAddSave: false,
   }),
   mounted() {
-    document.title = "departement";
+    document.title = "Checklist";
 
     this.initialize();
   },
