@@ -55,11 +55,7 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn
-                  color="#ffff"
-                  class="mb-2 btn "
-                  @click="close(item)"
-                >
+                <v-btn color="#ffff" class="mb-2 btn" @click="close(item)">
                   Cancel
                 </v-btn>
                 <v-btn
@@ -74,11 +70,12 @@
           </v-dialog>
           <v-dialog v-model="dialogDelete" max-width="600px">
             <v-card>
-               <v-toolbar dark color="error" >
+              <v-toolbar dark color="error">
                 <v-toolbar-title>Warning !</v-toolbar-title>
               </v-toolbar>
-              <v-card-title  class="text-h5"
-                >Are you sure you want to Delete this Equipment group?</v-card-title
+              <v-card-title class="text-h5"
+                >Are you sure you want to Delete this Equipment
+                group?</v-card-title
               >
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -101,22 +98,24 @@
           <v-dialog v-model="confirmAddSave" max-width="500px">
             <v-card>
               <div v-if="editedIndex == -1">
-                <v-toolbar dark color="error" >
-                <v-toolbar-title>Warning !</v-toolbar-title>
-              </v-toolbar>
-              <v-card-title  class="text-h5"
-                >Are you sure you want to add this Equipment group?</v-card-title
-              >
+                <v-toolbar dark color="error">
+                  <v-toolbar-title>Warning !</v-toolbar-title>
+                </v-toolbar>
+                <v-card-title class="text-h5"
+                  >Are you sure you want to add this Equipment
+                  group?</v-card-title
+                >
               </div>
               <div v-else>
-                <v-toolbar dark color="error" >
-                <v-toolbar-title>Warning !</v-toolbar-title>
-              </v-toolbar>
-              <v-card-title class="text-h5"
-                >Are you sure you want to update this Equipment group?</v-card-title
-              >
+                <v-toolbar dark color="error">
+                  <v-toolbar-title>Warning !</v-toolbar-title>
+                </v-toolbar>
+                <v-card-title class="text-h5"
+                  >Are you sure you want to update this Equipment
+                  group?</v-card-title
+                >
               </div>
-              
+
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
@@ -212,20 +211,24 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 import User from "../user/Users.vue";
 import DamageType from "../damage_Type/DamageType.vue";
 export default {
   components: {
     User,
     DamageType,
+    LoadingPage,
   },
   data: () => ({
     dialog: false,
+    LoadingPage: false,
     dialogDelete: false,
     confirmAddSave: false,
     dialogView: false,
@@ -260,7 +263,9 @@ export default {
   },
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Equipment group" : "Edit Equipment group";
+      return this.editedIndex === -1
+        ? "New Equipment group"
+        : "Edit Equipment group";
     },
     ...mapGetters(["getprofilegroups", "getdepartements"]),
   },
@@ -322,6 +327,11 @@ export default {
       this.deletePROFILEDROUPAction(this.editedItem).then(() => {
         this.profilegroups = [...this.getprofilegroups];
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.closeDelete();
     },
     close() {
@@ -348,11 +358,21 @@ export default {
           this.profilegroups = [...this.getprofilegroups];
           console.log("this.profilegroups", this.profilegroups);
         });
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
         this.closeAddSaveDialog();
       } else {
         this.editPROFILEDROUPAction(this.editedItem).then(() => {
           this.profilegroups = [...this.getprofilegroups];
         });
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
         this.closeAddSaveDialog();
       }
 

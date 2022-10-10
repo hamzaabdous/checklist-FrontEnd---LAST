@@ -49,17 +49,23 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 <script>
 import CustomizedAxios from "../../plugins/axios";
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     loading: false,
+    LoadingPage: false,
     search: "",
-    fonction:"",
+    fonction: "",
     confirmAddSave: false,
     headers: [
       { text: "Name", value: "name", sortable: true },
@@ -112,7 +118,7 @@ export default {
   mounted() {
     document.title = "Checklist";
     this.fonction = this.getUserActive.fonction.name;
-
+    
     this.loading = true;
     setTimeout(() => {
       this.initialize();

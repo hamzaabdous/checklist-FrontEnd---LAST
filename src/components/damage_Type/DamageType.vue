@@ -136,14 +136,21 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
+
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     dialog: false,
+    LoadingPage: false,
     dialogDelete: false,
     confirmAddSave: false,
     search: "",
@@ -254,7 +261,11 @@ export default {
             return e.id != this.editedItem.id;
           });
       });
+      this.LoadingPage = true;
 
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.closeDelete();
     },
     close() {
@@ -297,6 +308,11 @@ export default {
           profile_group_id: "",
           department_id: "",
         };
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
         this.closeAddSaveDialog();
       } else {
         this.editDAMAGETYPEAction(this.editedItem).then((damageType) => {
@@ -312,6 +328,11 @@ export default {
           profile_group_id: "",
           department_id: "",
         };
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
         this.closeAddSaveDialog();
       }
 

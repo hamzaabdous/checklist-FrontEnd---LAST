@@ -91,12 +91,17 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     dialog: false,
     dialogDelete: false,
@@ -189,6 +194,11 @@ export default {
         });
       });
       this.editedIndex = -1;
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.closeDelete();
     },
     close() {
@@ -203,6 +213,11 @@ export default {
         this.addEQUIPMENTAction(this.editedItem).then((equipment) => {
           this.equipmentsFiltres.push(equipment);
         });
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
       } else {
         this.editEQUIPMENTAction(this.editedItem).then((equipment) => {
           this.equipmentsFiltres = this.equipmentsFiltres.map((c) => {
@@ -210,6 +225,11 @@ export default {
             return c;
           });
         });
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
       }
 
       this.close();

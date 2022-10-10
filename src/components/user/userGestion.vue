@@ -416,13 +416,20 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
+
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     dialog: false,
+    LoadingPage: false,
     dialogDelete: false,
     dialogModifier: false,
     showInput: false,
@@ -529,7 +536,7 @@ export default {
           id: "",
           name: "",
           departmentID: "",
-          fonction_id:"",
+          fonction_id: "",
           fonction: {
             id: "",
             department: {
@@ -610,7 +617,11 @@ export default {
         });
         return exist.length == 0;
       });
+      this.LoadingPage = true;
 
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogediteUserToProfilegroup = true;
     },
     SaveUserToProfilegroupItem() {
@@ -618,6 +629,11 @@ export default {
       this.addUserToProfileGroupAction(this.UserToProfile).then(() => {
         console.log("done ");
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogediteUserToProfilegroup = false;
     },
     deleteItem(item) {
@@ -631,6 +647,11 @@ export default {
       }).then(() => {
         this.users = [...this.getUsers];
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.closeDelete();
     },
     close() {
@@ -639,7 +660,7 @@ export default {
     closemodifier() {
       this.dialogModifier = false;
       this.editedIndex = -1;
-      this.departmentID="";
+      this.departmentID = "";
       this.editedItem = {
         id: "",
         created_date: "",
@@ -677,6 +698,11 @@ export default {
           }
         });
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogprofilgroupToUser = false;
     },
     AddUserFromProfileGroup() {
@@ -687,6 +713,11 @@ export default {
           return e.id != this.UserToProfile.profile_group_id;
         });
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogAddprofilgroupToUser = false;
     },
     closeDelete() {
@@ -700,6 +731,11 @@ export default {
             this.users = [...this.getUsers];
           });
           this.closemodifier();
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+          }, 2000);
         });
       } else {
         console.log("edite");
@@ -707,6 +743,11 @@ export default {
           this.users = [...this.getUsers];
           this.dialogModifier = false;
           this.closemodifier();
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+          }, 2000);
         });
       }
       this.dialogConfirmationModifier = false;

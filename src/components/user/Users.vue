@@ -156,14 +156,20 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     dialog: false,
+    LoadingPage: false,
     dialogDelete: false,
     dialogModifier: false,
     search: "",
@@ -245,13 +251,13 @@ export default {
         console.log("this.users", this.users);
       });
       this.setUsersAction(localStorage.getItem("id")).then(() => {
-        this.usersSelect = this.getUsers.filter((user)=>{
-          var exist= this.users.filter((user2)=>{
-            return user.id==user2.id;
+        this.usersSelect = this.getUsers.filter((user) => {
+          var exist = this.users.filter((user2) => {
+            return user.id == user2.id;
           });
-          return exist.length==0;
+          return exist.length == 0;
         });
-      
+
         console.log("this.users", this.usersSelect);
       });
     },
@@ -280,16 +286,20 @@ export default {
       this.deleteUserFromProfileGroupAction(this.UserToProfile).then(() => {
         this.users = this.users.filter((e) => {
           if (e.id == this.UserToProfile.user_id) {
-            console.log("Us",e);
+            console.log("Us", e);
             this.usersSelect.push(e);
           }
           return e.id != this.UserToProfile.user_id;
         });
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.closeDelete();
     },
     close() {
-      
       this.dialog = false;
     },
     closemodifier() {
@@ -298,9 +308,7 @@ export default {
     closeDelete() {
       this.dialogDelete = false;
     },
-    usersSelectchange(){
-      
-    },
+    usersSelectchange() {},
     save() {
       console.log("this.UserToProfile", this.UserToProfile);
       this.addUserToProfileGroupAction(this.UserToProfile).then(() => {
@@ -313,7 +321,11 @@ export default {
           return e.id != this.UserToProfile.user_id;
         });
       });
+      this.LoadingPage = true;
 
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.close();
     },
   },

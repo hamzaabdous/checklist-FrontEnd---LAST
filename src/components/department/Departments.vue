@@ -97,12 +97,17 @@
         <v-btn color="primary" @click="initialize()"> Reset </v-btn>
       </template>
     </v-data-table>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     dialog: false,
     dialogDelete: false,
@@ -182,6 +187,11 @@ export default {
       this.deleteDepartementAction(this.editedIndex).then(() => {
         this.departements = [...this.getdepartements];
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.closeDelete();
     },
     close() {
@@ -202,11 +212,21 @@ export default {
         this.addDepartementAction(this.editedItem).then(() => {
           this.departements = [...this.getdepartements];
         });
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
         this.closeAddSaveDialog();
       } else {
         this.editDepartementAction(this.editedItem).then(() => {
           this.departements = [...this.getdepartements];
         });
+        this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+        }, 2000);
         this.closeAddSaveDialog();
       }
 

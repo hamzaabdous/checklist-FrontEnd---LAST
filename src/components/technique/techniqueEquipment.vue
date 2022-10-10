@@ -14,7 +14,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="200" outlined>
-            <v-list-item three-line class="d-flex ">
+            <v-list-item three-line class="d-flex">
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
                   Pending Defects Tickets
@@ -36,7 +36,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" max-width="200" outlined>
-            <v-list-item three-line class="d-flex ">
+            <v-list-item three-line class="d-flex">
               <v-list-item-content>
                 <div class="text-overline mb-4 deep-orange--text">
                   RESOLVED Defects TICKETS
@@ -58,7 +58,7 @@
       <v-col cols="4" md="4">
         <template>
           <v-card class="mx-auto" v-if="isHistorique" max-width="200" outlined>
-            <v-list-item three-line class="d-flex ">
+            <v-list-item three-line class="d-flex">
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
                   Closed Defect Tickets
@@ -589,10 +589,10 @@
               </v-btn>
               <v-toolbar-title>Picture</v-toolbar-title>
               <v-spacer></v-spacer>
-              <v-btn class="mr-2 white--text " color="red">
+              <v-btn class="mr-2 white--text" color="red">
                 <v-icon medium class="mr-2">mdi-folder-image</v-icon>
                 <a
-                class="downloadpicture"
+                  class="downloadpicture"
                   :href="`http://localhost:8000/storage/cdn/damagePhotos/${PhotoShow.filename}`"
                   download
                   target="_blank"
@@ -669,14 +669,20 @@
         </template>
       </v-data-table>
     </div>
+    <LoadingPage v-if="LoadingPage == true" />
   </div>
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import LoadingPage from "../LoadingPage.vue";
 
 export default {
+  components: {
+    LoadingPage,
+  },
   data: () => ({
     isHistorique: false,
+    LoadingPage: false,
     dialog: false,
     dialogDelete: false,
     loading: false,
@@ -889,13 +895,12 @@ export default {
         DeclaredBy: "",
         DeclaredAt: "",
       },
-      status:"",
+      status: "",
       email: "hamza.abdous@tangeralliance.com",
       department: "IT",
     },
-    damageByEquipmentsClose:[],
-    damageByEquipmentsWithOutClose:[],
-
+    damageByEquipmentsClose: [],
+    damageByEquipmentsWithOutClose: [],
   }),
   mounted() {
     document.title = "Checklist";
@@ -1025,7 +1030,7 @@ export default {
       "deleteDAMAGEAction",
       "FindDamageTypeByEquipmentID_ITAction",
       "FindDamageTypeByEquipmentID_TECAction",
-      "SendEmailAction"
+      "SendEmailAction",
     ]),
     pageView(item, row) {
       this.damageSelect = item;
@@ -1038,86 +1043,87 @@ export default {
     showHistorique() {
       this.damageByEquipments = [];
       this.equipmentsFiltreByid = [];
-      this.loading=true;
+      this.loading = true;
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-             this.damageByEquipments.map((item) => {
+            this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
                 this.equipmentsFiltreByid.push(item);
               }
-            }); 
-            this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status != "closed"
-            );
+            });
+            this.damageByEquipmentsWithOutClose =
+              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
             this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
               (c) => c.status == "closed"
             );
-            this.damageByEquipments=[];
-            this.damageByEquipments=[...this.damageByEquipmentsClose];
+            this.damageByEquipments = [];
+            this.damageByEquipments = [...this.damageByEquipmentsClose];
             this.damageByEquipmentsWithOutClose.map((item) => {
-                this.damageByEquipments.push(item);
-            }); 
-            
+              this.damageByEquipments.push(item);
+            });
+
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
             this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
             this.EquipmentsByCounter.closedCount = resolve.closedCount;
             console.log("resolve", resolve);
-            this.loading=false;
+            this.loading = false;
           }
         );
       } else if (this.getUserActive.fonction.department_id == 2) {
         this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-             this.damageByEquipments.map((item) => {
+            this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
                 this.equipmentsFiltreByid.push(item);
               }
-            }); 
-            this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status != "closed"
-            );
+            });
+            this.damageByEquipmentsWithOutClose =
+              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
             this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
               (c) => c.status == "closed"
             );
-            this.damageByEquipments=[];
-            this.damageByEquipments=[...this.damageByEquipmentsClose];
+            this.damageByEquipments = [];
+            this.damageByEquipments = [...this.damageByEquipmentsClose];
             this.damageByEquipmentsWithOutClose.map((item) => {
-                this.damageByEquipments.push(item);
-            }); 
+              this.damageByEquipments.push(item);
+            });
 
             this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
             this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
             this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
             this.EquipmentsByCounter.closedCount = resolve.closedCount;
           }
-          
         );
-        this.loading=false;
+        this.loading = false;
       } else {
         console.log("ccccccc filtre");
         this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-             this.damageByEquipments.map((item) => {
+            this.damageByEquipments.map((item) => {
               if (item.equipment_id == this.idEquipment) {
                 this.equipmentsFiltreByid.push(item);
               }
-            }); 
-            this.damageByEquipmentsWithOutClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status != "closed"
-            );
+            });
+            this.damageByEquipmentsWithOutClose =
+              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
             this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
               (c) => c.status == "closed"
             );
-            this.damageByEquipments=[];
-            this.damageByEquipments=[...this.damageByEquipmentsClose];
+            this.damageByEquipments = [];
+            this.damageByEquipments = [...this.damageByEquipmentsClose];
             this.damageByEquipmentsWithOutClose.map((item) => {
-                this.damageByEquipments.push(item);
-            }); 
+              this.damageByEquipments.push(item);
+            });
             this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
               this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
               this.EquipmentsByCounter.nameEquipment =
@@ -1131,8 +1137,7 @@ export default {
             });
           }
         );
-        this.loading=false;
-        
+        this.loading = false;
       }
       this.iscolor = "teal";
       this.isHistorique = true;
@@ -1185,8 +1190,10 @@ export default {
         this.confirmDamage.id = null;
         this.confirmDamage.confirmedBy_id = null;
         this.confirmDamage.resolveDescription = "";
-        this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.department = resolve.damage_type.department.name;
+        this.EmailModel.payload.Equipment =
+          this.EquipmentsByCounter.nameEquipment;
+        this.EmailModel.payload.department =
+          resolve.damage_type.department.name;
         this.EmailModel.payload.Defect = resolve.damage_type.name;
         this.EmailModel.status = "Resolved ";
         this.EmailModel.payload.Status = "resolved";
@@ -1208,6 +1215,11 @@ export default {
       setTimeout(() => {
         this.counters();
       }, 1000);
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.showdetails = false;
       this.dialogresolve = false;
     },
@@ -1223,10 +1235,12 @@ export default {
           }
           return item;
         });
-        
+
         this.damageSelect.status = resolve.status;
-        this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.department = resolve.damage_type.department.name;
+        this.EmailModel.payload.Equipment =
+          this.EquipmentsByCounter.nameEquipment;
+        this.EmailModel.payload.department =
+          resolve.damage_type.department.name;
         this.EmailModel.payload.Defect = resolve.damage_type.name;
         this.EmailModel.status = "Closed ";
         this.EmailModel.payload.Status = "closed";
@@ -1250,6 +1264,11 @@ export default {
       setTimeout(() => {
         this.counters();
       }, 1000);
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogclose = false;
       this.showdetails = false;
     },
@@ -1274,8 +1293,10 @@ export default {
         this.revertDamage.rejectedBy_id = null;
         this.revertDamage.rejectedDescription = "";
 
-        this.EmailModel.payload.Equipment = this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.department = resolve.damage_type.department.name;
+        this.EmailModel.payload.Equipment =
+          this.EquipmentsByCounter.nameEquipment;
+        this.EmailModel.payload.department =
+          resolve.damage_type.department.name;
         this.EmailModel.payload.Defect = resolve.damage_type.name;
         this.EmailModel.status = "Rejcted ";
         this.EmailModel.payload.Status = "on progress";
@@ -1298,6 +1319,11 @@ export default {
       setTimeout(() => {
         this.counters();
       }, 1000);
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.showdetails = false;
       this.dialogrejected = false;
     },
@@ -1309,6 +1335,11 @@ export default {
       });
       setTimeout(() => {
         this.counters();
+      }, 2000);
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
       }, 2000);
       this.dialogDelete = false;
     },
@@ -1389,6 +1420,11 @@ export default {
 
         console.log("done");
       });
+      this.LoadingPage = true;
+
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogimage = false;
     },
   },
