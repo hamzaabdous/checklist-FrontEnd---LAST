@@ -142,7 +142,8 @@
                     v-model="modelIT"
                     multiple
                     color="#fff"
-                    class="ITcol"
+                    class="ITcol TEC"
+
                   >
                     <div class="hamzatec">
                       <v-list-item
@@ -275,6 +276,7 @@
                     v-model="modelTEC"
                     multiple
                     color="#fff"
+                    class="TEC"
                   >
                     <div class="hamzatec">
                       <v-list-item

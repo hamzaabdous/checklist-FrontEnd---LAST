@@ -142,7 +142,7 @@
                     v-model="modelIT"
                     multiple
                     color="#fff"
-                    class="ITcol"
+                    class="ITcol TEC"
                   >
                     <div class="hamzatec">
                       <v-list-item
@@ -272,6 +272,7 @@
                 <v-list flat>
                   <v-list-item-group
                     name="TEC"
+                    class="TEC"
                     v-model="modelTEC"
                     multiple
                     color="#fff"
@@ -486,12 +487,21 @@ export default {
     departmentIT: {
       id: null,
       name: "",
+      email:"",
       created_at: "",
       updated_at: "",
     },
     departmentTEC: {
       id: null,
       name: "",
+      email:"",
+      created_at: "",
+      updated_at: "",
+    },
+    departmentOP: {
+      id: null,
+      name: "",
+      email:"",
       created_at: "",
       updated_at: "",
     },
@@ -636,7 +646,7 @@ export default {
         DeclaredAt: "",
       },
       status: "",
-      email: "hamza.abdous@tangeralliance.com",
+      email: "foreman@tangeralliance.com,shiftmanager@tangeralliance.com,iliass.errabai@tangeralliance.com",
       department: [],
     },
     EmailModelTEC: {
@@ -651,7 +661,7 @@ export default {
         DeclaredAt: "",
       },
       status: "",
-      email: "hamza.abdous@tangeralliance.com",
+      email: "",
       department: [],
     },
     a: [],
@@ -882,6 +892,9 @@ export default {
           if (item.name.toLowerCase() == "it") {
             this.departmentIT = item;
           }
+          if (item.name.toLowerCase() == "operations") {
+            this.departmentOP = item;
+          }
         });
         console.log("set Departements", this.department);
       });
@@ -1048,6 +1061,7 @@ export default {
           this.resolveditem[0].department.name;
         this.EmailModel.payload.Defects = resolve.damage_type.name;
         this.EmailModel.payload.Status = "closed";
+        this.EmailModel.email = this.departmentOP.email.toString()+this.resolveditem[0].department.email.toString();
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
         this.EmailModel.payload.ClosedAt = resolve.declaredAt;
         if (resolve != null) {
@@ -1088,6 +1102,8 @@ export default {
           this.resolveditem[0].department.name;
         this.EmailModel.payload.Defects = resolve.damage_type.name;
         this.EmailModel.payload.Status = "closed";
+        this.EmailModel.email = this.departmentOP.email.toString()+this.resolveditem[0].department.email.toString();
+
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
         this.EmailModel.payload.ClosedAt = resolve.declaredAt;
         if (resolve != null) {
@@ -1123,6 +1139,8 @@ export default {
           this.resolveditem[0].department.name;
         this.EmailModel.payload.Defects = resolve.damage_type.name;
         this.EmailModel.status = "Rejcted ";
+        this.EmailModel.email = this.departmentOP.email.toString()+this.resolveditem[0].department.email.toString();
+
         this.EmailModel.payload.Status = "on progress";
         this.EmailModel.payload.Rejected_by = this.getUserActive.username;
         this.EmailModel.payload.RejectedAt = resolve.declaredAt;
@@ -1260,8 +1278,8 @@ export default {
           this.EmailModel.payload.Defects=[];
           this.EmailModelTEC.payload.Defects=[];
           console.log("validerDamages", resolve);
-          var IT = this.departmentIT.id;
-          var TEC = this.departmentTEC.id;
+          var ITemail = this.departmentIT.email;
+          var TECemail = this.departmentTEC.email;
 
           
           this.Data.map((item) => {
@@ -1295,6 +1313,7 @@ export default {
             this.EmailModel.payload.Department = "IT";
             this.EmailModel.payload.Status = "on progress";
             this.EmailModel.status = "Defected ";
+            this.EmailModel.email = this.departmentIT.email.toString()+this.departmentOP.email.toString();
 
             
             if (resolve[0].driver_out != null) {
@@ -1305,14 +1324,14 @@ export default {
             }
             this.EmailModel.payload.DeclaredBy = resolve[0].declaredBy.username;
             this.EmailModel.payload.DeclaredAt = resolve[0].declaredAt;
-            console.log("this.EmailModel", this.EmailModel);
+            console.log("this.EmailModel.email", this.EmailModel.email);
             this.SendEmailAction(this.EmailModel).then(() => {
               console.log("DONE");
               this.listdepartmentIT = [];
               this.listdepartmentIT = [];
               this.listDefectsNamesIT = [];
               this.listDefectsNamesITFinal = [];
-            });
+            }); 
           }
           if (this.listdepartmentTEC.length != 0) {
             setTimeout(() => {
@@ -1324,6 +1343,7 @@ export default {
               this.EmailModelTEC.payload.Department = "TECHNIQUE";
               this.EmailModelTEC.payload.Status = "on progress";
               this.EmailModelTEC.status = "Defected ";
+              this.EmailModel.email = this.departmentTEC.email.toString()+this.departmentOP.email.toString();
 
               if (resolve[0].driver_out != null) {
                 this.EmailModelTEC.payload.DriverOut =

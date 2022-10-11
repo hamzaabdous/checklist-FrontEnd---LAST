@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 5px; padding-top: 8%">
+  <div style="padding: 5px; padding-top: 1%">
     <v-data-table
       :headers="headers"
       :items="departements"

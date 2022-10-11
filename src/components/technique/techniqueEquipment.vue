@@ -896,11 +896,32 @@ export default {
         DeclaredAt: "",
       },
       status: "",
-      email: "hamza.abdous@tangeralliance.com",
+      email: "",
       department: "IT",
     },
     damageByEquipmentsClose: [],
     damageByEquipmentsWithOutClose: [],
+    departmentIT: {
+      id: null,
+      name: "",
+      email:"",
+      created_at: "",
+      updated_at: "",
+    },
+    departmentTEC: {
+      id: null,
+      name: "",
+      email:"",
+      created_at: "",
+      updated_at: "",
+    },
+    departmentOP: {
+      id: null,
+      name: "",
+      email:"",
+      created_at: "",
+      updated_at: "",
+    },
   }),
   mounted() {
     document.title = "Checklist";
@@ -921,6 +942,7 @@ export default {
       "getEquipmentsByCounter",
       "sendDamagePhotosStoragePath",
       "getUserActive",
+      "getdepartements"
     ]),
   },
   watch: {
@@ -939,6 +961,21 @@ export default {
       return color;
     },
     initialize() {
+      this.setDepartementsAction().then(() => {
+        this.department = [...this.getdepartements];
+        this.department.map((item) => {
+          if (item.name.toLowerCase() == "technique") {
+            this.departmentTEC = item;
+          }
+          if (item.name.toLowerCase() == "it") {
+            this.departmentIT = item;
+          }
+          if (item.name.toLowerCase() == "operations") {
+            this.departmentOP = item;
+          }
+        });
+        console.log("set Departements", this.department);
+      });
       this.damageByEquipments = [];
       this.equipmentsFiltreByid = [];
       this.idEquipment = localStorage.getItem("idEquipment");
@@ -1031,6 +1068,7 @@ export default {
       "FindDamageTypeByEquipmentID_ITAction",
       "FindDamageTypeByEquipmentID_TECAction",
       "SendEmailAction",
+      "setDepartementsAction"
     ]),
     pageView(item, row) {
       this.damageSelect = item;
@@ -1188,6 +1226,7 @@ export default {
           this.confirmDamage.resolveDescription;
         this.damageSelect.status = resolve.status;
         this.confirmDamage.id = null;
+
         this.confirmDamage.confirmedBy_id = null;
         this.confirmDamage.resolveDescription = "";
         this.EmailModel.payload.Equipment =
@@ -1197,6 +1236,8 @@ export default {
         this.EmailModel.payload.Defect = resolve.damage_type.name;
         this.EmailModel.status = "Resolved ";
         this.EmailModel.payload.Status = "resolved";
+        this.EmailModel.email = this.departmentOP.email.toString()+resolve.department.email.toString();
+
         this.EmailModel.payload.confirmed_by = this.getUserActive.username;
         this.EmailModel.payload.confirmedAt = resolve.declaredAt;
         if (resolve.driver_out != null) {
@@ -1244,6 +1285,7 @@ export default {
         this.EmailModel.payload.Defect = resolve.damage_type.name;
         this.EmailModel.status = "Closed ";
         this.EmailModel.payload.Status = "closed";
+        this.EmailModel.email = this.departmentOP.email.toString()+resolve.department.email.toString();
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
         this.EmailModel.payload.ClosedAt = resolve.declaredAt;
         if (resolve.driver_out != null) {
@@ -1300,6 +1342,7 @@ export default {
         this.EmailModel.payload.Defect = resolve.damage_type.name;
         this.EmailModel.status = "Rejcted ";
         this.EmailModel.payload.Status = "on progress";
+        this.EmailModel.email = this.departmentOP.email.toString()+resolve.department.email.toString();
         this.EmailModel.payload.rejected_by = this.getUserActive.username;
         this.EmailModel.payload.rejectedAt = resolve.declaredAt;
         if (resolve.driver_out != null) {
