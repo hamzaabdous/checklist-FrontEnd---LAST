@@ -1064,10 +1064,10 @@ export default {
         this.EmailModel.email = this.departmentOP.email.toString()+this.resolveditem[0].department.email.toString();
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
         this.EmailModel.payload.ClosedAt = resolve.declaredAt;
-        if (resolve != null) {
+        if (resolve.driver_out != null) {
           this.EmailModel.payload.DriverOut = resolve.driver_out.username;
         } else {
-          console.error("test DriverOut");
+          
         }
         this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
         this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
@@ -1106,10 +1106,10 @@ export default {
 
         this.EmailModel.payload.ClosedBy = this.getUserActive.username;
         this.EmailModel.payload.ClosedAt = resolve.declaredAt;
-        if (resolve != null) {
+        if (resolve.driver_out != null) {
           this.EmailModel.payload.DriverOut = resolve.driver_out.username;
         } else {
-          console.error("test DriverOut");
+          
         }
         this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
         this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
@@ -1148,10 +1148,9 @@ export default {
         this.EmailModel.payload.Confirmed_by = resolve.confirmed_by.username;
         this.EmailModel.payload.ConfirmedAt = resolve.declaredAt;
 
-        if (resolve != null) {
+        if (resolve.driver_out != null) {
           this.EmailModel.payload.DriverOut = resolve.driver_out.username;
         } else {
-          console.error("test DriverOut");
         }
         this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
         this.EmailModel.payload.declaredAt = resolve.declaredAt;
@@ -1320,7 +1319,6 @@ export default {
               this.EmailModel.payload.DriverOut =
                 resolve[0].driver_out.username;
             } else {
-              console.error("test DriverOut");
             }
             this.EmailModel.payload.DeclaredBy = resolve[0].declaredBy.username;
             this.EmailModel.payload.DeclaredAt = resolve[0].declaredAt;
@@ -1348,7 +1346,6 @@ export default {
                 this.EmailModelTEC.payload.DriverOut =
                   resolve[0].driver_out.username;
               } else {
-                console.error("test DriverOut");
               }
               this.EmailModelTEC.payload.DeclaredBy =
                 resolve[0].declaredBy.username;
