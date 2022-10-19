@@ -296,6 +296,7 @@ export default {
 
       setTimeout(() => {
         this.LoadingPage = false;
+        swal("Good job!", "success", "success");
       }, 2000);
       this.closeDelete();
     },
@@ -311,21 +312,27 @@ export default {
     usersSelectchange() {},
     save() {
       console.log("this.UserToProfile", this.UserToProfile);
-      this.addUserToProfileGroupAction(this.UserToProfile).then(() => {
-        this.users.push(
-          this.usersSelect.filter((e) => {
-            return e.id == this.UserToProfile.user_id;
-          })[0]
-        );
-        this.usersSelect = this.usersSelect.filter((e) => {
-          return e.id != this.UserToProfile.user_id;
-        });
-      });
-      this.LoadingPage = true;
+      this.addUserToProfileGroupAction(this.UserToProfile)
+        .then(() => {
+          this.users.push(
+            this.usersSelect.filter((e) => {
+              return e.id == this.UserToProfile.user_id;
+            })[0]
+          );
+          this.usersSelect = this.usersSelect.filter((e) => {
+            return e.id != this.UserToProfile.user_id;
+          });
+          this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
+        });
+
       this.close();
     },
   },

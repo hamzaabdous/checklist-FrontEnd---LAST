@@ -186,12 +186,18 @@ export default {
     deleteItemConfirm() {
       this.deleteDepartementAction(this.editedIndex).then(() => {
         this.departements = [...this.getdepartements];
-      });
-      this.LoadingPage = true;
+        this.LoadingPage = true;
 
       setTimeout(() => {
         this.LoadingPage = false;
+        swal("Good job!", "success", "success");
+
       }, 2000);
+      }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+      
       this.closeDelete();
     },
     close() {
@@ -211,22 +217,35 @@ export default {
       if (this.editedIndex == -1) {
         this.addDepartementAction(this.editedItem).then(() => {
           this.departements = [...this.getdepartements];
-        });
-        this.LoadingPage = true;
+
+          this.LoadingPage = true;
 
         setTimeout(() => {
           this.LoadingPage = false;
+          swal("Good job!", "success", "success");
+
         }, 2000);
+        }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+        
         this.closeAddSaveDialog();
       } else {
         this.editDepartementAction(this.editedItem).then(() => {
           this.departements = [...this.getdepartements];
-        });
-        this.LoadingPage = true;
+          this.LoadingPage = true;
 
         setTimeout(() => {
           this.LoadingPage = false;
+          swal("Good job!", "success", "success");
+
         }, 2000);
+        }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+        
         this.closeAddSaveDialog();
       }
 

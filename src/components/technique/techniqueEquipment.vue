@@ -115,7 +115,8 @@
                   item.status != 'resolved' &&
                   item.status != 'closed' &&
                   fonction != 'FOREMAN' &&
-                  fonction != 'ADMIN'
+                  fonction != 'ADMIN' &&
+                  fonction != 'SHIFT MANAGER'
                 "
                 class="mr-2 btn white--text"
                 color="#FF8F56"
@@ -904,21 +905,21 @@ export default {
     departmentIT: {
       id: null,
       name: "",
-      email:"",
+      email: "",
       created_at: "",
       updated_at: "",
     },
     departmentTEC: {
       id: null,
       name: "",
-      email:"",
+      email: "",
       created_at: "",
       updated_at: "",
     },
     departmentOP: {
       id: null,
       name: "",
-      email:"",
+      email: "",
       created_at: "",
       updated_at: "",
     },
@@ -942,7 +943,7 @@ export default {
       "getEquipmentsByCounter",
       "sendDamagePhotosStoragePath",
       "getUserActive",
-      "getdepartements"
+      "getdepartements",
     ]),
   },
   watch: {
@@ -1068,7 +1069,7 @@ export default {
       "FindDamageTypeByEquipmentID_ITAction",
       "FindDamageTypeByEquipmentID_TECAction",
       "SendEmailAction",
-      "setDepartementsAction"
+      "setDepartementsAction",
     ]),
     pageView(item, row) {
       this.damageSelect = item;
@@ -1213,54 +1214,63 @@ export default {
       this.confirmDamage.id = this.damageSelect.id;
       this.confirmDamage.confirmedBy_id = this.getUserActive.id;
 
-      this.confirmDamageAction(this.confirmDamage).then((resolve) => {
-        this.damageByEquipments = this.damageByEquipments.map((item) => {
-          if (item.id == resolve.id) {
-            // resolve.confirmed_by=resolve.confirmedBy;
-            return resolve;
+      this.confirmDamageAction(this.confirmDamage)
+        .then((resolve) => {
+          this.damageByEquipments = this.damageByEquipments.map((item) => {
+            if (item.id == resolve.id) {
+              // resolve.confirmed_by=resolve.confirmedBy;
+              return resolve;
+            }
+            return item;
+          });
+          console.log("resolve", resolve);
+          this.damageSelect.resolveDescription =
+            this.confirmDamage.resolveDescription;
+          this.damageSelect.status = resolve.status;
+          this.confirmDamage.id = null;
+
+          this.confirmDamage.confirmedBy_id = null;
+          this.confirmDamage.resolveDescription = "";
+          this.EmailModel.payload.Equipment =
+            this.EquipmentsByCounter.nameEquipment;
+          this.EmailModel.payload.department =
+            resolve.damage_type.department.name;
+          this.EmailModel.payload.Defect = resolve.damage_type.name;
+          this.EmailModel.status = "Resolved ";
+          this.EmailModel.payload.Status = "resolved";
+          this.EmailModel.email =
+            this.departmentOP.email.toString() +
+            resolve.department.email.toString();
+
+          this.EmailModel.payload.confirmed_by = this.getUserActive.username;
+          this.EmailModel.payload.confirmedAt = resolve.declaredAt;
+          if (resolve.driver_out != null) {
+            this.damageSelect.driver_out = resolve.driver_out.username;
+            this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+          } else {
+            console.error("test DriverOut");
           }
-          return item;
+          this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+          this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
+
+          this.SendEmailAction(this.EmailModel).then(() => {
+            console.log("DONE");
+          });
+
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
         });
-        console.log("resolve", resolve);
-        this.damageSelect.resolveDescription =
-          this.confirmDamage.resolveDescription;
-        this.damageSelect.status = resolve.status;
-        this.confirmDamage.id = null;
-
-        this.confirmDamage.confirmedBy_id = null;
-        this.confirmDamage.resolveDescription = "";
-        this.EmailModel.payload.Equipment =
-          this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.department =
-          resolve.damage_type.department.name;
-        this.EmailModel.payload.Defect = resolve.damage_type.name;
-        this.EmailModel.status = "Resolved ";
-        this.EmailModel.payload.Status = "resolved";
-        this.EmailModel.email = this.departmentOP.email.toString()+resolve.department.email.toString();
-
-        this.EmailModel.payload.confirmed_by = this.getUserActive.username;
-        this.EmailModel.payload.confirmedAt = resolve.declaredAt;
-        if (resolve.driver_out != null) {
-          this.damageSelect.driver_out = resolve.driver_out.username;
-          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
-        } else {
-          console.error("test DriverOut");
-        }
-        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
-        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
-
-        this.SendEmailAction(this.EmailModel).then(() => {
-          console.log("DONE");
-        });
-      });
       setTimeout(() => {
         this.counters();
       }, 1000);
-      this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
       this.showdetails = false;
       this.dialogresolve = false;
     },
@@ -1268,49 +1278,58 @@ export default {
       this.closeDamage.id = this.damageSelect.id;
       this.closeDamage.closedBy_id = this.getUserActive.id;
       this.damageSelect.status = this.closeDamage.status;
-      this.closeDamageAction(this.closeDamage).then((resolve) => {
-        this.damageByEquipments = this.damageByEquipments.map((item) => {
-          if (item.id == resolve.id) {
-            // resolve.confirmed_by=resolve.confirmedBy;
-            return resolve;
+      this.closeDamageAction(this.closeDamage)
+        .then((resolve) => {
+          this.damageByEquipments = this.damageByEquipments.map((item) => {
+            if (item.id == resolve.id) {
+              // resolve.confirmed_by=resolve.confirmedBy;
+              return resolve;
+            }
+            return item;
+          });
+
+          this.damageSelect.status = resolve.status;
+          this.EmailModel.payload.Equipment =
+            this.EquipmentsByCounter.nameEquipment;
+          this.EmailModel.payload.department =
+            resolve.damage_type.department.name;
+          this.EmailModel.payload.Defect = resolve.damage_type.name;
+          this.EmailModel.status = "Closed ";
+          this.EmailModel.payload.Status = "closed";
+          this.EmailModel.email =
+            this.departmentOP.email.toString() +
+            resolve.damage_type.department.email.toString();
+          this.EmailModel.payload.ClosedBy = this.getUserActive.username;
+          this.EmailModel.payload.ClosedAt = resolve.declaredAt;
+          if (resolve.driver_out != null) {
+            this.damageSelect.driver_out = resolve.driver_out.username;
+            this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+          } else {
           }
-          return item;
-        });
+          this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+          this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
 
-        this.damageSelect.status = resolve.status;
-        this.EmailModel.payload.Equipment =
-          this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.department =
-          resolve.damage_type.department.name;
-        this.EmailModel.payload.Defect = resolve.damage_type.name;
-        this.EmailModel.status = "Closed ";
-        this.EmailModel.payload.Status = "closed";
-        this.EmailModel.email = this.departmentOP.email.toString()+resolve.department.email.toString();
-        this.EmailModel.payload.ClosedBy = this.getUserActive.username;
-        this.EmailModel.payload.ClosedAt = resolve.declaredAt;
-        if (resolve.driver_out != null) {
-          this.damageSelect.driver_out = resolve.driver_out.username;
-          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
-        } else {
-          console.error("test DriverOut");
-        }
-        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
-        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
+          /* this.SendEmailAction(this.EmailModel).then(() => {
+            console.log("DONE");
+          }); */
+          this.closeDamage.id = null;
+          this.closeDamage.closedBy_id = null;
 
-        this.SendEmailAction(this.EmailModel).then(() => {
-          console.log("DONE");
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
+        })
+        .catch((error) => {
+          swal("Error", "", "error");
+          console.log("error",error);
         });
-        this.closeDamage.id = null;
-        this.closeDamage.closedBy_id = null;
-      });
       setTimeout(() => {
         this.counters();
       }, 1000);
-      this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
       this.dialogclose = false;
       this.showdetails = false;
     },
@@ -1319,71 +1338,87 @@ export default {
       this.revertDamage.rejectedBy_id = this.getUserActive.id;
       this.damageSelect.status = this.revertDamage.status;
 
-      this.revertDamageAction(this.revertDamage).then((resolve) => {
-        this.damageByEquipments = this.damageByEquipments.map((item) => {
-          if (item.id == resolve.id) {
-            // resolve.confirmed_by=resolve.confirmedBy;
-            return resolve;
+      this.revertDamageAction(this.revertDamage)
+        .then((resolve) => {
+          this.damageByEquipments = this.damageByEquipments.map((item) => {
+            if (item.id == resolve.id) {
+              // resolve.confirmed_by=resolve.confirmedBy;
+              return resolve;
+            }
+            return item;
+          });
+          this.damageSelect.status = resolve.status;
+          this.damageSelect.rejectedTimes = resolve.rejectedTimes;
+          this.damageSelect.rejectedDescription =
+            this.revertDamage.rejectedDescription;
+          this.revertDamage.id = null;
+          this.revertDamage.rejectedBy_id = null;
+          this.revertDamage.rejectedDescription = "";
+
+          this.EmailModel.payload.Equipment =
+            this.EquipmentsByCounter.nameEquipment;
+          this.EmailModel.payload.department =
+            resolve.damage_type.department.name;
+          this.EmailModel.payload.Defect = resolve.damage_type.name;
+          this.EmailModel.status = "Rejcted ";
+          this.EmailModel.payload.Status = "on progress";
+          this.EmailModel.email =
+            this.departmentOP.email.toString() +
+            resolve.damage_type.department.email.toString();
+          this.EmailModel.payload.rejected_by = this.getUserActive.username;
+          this.EmailModel.payload.rejectedAt = resolve.declaredAt;
+          if (resolve.driver_out != null) {
+            this.damageSelect.driver_out = resolve.driver_out.username;
+
+            this.EmailModel.payload.DriverOut = resolve.driver_out.username;
+          } else {
+            console.error("test DriverOut");
           }
-          return item;
+          this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
+          this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
+
+          this.SendEmailAction(this.EmailModel).then(() => {
+            console.log("DONE");
+          });
+
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
         });
-        this.damageSelect.status = resolve.status;
-        this.damageSelect.rejectedTimes = resolve.rejectedTimes;
-        this.damageSelect.rejectedDescription =
-          this.revertDamage.rejectedDescription;
-        this.revertDamage.id = null;
-        this.revertDamage.rejectedBy_id = null;
-        this.revertDamage.rejectedDescription = "";
-
-        this.EmailModel.payload.Equipment =
-          this.EquipmentsByCounter.nameEquipment;
-        this.EmailModel.payload.department =
-          resolve.damage_type.department.name;
-        this.EmailModel.payload.Defect = resolve.damage_type.name;
-        this.EmailModel.status = "Rejcted ";
-        this.EmailModel.payload.Status = "on progress";
-        this.EmailModel.email = this.departmentOP.email.toString()+resolve.department.email.toString();
-        this.EmailModel.payload.rejected_by = this.getUserActive.username;
-        this.EmailModel.payload.rejectedAt = resolve.declaredAt;
-        if (resolve.driver_out != null) {
-          this.damageSelect.driver_out = resolve.driver_out.username;
-
-          this.EmailModel.payload.DriverOut = resolve.driver_out.username;
-        } else {
-          console.error("test DriverOut");
-        }
-        this.EmailModel.payload.DeclaredBy = resolve.declared_by.username;
-        this.EmailModel.payload.DeclaredAt = resolve.declaredAt;
-
-        this.SendEmailAction(this.EmailModel).then(() => {
-          console.log("DONE");
-        });
-      });
       setTimeout(() => {
         this.counters();
       }, 1000);
-      this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
       this.showdetails = false;
       this.dialogrejected = false;
     },
     deleteDamage() {
-      this.deleteDAMAGEAction(this.Damagedelete).then(() => {
-        this.damageByEquipments = this.damageByEquipments.filter((e) => {
-          return e.id != this.Damagedelete.id;
+      this.deleteDAMAGEAction(this.Damagedelete)
+        .then(() => {
+          this.damageByEquipments = this.damageByEquipments.filter((e) => {
+            return e.id != this.Damagedelete.id;
+          });
+
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
         });
-      });
       setTimeout(() => {
         this.counters();
       }, 2000);
-      this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
       this.dialogDelete = false;
     },
     showImage(item) {
@@ -1449,25 +1484,28 @@ export default {
       );
 
       console.log("this.photo", this.photo);
-      this.sendDamagePhotosStoragePathAction(formData).then((resolve) => {
-        this.damageByEquipments = this.damageByEquipments.map((c) => {
-          if (c.id == resolve.id) {
-            this.damageSelect.photos = resolve.photos;
-            this.damageSelect.description = resolve.description;
-            c.photos = resolve.photos;
-            c.description = resolve.description;
-          }
-          return c;
+      this.sendDamagePhotosStoragePathAction(formData)
+        .then((resolve) => {
+          this.damageByEquipments = this.damageByEquipments.map((c) => {
+            if (c.id == resolve.id) {
+              this.damageSelect.photos = resolve.photos;
+              this.damageSelect.description = resolve.description;
+              c.photos = resolve.photos;
+              c.description = resolve.description;
+            }
+            return c;
+          });
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "Add photo and description success", "success");
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
         });
-        swal("Good job!", "Add photo and description success ", "success");
 
-        console.log("done");
-      });
-      this.LoadingPage = true;
-
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
       this.dialogimage = false;
     },
   },

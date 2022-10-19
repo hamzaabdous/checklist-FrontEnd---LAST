@@ -260,12 +260,19 @@ export default {
           this.damageTypesByProfile_group_id.filter((e) => {
             return e.id != this.editedItem.id;
           });
-      });
-      this.LoadingPage = true;
+
+          this.LoadingPage = true;
 
       setTimeout(() => {
         this.LoadingPage = false;
+        swal("Good job!", "success", "success");
+
       }, 2000);
+      }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+      
       this.closeDelete();
     },
     close() {
@@ -301,6 +308,16 @@ export default {
         this.editedItem.profile_group_id = localStorage.getItem("id");
         this.addDAMAGETYPEAction(this.editedItem).then((damageType) => {
           this.damageTypesByProfile_group_id.push(damageType);
+          this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+          swal("Good job!", "success", "success");
+
+        }, 2000);
+        }).catch(()=>{
+          swal("Error", "", "error");
+
         });
         this.editedIndex = -1;
         this.editedItem = {
@@ -308,11 +325,7 @@ export default {
           profile_group_id: "",
           department_id: "",
         };
-        this.LoadingPage = true;
-
-        setTimeout(() => {
-          this.LoadingPage = false;
-        }, 2000);
+        
         this.closeAddSaveDialog();
       } else {
         this.editDAMAGETYPEAction(this.editedItem).then((damageType) => {
@@ -321,6 +334,17 @@ export default {
               if (c.id == damageType.id) return damageType;
               return c;
             });
+
+            this.LoadingPage = true;
+
+        setTimeout(() => {
+          this.LoadingPage = false;
+          swal("Good job!", "success", "success");
+
+        }, 2000);
+        }).catch(()=>{
+          swal("Error", "", "error");
+
         });
         this.editedIndex = -1;
         this.editedItem = {
@@ -328,11 +352,7 @@ export default {
           profile_group_id: "",
           department_id: "",
         };
-        this.LoadingPage = true;
-
-        setTimeout(() => {
-          this.LoadingPage = false;
-        }, 2000);
+       
         this.closeAddSaveDialog();
       }
 

@@ -391,7 +391,9 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
-        v-if="item.fonction.name == 'DRIVER' || item.fonction.name == 'FOREMAN'"
+          v-if="
+            item.fonction.name == 'DRIVER' || item.fonction.name == 'FOREMAN'
+          "
           color="#FB8C00"
           class="mr-2 btn white--text"
           @click="editeUserToProfilegroupItem(item)"
@@ -417,7 +419,7 @@
           class="m-2 btn white--text"
           @click="resetPassword(item)"
         >
-          <v-icon medium > mdi-lock-reset </v-icon>
+          <v-icon medium> mdi-lock-reset </v-icon>
         </v-btn>
       </template>
       <template v-slot:no-data>
@@ -595,7 +597,7 @@ export default {
       "setPROFILEDROUPSAction",
       "addUserToProfileGroupAction2",
       "deleteUserFromProfileGroupAction2",
-      "resetPasswordAction"
+      "resetPasswordAction",
     ]),
     changeDepartmentinDialogeProfilgroup() {
       this.profilegroupsActive = [];
@@ -635,14 +637,19 @@ export default {
     },
     SaveUserToProfilegroupItem() {
       this.UserToProfile.user_id = this.editedItem.id;
-      this.addUserToProfileGroupAction(this.UserToProfile).then(() => {
-        console.log("done ");
-      });
-      this.LoadingPage = true;
+      this.addUserToProfileGroupAction(this.UserToProfile)
+        .then(() => {
+          console.log("done ");
+          this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
+          setTimeout(() => {
+            this.LoadingPage = false;
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
+        });
+
       this.dialogediteUserToProfilegroup = false;
     },
     deleteItem(item) {
@@ -695,38 +702,48 @@ export default {
       console.log("this.UserToProfile", this.UserToProfile);
     },
     deleteUserFromProfileGroup() {
-      this.deleteUserFromProfileGroupAction2(this.UserToProfile).then(() => {
-        this.profilegroupsActive = this.profilegroupsActive.filter((e) => {
-          if (e.id != this.UserToProfile.profile_group_id) {
-            return true;
-          } else {
-            var deletedProfileGroup = this.getprofilegroups.filter((e) => {
-              return e.id == this.UserToProfile.profile_group_id;
-            })[0];
-            this.profilegroupsFiltre.push(deletedProfileGroup);
-          }
-        });
-      });
-      this.LoadingPage = true;
+      this.deleteUserFromProfileGroupAction2(this.UserToProfile)
+        .then(() => {
+          this.profilegroupsActive = this.profilegroupsActive.filter((e) => {
+            if (e.id != this.UserToProfile.profile_group_id) {
+              return true;
+            } else {
+              var deletedProfileGroup = this.getprofilegroups.filter((e) => {
+                return e.id == this.UserToProfile.profile_group_id;
+              })[0];
+              this.profilegroupsFiltre.push(deletedProfileGroup);
+            }
+          });
+          this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
+          setTimeout(() => {
+            this.LoadingPage = false;
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
+        });
+
       this.dialogprofilgroupToUser = false;
     },
     AddUserFromProfileGroup() {
-      this.addUserToProfileGroupAction2(this.UserToProfile).then((user) => {
-        this.users = [...this.getUsers];
-        this.profilegroupsActive = user.profile_groups;
-        this.profilegroupsFiltre = this.profilegroupsFiltre.filter((e) => {
-          return e.id != this.UserToProfile.profile_group_id;
-        });
-      });
-      this.LoadingPage = true;
+      this.addUserToProfileGroupAction2(this.UserToProfile)
+        .then((user) => {
+          this.users = [...this.getUsers];
+          this.profilegroupsActive = user.profile_groups;
+          this.profilegroupsFiltre = this.profilegroupsFiltre.filter((e) => {
+            return e.id != this.UserToProfile.profile_group_id;
+          });
+          this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
+          setTimeout(() => {
+            this.LoadingPage = false;
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
+        });
+
       this.dialogAddprofilgroupToUser = false;
     },
     closeDelete() {
@@ -768,11 +785,12 @@ export default {
       });
     },
     resetPassword(item) {
-      this.resetPasswordAction(item).then(() => {
-          
+      this.resetPasswordAction(item)
+        .then(() => {
           swal("success", "Password has been reset successfully", "success");
-
-          
+        })
+        .catch(() => {
+          swal("Error", "", "error");
         });
     },
   },

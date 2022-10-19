@@ -324,14 +324,21 @@ export default {
     },
     deleteItemConfirm() {
       console.log("this.editedItem", this.editedItem);
-      this.deletePROFILEDROUPAction(this.editedItem).then(() => {
-        this.profilegroups = [...this.getprofilegroups];
-      });
-      this.LoadingPage = true;
+      this.deletePROFILEDROUPAction(this.editedItem)
+        .then(() => {
+          this.profilegroups = [...this.getprofilegroups];
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-      }, 2000);
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
+        })
+        .catch(() => {
+          swal("Error", "", "error");
+        });
+
       this.closeDelete();
     },
     close() {
@@ -354,25 +361,37 @@ export default {
     save() {
       console.log("this.editedItem", this.editedItem);
       if (this.editedIndex == -1) {
-        this.addPROFILEDROUPAction(this.editedItem).then(() => {
-          this.profilegroups = [...this.getprofilegroups];
-          console.log("this.profilegroups", this.profilegroups);
-        });
-        this.LoadingPage = true;
+        this.addPROFILEDROUPAction(this.editedItem)
+          .then(() => {
+            this.profilegroups = [...this.getprofilegroups];
+            console.log("this.profilegroups", this.profilegroups);
+            this.LoadingPage = true;
 
-        setTimeout(() => {
-          this.LoadingPage = false;
-        }, 2000);
+            setTimeout(() => {
+              this.LoadingPage = false;
+              swal("Good job!", "success", "success");
+            }, 2000);
+          })
+          .catch(() => {
+            swal("Error", "", "error");
+          });
+
         this.closeAddSaveDialog();
       } else {
-        this.editPROFILEDROUPAction(this.editedItem).then(() => {
-          this.profilegroups = [...this.getprofilegroups];
-        });
-        this.LoadingPage = true;
+        this.editPROFILEDROUPAction(this.editedItem)
+          .then(() => {
+            this.profilegroups = [...this.getprofilegroups];
+            this.LoadingPage = true;
 
-        setTimeout(() => {
-          this.LoadingPage = false;
-        }, 2000);
+            setTimeout(() => {
+              this.LoadingPage = false;
+              swal("Good job!", "success", "success");
+            }, 2000);
+          })
+          .catch(() => {
+            swal("Error", "", "error");
+          });
+
         this.closeAddSaveDialog();
       }
 

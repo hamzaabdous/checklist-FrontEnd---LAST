@@ -192,13 +192,19 @@ export default {
         this.equipmentsFiltres = this.equipmentsFiltres.filter((e) => {
           return e.id != this.editedItem.id;
         });
-      });
-      this.editedIndex = -1;
-      this.LoadingPage = true;
+        this.LoadingPage = true;
 
       setTimeout(() => {
         this.LoadingPage = false;
+        swal("Good job!", "success", "success");
+
       }, 2000);
+      }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+      this.editedIndex = -1;
+      
       this.closeDelete();
     },
     close() {
@@ -212,24 +218,38 @@ export default {
         this.editedItem.profile_group_id = localStorage.getItem("id");
         this.addEQUIPMENTAction(this.editedItem).then((equipment) => {
           this.equipmentsFiltres.push(equipment);
-        });
-        this.LoadingPage = true;
+
+          this.LoadingPage = true;
 
         setTimeout(() => {
           this.LoadingPage = false;
+          swal("Good job!", "success", "success");
+
         }, 2000);
+        }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+        
       } else {
         this.editEQUIPMENTAction(this.editedItem).then((equipment) => {
           this.equipmentsFiltres = this.equipmentsFiltres.map((c) => {
             if (c.id == equipment.id) return equipment;
             return c;
           });
-        });
-        this.LoadingPage = true;
+
+          this.LoadingPage = true;
 
         setTimeout(() => {
           this.LoadingPage = false;
+          swal("Good job!", "success", "success");
+
         }, 2000);
+        }).catch(()=>{
+          swal("Error", "", "error");
+
+        });
+        
       }
 
       this.close();
