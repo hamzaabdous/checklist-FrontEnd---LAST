@@ -646,7 +646,7 @@ export default {
         DeclaredAt: "",
       },
       status: "",
-      email: "foreman@tangeralliance.com,shiftmanager@tangeralliance.com,iliass.errabai@tangeralliance.com",
+      email: "",
       department: [],
     },
     EmailModelTEC: {
@@ -1214,7 +1214,7 @@ export default {
         DeclaredAt: "",
       };
       this.EmailModel.status = "";
-      this.EmailModel.email = "hamza.abdous@tangeralliance.com";
+      this.EmailModel.email = "";
       this.EmailModel.department = [];
 
       // TEC
@@ -1230,7 +1230,7 @@ export default {
         DeclaredAt: "",
       };
       this.EmailModelTEC.status = "";
-      this.EmailModelTEC.email = "hamza.abdous@tangeralliance.com";
+      this.EmailModelTEC.email = "";
       this.EmailModelTEC.department = [];
 
       this.listdepartmentIT = [];
@@ -1343,8 +1343,7 @@ export default {
               this.EmailModelTEC.payload.Department = "TECHNIQUE";
               this.EmailModelTEC.payload.Status = "on progress";
               this.EmailModelTEC.status = "Defected ";
-              this.EmailModel.email = this.departmentTEC.email.toString()+this.departmentOP.email.toString();
-
+              this.EmailModelTEC.email = this.departmentTEC.email.toString()+","+this.departmentOP.email.toString();
               if (resolve[0].driver_out != null) {
                 this.EmailModelTEC.payload.DriverOut =
                   resolve[0].driver_out.username;

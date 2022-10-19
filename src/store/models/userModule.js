@@ -188,6 +188,18 @@ const usersModule = {
           });
       });
     },
+    resetPasswordAction({ commit }, user) {
+      return new Promise((resolve, reject) => {
+        CustomizedAxios.post("users/resetPassword", user)
+          .then((response) => {
+            commit("GET_USERACTIVE", response.data.payload);
+            resolve(response.data.payload);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
   },
   getters: {
     getUsers: (state) => {

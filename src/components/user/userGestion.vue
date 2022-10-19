@@ -391,6 +391,7 @@
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <v-btn
+        v-if="item.fonction.name == 'DRIVER' || item.fonction.name == 'FOREMAN'"
           color="#FB8C00"
           class="mr-2 btn white--text"
           @click="editeUserToProfilegroupItem(item)"
@@ -406,10 +407,17 @@
         </v-btn>
         <v-btn
           color="#f45"
-          class="m-2 btn white--text"
+          class="mr-2 btn white--text"
           @click="deleteItem(item)"
         >
           <v-icon medium @click="deleteItem(item)"> mdi-delete </v-icon>
+        </v-btn>
+        <v-btn
+          color="#545"
+          class="m-2 btn white--text"
+          @click="resetPassword(item)"
+        >
+          <v-icon medium > mdi-lock-reset </v-icon>
         </v-btn>
       </template>
       <template v-slot:no-data>
@@ -587,6 +595,7 @@ export default {
       "setPROFILEDROUPSAction",
       "addUserToProfileGroupAction2",
       "deleteUserFromProfileGroupAction2",
+      "resetPasswordAction"
     ]),
     changeDepartmentinDialogeProfilgroup() {
       this.profilegroupsActive = [];
@@ -757,6 +766,14 @@ export default {
       this.fonctions = this.getfunctions.filter((e) => {
         return e.department_id == id;
       });
+    },
+    resetPassword(item) {
+      this.resetPasswordAction(item).then(() => {
+          
+          swal("success", "Password has been reset successfully", "success");
+
+          
+        });
     },
   },
 };
