@@ -9,7 +9,7 @@
     >
       <template v-slot:top>
         <v-toolbar flat>
-          <v-toolbar-title>Equipments Profiles : :</v-toolbar-title>
+          <v-toolbar-title>Equipment's Profile :</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="600px">
@@ -138,7 +138,7 @@
           <v-dialog v-model="dialogView" width="1000px">
             <v-card>
               <v-container>
-                <div>Equipments groups :</div>
+                <div>Equipment's Profile</div>
                 <v-tabs color="#1D4F91" left>
                   <v-tab>users</v-tab>
                   <v-tab>Damage type</v-tab>
