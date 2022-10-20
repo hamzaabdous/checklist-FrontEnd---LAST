@@ -88,17 +88,17 @@
         class="elevation-1"
       >
         <template v-slot:item="{ item }">
-          <tr @click="pageView(item)">
-            <td class="">{{ item.damage_type.name }}</td>
+          <tr @click="pageView(item)" class="">
+            <td class="cursor">{{ item.damage_type.name }}</td>
 
-            <td>
-              <v-chip class="white--text" :color="getColor(item.status)">
+            <td class="cursor">
+              <v-chip class="white--text cursor" :color="getColor(item.status)">
                 {{ item.status }}
               </v-chip>
             </td>
-            <td class="">{{ item.declared_by.username }}</td>
-            <td class="">{{ item.created_at }}</td>
-            <td class="">{{ item.confirmedAt }}</td>
+            <td class="cursor">{{ item.declared_by.username }}</td>
+            <td class="cursor">{{ item.created_at }}</td>
+            <td class="cursor">{{ item.confirmedAt }}</td>
             <td>
               <v-btn
                 v-if="item.status != 'closed'"
