@@ -61,7 +61,7 @@
             <v-list-item three-line class="d-flex">
               <v-list-item-content>
                 <div class="text-overline mb-4 blue--text">
-                  Closed Defect Tickets
+                  Closed Defects Tickets
                 </div>
                 <v-list-item-title class="text-h5 mb-1 blue--text">
                   {{ this.EquipmentsByCounter.closedCount }}
@@ -170,7 +170,7 @@
               @click="isHistorique == false ? showHistorique() : initialize()"
               class="white--text"
             >
-              Historique Defecte
+              Defects history
             </v-btn>
           </template>
           <v-dialog v-model="dialogimage" max-width="700px">
@@ -985,7 +985,34 @@ export default {
         "department_id: " + this.getUserActive.fonction.department_id
       );
 
-      if (this.getUserActive.fonction.department_id == 1) {
+      if (this.fonction =="ADMIN") {
+        console.log("hamza test admin");
+        this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
+          (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+            this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
+              }
+            });
+            this.damageByEquipments = this.equipmentsFiltreByid.filter(
+              (c) => c.status != "closed"
+            );
+
+            this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+              this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+              this.EquipmentsByCounter.nameEquipment =
+                this.getEquipmentsByCounter.nameEquipment;
+              this.EquipmentsByCounter.damagedCount =
+                this.getEquipmentsByCounter.damagedCount;
+              this.EquipmentsByCounter.confirmedCount =
+                this.getEquipmentsByCounter.confirmedCount;
+              this.EquipmentsByCounter.closedCount = 0;
+            });
+          }
+        );
+      }else{
+        if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
@@ -1052,6 +1079,9 @@ export default {
           }
         );
       }
+      }
+
+      
       this.iscolor = "black";
       this.isHistorique = false;
       console.log("EquipmentsByCounter", this.EquipmentsByCounter);
@@ -1088,7 +1118,41 @@ export default {
       setTimeout(() => {
         this.LoadingPage = false;
       }, 2000);
-      if (this.getUserActive.fonction.department_id == 1) {
+if (this.fonction =="ADMIN") {
+  this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
+          (resolve) => {
+            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+            this.damageByEquipments.map((item) => {
+              if (item.equipment_id == this.idEquipment) {
+                this.equipmentsFiltreByid.push(item);
+              }
+            });
+            this.damageByEquipmentsWithOutClose =
+              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
+            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+              (c) => c.status == "closed"
+            );
+            this.damageByEquipments = [];
+            this.damageByEquipments = [...this.damageByEquipmentsClose];
+            this.damageByEquipmentsWithOutClose.map((item) => {
+              this.damageByEquipments.push(item);
+            });
+            this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+              this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+              this.EquipmentsByCounter.nameEquipment =
+                this.getEquipmentsByCounter.nameEquipment;
+              this.EquipmentsByCounter.damagedCount =
+                this.getEquipmentsByCounter.damagedCount;
+              this.EquipmentsByCounter.confirmedCount =
+                this.getEquipmentsByCounter.confirmedCount;
+              this.EquipmentsByCounter.closedCount =
+                this.getEquipmentsByCounter.closedCount;
+            });
+          }
+        );
+        this.loading = false;
+} else {
+  if (this.getUserActive.fonction.department_id == 1) {
         this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
@@ -1178,6 +1242,9 @@ export default {
         );
         this.loading = false;
       }
+}
+
+      
       this.iscolor = "teal";
       this.isHistorique = true;
     },
@@ -1324,7 +1391,7 @@ export default {
         })
         .catch((error) => {
           swal("Error", "", "error");
-          console.log("error",error);
+          console.log("error", error);
         });
       setTimeout(() => {
         this.counters();

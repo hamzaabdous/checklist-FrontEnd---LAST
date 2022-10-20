@@ -172,11 +172,7 @@
                   <v-list-item class="itemd"> Technique </v-list-item>
                 </div>
               </router-link>
-              <router-link class="linktext" to="/Rapport">
-                <div class="itemdrawer">
-                  <v-list-item class="itemd"> Rapport </v-list-item>
-                </div>
-              </router-link>
+              
            
             </v-list-item-group>
           </v-list>

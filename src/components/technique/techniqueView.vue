@@ -223,7 +223,35 @@ export default {
     },
     initialize() {
       this.idgrp = localStorage.getItem("idDomainGroupes");
-      if (this.getUserActive.fonction.department_id == 1) {
+
+      if (this.getUserActive.fonction.name == "ADMIN") {
+        this.getEquipmentsByCountersAction(
+          localStorage.getItem("idDomainGroupesid")
+        ).then((resolve) => {
+          this.equipments = [...this.getEquipmentsByCounters];
+          //  console.log("this.equipments",this.equipments);
+        });
+        this.getProfileGroupsByCounterAction(
+          localStorage.getItem("idDomainGroupesid")
+        ).then(() => {
+          this.ProfileGroupsByCounter.id = this.getProfileGroupsByCounter.id;
+          this.ProfileGroupsByCounter.name =
+            this.getProfileGroupsByCounter.name;
+          this.ProfileGroupsByCounter.equipmentsCount =
+            this.getProfileGroupsByCounter.equipmentsCount;
+          this.ProfileGroupsByCounter.functionalEquipmnet =
+            this.getProfileGroupsByCounter.functionalEquipmnet;
+          this.ProfileGroupsByCounter.damagedCount =
+            this.getProfileGroupsByCounter.damagedCount;
+          this.ProfileGroupsByCounter.confirmedCount =
+            this.getProfileGroupsByCounter.confirmedCount;
+          this.ProfileGroupsByCounter.closedCount =
+            this.getProfileGroupsByCounter.closedCount;
+            this.ProfileGroupsByCounter.nonFunctionalEquipmnet =
+            this.getProfileGroupsByCounter.nonFunctionalEquipmnet;
+        });
+      } else {
+         if (this.getUserActive.fonction.department_id == 1) {
         this.getEquipmentsByCountersITAction(
           localStorage.getItem("idDomainGroupesid")
         ).then((resolve) => {
@@ -302,6 +330,9 @@ export default {
             this.getProfileGroupsByCounter.nonFunctionalEquipmnet;
         });
       }
+      }
+
+     
 
       console.log("this.ProfileGroupsByCounter", this.ProfileGroupsByCounter);
     },
