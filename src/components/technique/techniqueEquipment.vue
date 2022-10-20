@@ -515,6 +515,16 @@
                           </td>
                         </tr>
                         <tr>
+                          <td><h3>Shift</h3></td>
+                          <td class="valueColumn">
+                            <h5 v-if="damageSelect.shift == null">Empty</h5>
+
+                            <h4 v-else>
+                              {{ damageSelect.shift }}
+                            </h4>
+                          </td>
+                        </tr>
+                        <tr>
                           <td><h3>Last driver</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.driverOut == null">Empty</h5>
