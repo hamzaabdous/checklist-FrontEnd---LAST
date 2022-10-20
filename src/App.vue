@@ -164,7 +164,7 @@
               </router-link>
               <router-link class="linktext" to="/profile_groupe">
                 <div class="itemdrawer">
-                  <v-list-item class="itemd"> Equipement </v-list-item>
+                  <v-list-item class="itemd"> Equipment </v-list-item>
                 </div>
               </router-link>
               <router-link class="linktext" to="/technique">
