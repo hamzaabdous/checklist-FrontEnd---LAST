@@ -159,7 +159,15 @@ export default {
   methods: {
     initialize() {
       this.profilegroupsBydepartements = [];
-      if (this.getUserActive.fonction.department_id == 1) {
+
+if (this.getUserActive.fonction.name == "ADMIN") {
+  this.getProfileGroupsByCountersAction().then(() => {
+          this.profilegroupsBydepartements = [
+            ...this.getProfileGroupsByCounters,
+          ];
+        });
+} else {
+  if (this.getUserActive.fonction.department_id == 1) {
         this.getProfileGroupsByCountersITAction().then(() => {
           this.profilegroupsBydepartements = [
             ...this.getProfileGroupsByCounters,
@@ -178,7 +186,9 @@ export default {
           ];
         });
       }
+}
 
+      
       this.setDepartementsAction().then(() => {
         this.departements = [...this.getdepartements];
       });
