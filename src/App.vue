@@ -100,11 +100,7 @@
               </h4>
             </div>
             <v-divider></v-divider>
-            <div class="pa-8">
-              <v-btn @click="dialog = true" color="primary">
-                <h4 class="white--text">Changer password</h4>
-              </v-btn>
-            </div>
+            
             <div class="pa-8">
               <v-btn width="190px" @click="logout">
                 <v-icon>mdi-logout-variant</v-icon>

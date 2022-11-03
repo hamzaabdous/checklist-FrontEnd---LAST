@@ -96,8 +96,16 @@
                 {{ item.status }}
               </v-chip>
             </td>
-            <td class="cursor">{{ item.declared_by.username }}</td>
-            <td class="cursor">{{ item.created_at }}</td>
+            <td class="cursor" v-if="fonction != 'TECHNICIEN'">
+              {{ item.declared_by.username }}
+            </td>
+            <td class="cursor" v-else>
+              
+            </td>
+            <td class="cursor" v-if="fonction != 'TECHNICIEN'">{{ item.created_at }}</td>
+            <td class="cursor" v-else>
+              
+            </td>
             <td class="cursor">{{ item.confirmedAt }}</td>
             <td>
               <v-btn
@@ -321,7 +329,8 @@
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
                 <v-toolbar-title>
-                  {{ damageSelect.damage_type.name }} {{" - "}} {{ damageSelect.declaredAt }}
+                  {{ damageSelect.damage_type.name }} {{ " - " }}
+                  {{ damageSelect.declaredAt }}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
@@ -385,7 +394,7 @@
                             <h4 v-else>{{ damageSelect.equipment.name }}</h4>
                           </td>
                         </tr>
-                        <tr>
+                        <tr v-if="fonction != 'TECHNICIEN'">
                           <td><h3>Declared At</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.declaredAt == null">
@@ -395,7 +404,7 @@
                             <h4 v-else>{{ damageSelect.declaredAt }}</h4>
                           </td>
                         </tr>
-                        <tr>
+                        <tr v-if="fonction != 'TECHNICIEN'">
                           <td><h3>Declared By</h3></td>
                           <td class="valueColumn">
                             <h5
@@ -506,7 +515,7 @@
                           </td>
                         </tr>
 
-                        <tr>
+                        <tr v-if="fonction != 'TECHNICIEN'">
                           <td><h3>Created at</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.created_at == null">
@@ -526,7 +535,7 @@
                             </h4>
                           </td>
                         </tr>
-                        <tr>
+                        <tr v-if="fonction != 'TECHNICIEN'">
                           <td><h3>Last driver</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.driverOut == null">Empty</h5>

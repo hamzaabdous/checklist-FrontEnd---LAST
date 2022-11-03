@@ -453,6 +453,8 @@
 import { mapActions, mapGetters } from "vuex";
 import CustomizedAxios from "../../plugins/axios";
 import LoadingPage from "../LoadingPage.vue";
+import moment from 'moment';
+
 export default {
   components: {
     LoadingPage,
@@ -475,6 +477,8 @@ export default {
       declaredBy_id: null,
       equipment_id: null,
       damage_type_id: null,
+      shift:"",
+
     },
     damage_type_id: null,
     modelIT_id_Courent: null,
@@ -938,10 +942,13 @@ export default {
             declaredBy_id: null,
             equipment_id: null,
             damage_type_id: null,
+            shift:"",
+
           };
           Damage.declaredBy_id = this.getUserActive.id;
           Damage.damage_type_id = this.damage_type_id;
           Damage.equipment_id = this.equipments_id;
+          Damage.shift = this.getActualShift();
 
           this.damageSelect.push(Damage);
 
@@ -951,10 +958,13 @@ export default {
             declaredBy_id: null,
             equipment_id: null,
             damage_type_id: null,
+            shift:"",
+
           };
           Damage.declaredBy_id = this.getUserActive.id;
           Damage.damage_type_id = this.damage_type_id;
           Damage.equipment_id = this.equipments_id;
+          Damage.shift = this.getActualShift();
 
           this.damageSelect.push(Damage);
 
@@ -983,10 +993,13 @@ export default {
               declaredBy_id: null,
               equipment_id: null,
               damage_type_id: null,
+              shift:"",
+
             };
             Damage.declaredBy_id = this.getUserActive.id;
             Damage.damage_type_id = this.damage_type_id;
             Damage.equipment_id = this.equipments_id;
+            Damage.shift = this.getActualShift();
 
             this.damageSelect.push(Damage);
 
@@ -996,10 +1009,13 @@ export default {
               declaredBy_id: null,
               equipment_id: null,
               damage_type_id: null,
+              shift:"",
+
             };
             Damage.declaredBy_id = this.getUserActive.id;
             Damage.damage_type_id = this.damage_type_id;
             Damage.equipment_id = this.equipments_id;
+            Damage.shift = this.getActualShift();
 
             this.damageSelect.push(Damage);
 
@@ -1358,6 +1374,34 @@ export default {
 
         
       }
+    },
+    getActualShift() {
+      let thisDate = new Date("2022-02-16T07:00:00");
+      let nowDate = new Date();
+      let shift = ["D", "A", "B", "C"];
+      let momentDate = moment(thisDate);
+
+      while (momentDate.add(72, "hours").toDate() < nowDate) {
+        shift = this.shiftArrays(shift);
+      }
+      if (nowDate.getHours() >= 7 && nowDate.getHours() < 15) return shift[0];
+      else if (nowDate.getHours() >= 15 && nowDate.getHours() < 23)
+        return shift[1];
+      else if (
+        nowDate.getHours() == 23 ||
+        (nowDate.getHours() >= 0 && nowDate.getHours() < 7)
+      )
+        return shift[2];
+    },
+    shiftArrays(array) {
+      let c = "";
+      c = array[3];
+      array[3] = array[2];
+      array[2] = array[1];
+      array[1] = array[0];
+      array[0] = c;
+
+      return array;
     },
   },
 };
