@@ -179,7 +179,7 @@
                 <v-btn icon dark @click="dialogimage = false">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Settings</v-toolbar-title>
+                <v-toolbar-title>Details</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items> </v-toolbar-items>
               </v-toolbar>
@@ -320,7 +320,9 @@
                 <v-btn icon dark @click="closedtailedialoge">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Settings</v-toolbar-title>
+                <v-toolbar-title>
+                  {{ damageSelect.damage_type.name }} {{" - "}} {{ damageSelect.declaredAt }}
+                </v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
               <v-card-title class="text-h5 blue--text text--darken-3">
@@ -995,7 +997,7 @@ export default {
         "department_id: " + this.getUserActive.fonction.department_id
       );
 
-      if (this.fonction =="ADMIN") {
+      if (this.fonction == "ADMIN") {
         console.log("hamza test admin");
         this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
           (resolve) => {
@@ -1021,77 +1023,76 @@ export default {
             });
           }
         );
-      }else{
-        if (this.getUserActive.fonction.department_id == 1) {
-        this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
-          (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
-            this.damageByEquipments = this.equipmentsFiltreByid.filter(
-              (c) => c.status != "closed"
-            );
-            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status == "closed"
-            );
-            this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
-            this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
-            this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
-            this.EquipmentsByCounter.closedCount = 0;
-            console.log("resolve", resolve);
-          }
-        );
-      } else if (this.getUserActive.fonction.department_id == 2) {
-        this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
-          (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
-            this.damageByEquipments = this.equipmentsFiltreByid.filter(
-              (c) => c.status != "closed"
-            );
-            this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
-            this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
-            this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
-            this.EquipmentsByCounter.closedCount = 0;
-          }
-        );
       } else {
-        console.log("ccccccc filtre");
-        this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
-          (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
-            this.damageByEquipments = this.equipmentsFiltreByid.filter(
-              (c) => c.status != "closed"
-            );
-
-            this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
-              this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
-              this.EquipmentsByCounter.nameEquipment =
-                this.getEquipmentsByCounter.nameEquipment;
-              this.EquipmentsByCounter.damagedCount =
-                this.getEquipmentsByCounter.damagedCount;
-              this.EquipmentsByCounter.confirmedCount =
-                this.getEquipmentsByCounter.confirmedCount;
+        if (this.getUserActive.fonction.department_id == 1) {
+          this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
+            (resolve) => {
+              this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+              this.damageByEquipments.map((item) => {
+                if (item.equipment_id == this.idEquipment) {
+                  this.equipmentsFiltreByid.push(item);
+                }
+              });
+              this.damageByEquipments = this.equipmentsFiltreByid.filter(
+                (c) => c.status != "closed"
+              );
+              this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+                (c) => c.status == "closed"
+              );
+              this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
+              this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
+              this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
               this.EquipmentsByCounter.closedCount = 0;
-            });
-          }
-        );
-      }
+              console.log("resolve", resolve);
+            }
+          );
+        } else if (this.getUserActive.fonction.department_id == 2) {
+          this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
+            (resolve) => {
+              this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+              this.damageByEquipments.map((item) => {
+                if (item.equipment_id == this.idEquipment) {
+                  this.equipmentsFiltreByid.push(item);
+                }
+              });
+              this.damageByEquipments = this.equipmentsFiltreByid.filter(
+                (c) => c.status != "closed"
+              );
+              this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
+              this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
+              this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
+              this.EquipmentsByCounter.closedCount = 0;
+            }
+          );
+        } else {
+          console.log("ccccccc filtre");
+          this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
+            (resolve) => {
+              this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+              this.damageByEquipments.map((item) => {
+                if (item.equipment_id == this.idEquipment) {
+                  this.equipmentsFiltreByid.push(item);
+                }
+              });
+              this.damageByEquipments = this.equipmentsFiltreByid.filter(
+                (c) => c.status != "closed"
+              );
+
+              this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+                this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+                this.EquipmentsByCounter.nameEquipment =
+                  this.getEquipmentsByCounter.nameEquipment;
+                this.EquipmentsByCounter.damagedCount =
+                  this.getEquipmentsByCounter.damagedCount;
+                this.EquipmentsByCounter.confirmedCount =
+                  this.getEquipmentsByCounter.confirmedCount;
+                this.EquipmentsByCounter.closedCount = 0;
+              });
+            }
+          );
+        }
       }
 
-      
       this.iscolor = "black";
       this.isHistorique = false;
       console.log("EquipmentsByCounter", this.EquipmentsByCounter);
@@ -1128,97 +1129,7 @@ export default {
       setTimeout(() => {
         this.LoadingPage = false;
       }, 2000);
-if (this.fonction =="ADMIN") {
-  this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
-          (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
-            this.damageByEquipmentsWithOutClose =
-              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
-            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status == "closed"
-            );
-            this.damageByEquipments = [];
-            this.damageByEquipments = [...this.damageByEquipmentsClose];
-            this.damageByEquipmentsWithOutClose.map((item) => {
-              this.damageByEquipments.push(item);
-            });
-            this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
-              this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
-              this.EquipmentsByCounter.nameEquipment =
-                this.getEquipmentsByCounter.nameEquipment;
-              this.EquipmentsByCounter.damagedCount =
-                this.getEquipmentsByCounter.damagedCount;
-              this.EquipmentsByCounter.confirmedCount =
-                this.getEquipmentsByCounter.confirmedCount;
-              this.EquipmentsByCounter.closedCount =
-                this.getEquipmentsByCounter.closedCount;
-            });
-          }
-        );
-        this.loading = false;
-} else {
-  if (this.getUserActive.fonction.department_id == 1) {
-        this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
-          (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
-            this.damageByEquipmentsWithOutClose =
-              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
-            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status == "closed"
-            );
-            this.damageByEquipments = [];
-            this.damageByEquipments = [...this.damageByEquipmentsClose];
-            this.damageByEquipmentsWithOutClose.map((item) => {
-              this.damageByEquipments.push(item);
-            });
-
-            this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
-            this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
-            this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
-            this.EquipmentsByCounter.closedCount = resolve.closedCount;
-            console.log("resolve", resolve);
-            this.loading = false;
-          }
-        );
-      } else if (this.getUserActive.fonction.department_id == 2) {
-        this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
-          (resolve) => {
-            this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
-            this.damageByEquipments.map((item) => {
-              if (item.equipment_id == this.idEquipment) {
-                this.equipmentsFiltreByid.push(item);
-              }
-            });
-            this.damageByEquipmentsWithOutClose =
-              this.equipmentsFiltreByid.filter((c) => c.status != "closed");
-            this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
-              (c) => c.status == "closed"
-            );
-            this.damageByEquipments = [];
-            this.damageByEquipments = [...this.damageByEquipmentsClose];
-            this.damageByEquipmentsWithOutClose.map((item) => {
-              this.damageByEquipments.push(item);
-            });
-
-            this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
-            this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
-            this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
-            this.EquipmentsByCounter.closedCount = resolve.closedCount;
-          }
-        );
-        this.loading = false;
-      } else {
-        console.log("ccccccc filtre");
+      if (this.fonction == "ADMIN") {
         this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
           (resolve) => {
             this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
@@ -1251,10 +1162,99 @@ if (this.fonction =="ADMIN") {
           }
         );
         this.loading = false;
-      }
-}
+      } else {
+        if (this.getUserActive.fonction.department_id == 1) {
+          this.FindDamageTypeByEquipmentID_ITAction(this.idEquipment).then(
+            (resolve) => {
+              this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+              this.damageByEquipments.map((item) => {
+                if (item.equipment_id == this.idEquipment) {
+                  this.equipmentsFiltreByid.push(item);
+                }
+              });
+              this.damageByEquipmentsWithOutClose =
+                this.equipmentsFiltreByid.filter((c) => c.status != "closed");
+              this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+                (c) => c.status == "closed"
+              );
+              this.damageByEquipments = [];
+              this.damageByEquipments = [...this.damageByEquipmentsClose];
+              this.damageByEquipmentsWithOutClose.map((item) => {
+                this.damageByEquipments.push(item);
+              });
 
-      
+              this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
+              this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
+              this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
+              this.EquipmentsByCounter.closedCount = resolve.closedCount;
+              console.log("resolve", resolve);
+              this.loading = false;
+            }
+          );
+        } else if (this.getUserActive.fonction.department_id == 2) {
+          this.FindDamageTypeByEquipmentID_TECAction(this.idEquipment).then(
+            (resolve) => {
+              this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+              this.damageByEquipments.map((item) => {
+                if (item.equipment_id == this.idEquipment) {
+                  this.equipmentsFiltreByid.push(item);
+                }
+              });
+              this.damageByEquipmentsWithOutClose =
+                this.equipmentsFiltreByid.filter((c) => c.status != "closed");
+              this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+                (c) => c.status == "closed"
+              );
+              this.damageByEquipments = [];
+              this.damageByEquipments = [...this.damageByEquipmentsClose];
+              this.damageByEquipmentsWithOutClose.map((item) => {
+                this.damageByEquipments.push(item);
+              });
+
+              this.EquipmentsByCounter.nameEquipment = resolve.nameEquipment;
+              this.EquipmentsByCounter.damagedCount = resolve.damagedCount;
+              this.EquipmentsByCounter.confirmedCount = resolve.confirmedCount;
+              this.EquipmentsByCounter.closedCount = resolve.closedCount;
+            }
+          );
+          this.loading = false;
+        } else {
+          console.log("ccccccc filtre");
+          this.FindDamageTypeByEquipmentIDAction(this.idEquipment).then(
+            (resolve) => {
+              this.damageByEquipments = [...this.getDamageTypeByEquipmentID];
+              this.damageByEquipments.map((item) => {
+                if (item.equipment_id == this.idEquipment) {
+                  this.equipmentsFiltreByid.push(item);
+                }
+              });
+              this.damageByEquipmentsWithOutClose =
+                this.equipmentsFiltreByid.filter((c) => c.status != "closed");
+              this.damageByEquipmentsClose = this.equipmentsFiltreByid.filter(
+                (c) => c.status == "closed"
+              );
+              this.damageByEquipments = [];
+              this.damageByEquipments = [...this.damageByEquipmentsClose];
+              this.damageByEquipmentsWithOutClose.map((item) => {
+                this.damageByEquipments.push(item);
+              });
+              this.getEquipmentsByCounterAction(this.idEquipment).then(() => {
+                this.EquipmentsByCounter.id = this.getEquipmentsByCounter.id;
+                this.EquipmentsByCounter.nameEquipment =
+                  this.getEquipmentsByCounter.nameEquipment;
+                this.EquipmentsByCounter.damagedCount =
+                  this.getEquipmentsByCounter.damagedCount;
+                this.EquipmentsByCounter.confirmedCount =
+                  this.getEquipmentsByCounter.confirmedCount;
+                this.EquipmentsByCounter.closedCount =
+                  this.getEquipmentsByCounter.closedCount;
+              });
+            }
+          );
+          this.loading = false;
+        }
+      }
+
       this.iscolor = "teal";
       this.isHistorique = true;
     },
