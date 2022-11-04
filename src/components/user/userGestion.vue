@@ -76,6 +76,14 @@
                   </v-col>
                   <v-col cols="12" sm="6">
                     <v-text-field
+                      v-model="editedItem.password"
+                      label="Password"
+                      outlined
+                      type="password"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-text-field
                       v-model="editedItem.phoneNumber"
                       label="Phone Number"
                       outlined

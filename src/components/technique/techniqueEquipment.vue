@@ -3,7 +3,7 @@
     <v-row style="text-align: center">
       <v-col cols="12" md="12">
         <h3>
-          Equipement :
+          Equipment :
           <span class="red--text">
             {{ this.EquipmentsByCounter.nameEquipment }}</span
           >
@@ -17,7 +17,7 @@
             <v-list-item three-line class="d-flex">
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
-                  Pending Defects Tickets
+                  On progress Defects Tickets
                 </div>
                 <v-list-item-title class="text-h5 mb-1 red--text">
                   {{ this.EquipmentsByCounter.damagedCount }}
@@ -90,12 +90,24 @@
         <template v-slot:item="{ item }">
           <tr @click="pageView(item)" class="">
             <td class="cursor">{{ item.damage_type.name }}</td>
+            
+            <td v-if="item.damage_type.important == 1" class="cursor">
+              <v-chip class="white--text cursor text-uppercase" :color="getColorceritical(item.damage_type.important)">
+                ciritical
+              </v-chip>
+            </td>
+            <td v-else class="cursor">
+              <v-chip class="black--text cursor text-uppercase" :color="getColorceritical(item.status)">
+                not critical
+              </v-chip>
+            </td>
 
             <td class="cursor">
-              <v-chip class="white--text cursor" :color="getColor(item.status)">
+              <v-chip class="white--text cursor text-uppercase" :color="getColor(item.status)">
                 {{ item.status }}
               </v-chip>
             </td>
+
             <td class="cursor" v-if="fonction != 'TECHNICIEN'">
               {{ item.declared_by.username }}
             </td>
@@ -719,6 +731,7 @@ export default {
     userDepartment: "",
     headers: [
       { text: "Name", value: "damage_type.name", sortable: true },
+      { text: "Ciritical Defect", value: "damage_type.name", sortable: true },
       { text: "Status", value: "status", sortable: true },
       { text: "Created By", value: "declared_by.username", sortable: true },
       { text: "Created At", value: "created_at", sortable: true },
@@ -979,6 +992,12 @@ export default {
       if (status == "on progress") color = "#f54 ";
       else if (status == "closed") color = "#76ba99";
       else if (status == "resolved") color = "#FF8F56";
+
+      return color;
+    },
+    getColorceritical(important) {
+      var color = "";
+      if (important == 1) color = "#f54 ";
 
       return color;
     },

@@ -32,7 +32,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this defecte(s) ?
+              Are you sure to validet this Checklist ?
             </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -41,13 +41,14 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
+        
         <v-dialog v-model="dialogValide" persistent max-width="600px">
           <v-card>
             <v-toolbar dark color="error">
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this defecte(s) ?
+              Are you sure to validet this Checklist ?
             </v-card-title>
             <v-card-text class="font-weight-bold"></v-card-text>
             <v-card-actions>
@@ -63,7 +64,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure you want to valide this defecte(s) ?
+              Are you sure to validet this Checklist ?
             </v-card-title>
             <v-card-text class="font-weight-bold"></v-card-text>
             <v-card-actions>
@@ -125,7 +126,144 @@
         </v-dialog>
         <v-container>
           <v-row>
-            <v-col cols="4" class="ITpanell">
+            
+
+            <v-col cols="12" class="TECpanell">
+              <v-row>
+                <v-col cols="12" class="d-flex justify-center">
+                  <span>Technique </span>
+                  <span class="red--text">
+                    ({{ this.countDefectsTEC + this.countResolvedTEC }})</span
+                  ></v-col
+                >
+              </v-row>
+
+              <v-col cols="12" sm="12" class="scroll">
+                <v-list flat>
+                  <v-list-item-group
+                    name="TEC"
+                    class="TEC"
+                    v-model="modelTEC"
+                    multiple
+                    color="#fff"
+                  >
+                    <div class="hamzatec">
+                      <v-list-item
+                        v-for="(item, i) in damageTypesTEC"
+                        :key="i"
+                        class="item"
+                        two-line
+                        active-class="bg-active"
+                      >
+                        <v-list-item-content
+                          v-if="item.damage == null"
+                          class="item-content"
+                          @click="valider(item, i)"
+                        >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #76ba99"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="itemSubtitle"
+                              style="color: #76ba99; width: 170px !important"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-else-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #76ba99"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              class="itemSubtitle"
+                              style="
+                                color: rgb(0, 171, 88);
+                                font-weight: bolder !important;
+                                width: 170px !important;
+                              "
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                        </v-list-item-content>
+                        <v-list-item-content
+                          @click="resolvedFunction(item, i)"
+                          v-else-if="item.damage.status == 'resolved'"
+                          class="item-content resolved"
+                        >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #ff8f56"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="color: #ff8f56; width: 170px !important"
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-else-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #ff8f56"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="
+                                color: #ff8f56;
+                                width: 170px !important;
+                                font-weight: bolder !important;
+                              "
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                        </v-list-item-content>
+                        <v-list-item-content
+                          v-else-if="item.damage.status == 'on progress'"
+                          class="item-content defects"
+                          @click="defectedFunction(item, i)"
+                        >
+                          <span v-if="item.important == false">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #f54"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="color: #f54; width: 170px !important"
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                          <span v-if="item.important == true">
+                            <v-list-item-title
+                              name="damageTypesTEC"
+                              class="itemName"
+                              style="background-color: #f54"
+                            ></v-list-item-title>
+                            <v-list-item-subtitle
+                              style="
+                                color: #f54;
+                                font-weight: bolder !important;
+                                width: 170px !important;
+                              "
+                              class="itemSubtitle"
+                              >{{ item.name }}</v-list-item-subtitle
+                            >
+                          </span>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </div>
+                  </v-list-item-group>
+                </v-list>
+              </v-col>
+            </v-col>
+            <v-col cols="12" class="ITpanell">
               <v-row>
                 <v-col cols="12" class="d-flex justify-center">
                   <span>IT </span>
@@ -135,7 +273,7 @@
                 >
               </v-row>
 
-              <v-col cols="12" sm="12" class="scroll">
+              <v-col cols="12" sm="12" class="scrollIT">
                 <v-list flat>
                   <v-list-item-group
                     name="it"
@@ -257,142 +395,6 @@
                 </v-list>
               </v-col>
             </v-col>
-
-            <v-col cols="8" class="TECpanell">
-              <v-row>
-                <v-col cols="12" class="d-flex justify-center">
-                  <span>Technique </span>
-                  <span class="red--text">
-                    ({{ this.countDefectsTEC + this.countResolvedTEC }})</span
-                  ></v-col
-                >
-              </v-row>
-
-              <v-col cols="12" sm="12" class="scroll">
-                <v-list flat>
-                  <v-list-item-group
-                    name="TEC"
-                    class="TEC"
-                    v-model="modelTEC"
-                    multiple
-                    color="#fff"
-                  >
-                    <div class="hamzatec">
-                      <v-list-item
-                        v-for="(item, i) in damageTypesTEC"
-                        :key="i"
-                        class="item"
-                        two-line
-                        active-class="bg-active"
-                      >
-                        <v-list-item-content
-                          v-if="item.damage == null"
-                          class="item-content"
-                          @click="valider(item, i)"
-                        >
-                          <span v-if="item.important == false">
-                            <v-list-item-title
-                              name="damageTypesTEC"
-                              class="itemName"
-                              style="background-color: #76ba99"
-                            ></v-list-item-title>
-                            <v-list-item-subtitle
-                              class="itemSubtitle"
-                              style="color: #76ba99; width: 160px !important"
-                              >{{ item.name }}</v-list-item-subtitle
-                            >
-                          </span>
-                          <span v-else-if="item.important == true">
-                            <v-list-item-title
-                              name="damageTypesTEC"
-                              class="itemName"
-                              style="background-color: #76ba99"
-                            ></v-list-item-title>
-                            <v-list-item-subtitle
-                              class="itemSubtitle"
-                              style="
-                                color: rgb(0, 171, 88);
-                                font-weight: bolder !important;
-                                width: 160px !important;
-                              "
-                              >{{ item.name }}</v-list-item-subtitle
-                            >
-                          </span>
-                        </v-list-item-content>
-                        <v-list-item-content
-                          @click="resolvedFunction(item, i)"
-                          v-else-if="item.damage.status == 'resolved'"
-                          class="item-content resolved"
-                        >
-                          <span v-if="item.important == false">
-                            <v-list-item-title
-                              name="damageTypesTEC"
-                              class="itemName"
-                              style="background-color: #ff8f56"
-                            ></v-list-item-title>
-                            <v-list-item-subtitle
-                              style="color: #ff8f56; width: 160px !important"
-                              class="itemSubtitle"
-                              >{{ item.name }}</v-list-item-subtitle
-                            >
-                          </span>
-                          <span v-else-if="item.important == true">
-                            <v-list-item-title
-                              name="damageTypesTEC"
-                              class="itemName"
-                              style="background-color: #ff8f56"
-                            ></v-list-item-title>
-                            <v-list-item-subtitle
-                              style="
-                                color: #ff8f56;
-                                width: 160px !important;
-                                font-weight: bolder !important;
-                              "
-                              class="itemSubtitle"
-                              >{{ item.name }}</v-list-item-subtitle
-                            >
-                          </span>
-                        </v-list-item-content>
-                        <v-list-item-content
-                          v-else-if="item.damage.status == 'on progress'"
-                          class="item-content defects"
-                          @click="defectedFunction(item, i)"
-                        >
-                          <span v-if="item.important == false">
-                            <v-list-item-title
-                              name="damageTypesTEC"
-                              class="itemName"
-                              style="background-color: #f54"
-                            ></v-list-item-title>
-                            <v-list-item-subtitle
-                              style="color: #f54; width: 160px !important"
-                              class="itemSubtitle"
-                              >{{ item.name }}</v-list-item-subtitle
-                            >
-                          </span>
-                          <span v-if="item.important == true">
-                            <v-list-item-title
-                              name="damageTypesTEC"
-                              class="itemName"
-                              style="background-color: #f54"
-                            ></v-list-item-title>
-                            <v-list-item-subtitle
-                              style="
-                                color: #f54;
-                                font-weight: bolder !important;
-                                width: 160px !important;
-                              "
-                              class="itemSubtitle"
-                              >{{ item.name }}</v-list-item-subtitle
-                            >
-                          </span>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </div>
-                  </v-list-item-group>
-                </v-list>
-              </v-col>
-            </v-col>
           </v-row>
           <v-row class="d-flex justify-center">
             <v-col cols="4">
@@ -464,6 +466,7 @@ export default {
     LoadingPage: false,
     resolvedDialoge: false,
     defectedDialoge: false,
+    dialogLogin:false,
     damageTypesIT: [],
     damageTypesTEC: [],
     modelDamageIT: [],
@@ -696,8 +699,8 @@ export default {
   }),
   mounted() {
     document.title = "Checklist";
-
-    this.initialize();
+    console.log("shift   : ",this.getActualShift())
+    
   },
   computed: {
     formTitle() {
@@ -724,7 +727,9 @@ export default {
     },
   },
   created() {
-    //this.initialize();
+    this.initialize();
+    
+
   },
   methods: {
     test() {
@@ -869,7 +874,6 @@ export default {
     },
     initialize() {
       console.log("initialize");
-
       this.setPROFILEDROUPSAction().then(() => {
         this.setUsersbyIDAction(this.getUserActive.id).then(() => {
           this.userFiltre = this.getUsers;
@@ -972,6 +976,7 @@ export default {
           Damage.damage_type_id = this.damage_type_id;
           Damage.equipment_id = this.equipments_id;
           Damage.shift = this.getActualShift();
+          console.log("shift",this.getActualShift());
 
           this.damageSelect.push(Damage);
 
@@ -1007,6 +1012,7 @@ export default {
             Damage.damage_type_id = this.damage_type_id;
             Damage.equipment_id = this.equipments_id;
             Damage.shift = this.getActualShift();
+            console.log("shift",this.getActualShift());
 
             this.damageSelect.push(Damage);
 
@@ -1023,7 +1029,7 @@ export default {
             Damage.damage_type_id = this.damage_type_id;
             Damage.equipment_id = this.equipments_id;
             Damage.shift = this.getActualShift();
-
+            console.log("shift",this.getActualShift());
             this.damageSelect.push(Damage);
 
             this.Data.push(Damage);
@@ -1421,22 +1427,27 @@ export default {
       }
     },
     getActualShift() {
-      let thisDate = new Date("2022-02-16T07:00:00");
+      let thisDate = new Date("2022-02-16T06:30:00");
       let nowDate = new Date();
       let shift = ["D", "A", "B", "C"];
       let momentDate = moment(thisDate);
-
+      
       while (momentDate.add(72, "hours").toDate() < nowDate) {
         shift = this.shiftArrays(shift);
       }
-      if (nowDate.getHours() >= 7 && nowDate.getHours() < 15) return shift[0];
-      else if (nowDate.getHours() >= 15 && nowDate.getHours() < 23)
+
+      if (( (nowDate.getHours()==6 && nowDate.getMinutes() >= 30) || (nowDate.getHours() >= 7 ) ) &&
+       ( (nowDate.getHours()==14 && nowDate.getMinutes() < 30) || (nowDate.getHours() < 15 ) )) return shift[0];
+
+      else if (( (nowDate.getHours()==14 && nowDate.getMinutes() >= 30) || (nowDate.getHours() >= 15 ) ) &&
+       ( (nowDate.getHours()==22 && nowDate.getMinutes() < 30) || (nowDate.getHours() < 23 ) ))
         return shift[1];
       else if (
-        nowDate.getHours() == 23 ||
-        (nowDate.getHours() >= 0 && nowDate.getHours() < 7)
+         (nowDate.getHours()==22 && nowDate.getMinutes() >= 30) ||
+        (nowDate.getHours() >= 0 && (nowDate.getHours() < 6 && nowDate.getMinutes() < 30))
       )
         return shift[2];
+      
     },
     shiftArrays(array) {
       let c = "";
@@ -1448,6 +1459,7 @@ export default {
 
       return array;
     },
+    
   },
 };
 </script>

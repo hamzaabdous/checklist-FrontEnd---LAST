@@ -14,15 +14,16 @@
 }
 .ITpanell {
   width: 320px;
-  height: 450px;
+  min-height: 150px;
   border: 1.5px solid rgb(151, 151, 151);
   border-radius: 15px;
 }
 .TECpanell {
-  width: 320px;
-  height: 450px;
+  width: 420px;
+  min-height: 250px;
   border: 1.5px solid rgb(151, 151, 151);
   border-radius: 15px;
+  margin-bottom: 12px;
 }
 .spaceIT {
   height: 10px;
@@ -53,8 +54,15 @@
   max-width: 96%;
 }
 .scroll {
-  overflow: scroll;
-  height: 400px;
+  //overflow: scroll;
+  min-height: 240px;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1.5px solid #000000d4;
+}
+.scrollIT {
+  //overflow: scroll;
+  min-height: 80px;
   background-color: #fff;
   border-radius: 8px;
   border: 1.5px solid #000000d4;
@@ -115,11 +123,11 @@
 }
 
 .TEC{
-  column-count: 2;
+  column-count: 3;
 
 }
 .ITcol{
-  column-count: 1;
+  column-count: 2;
 
 }
 .itemDrawer{
@@ -150,7 +158,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    width:150px !important;
+    //width:150px !important;
   }
   .itemSubtitle,
   .itemName {

@@ -1,5 +1,7 @@
 <template>
-  <v-card v-if="logged" class="mx-auto overflow-hidden">
+  
+  <v-card @mousemove="resetTimer" v-if="logged" class="mx-auto overflow-hidden">
+    <TimeoutLOgin :changeLoginValueToFalse="changeLoginValueToFalse" v-if="timeOutLogin"/>
     <v-app-bar color="#fff" style="border-bottom: 2px solid #002f6c">
       <v-app-bar-nav-icon
         v-if="this.fonction != 'DRIVER'"
@@ -72,46 +74,46 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          
         </v-row>
       </template>
       <div class="settingContainer">
         <h4 class="username">
-        {{ getUserActive.lastName }} <br/>{{ getUserActive.firstName }}
-      </h4>
+          {{ getUserActive.lastName }} <br />{{ getUserActive.firstName }}
+        </h4>
 
-      <div class="text-center">
-        <v-menu
-          min-width="180px"
-          rounded
-          offset-y
-          origin="center center"
-          transition="scale-transition"
-        >
-          <template class="pa-2" v-slot:activator="{ on, attrs }">
-            <v-btn v-bind="attrs" v-on="on">
-              <v-icon> mdi-account-cog </v-icon>
-            </v-btn>
-          </template>
-          <v-list class="text-center">
-            <div class="pa-4">
-              <v-icon x-large>mdi-account-circle-outline</v-icon>
-              <h4 class="text-uppercase title">
-                {{ getUserActive.username }}
-              </h4>
-            </div>
-            <v-divider></v-divider>
-            
-            <div class="pa-8">
-              <v-btn width="190px" @click="logout">
-                <v-icon>mdi-logout-variant</v-icon>
-                LOGOUT
+        <div class="text-center">
+          <v-menu
+            min-width="180px"
+            rounded
+            offset-y
+            origin="center center"
+            transition="scale-transition"
+          >
+            <template class="pa-2" v-slot:activator="{ on, attrs }">
+              <v-btn v-bind="attrs" v-on="on">
+                <v-icon> mdi-account-cog </v-icon>
               </v-btn>
-            </div>
-          </v-list>
-        </v-menu>
+            </template>
+            <v-list class="text-center">
+              <div class="pa-4">
+                <v-icon x-large>mdi-account-circle-outline</v-icon>
+                <h4 class="text-uppercase title">
+                  {{ getUserActive.username }}
+                </h4>
+              </div>
+              <v-divider></v-divider>
+
+              <div class="pa-8">
+                <v-btn width="190px" @click="logout">
+                  <v-icon>mdi-logout-variant</v-icon>
+                  LOGOUT
+                </v-btn>
+              </div>
+            </v-list>
+          </v-menu>
+        </div>
       </div>
-      </div>
-      
     </v-app-bar>
 
     <v-navigation-drawer
@@ -142,7 +144,6 @@
             "
           >
             <v-list-item-group active-class="activeDrawer" class="itemDrawer">
-              
               <router-link class="linktext" to="/technique">
                 <div class="itemdrawer">
                   <v-list-item class="itemd"> Defects </v-list-item>
@@ -168,8 +169,6 @@
                   <v-list-item class="itemd"> Technique </v-list-item>
                 </div>
               </router-link>
-              
-           
             </v-list-item-group>
           </v-list>
           <v-list v-else-if="department == 'IT'" class="">
@@ -182,7 +181,7 @@
             </v-list-item-group>
           </v-list>
           <v-list v-else-if="fonction == 'DRIVER'" class="foremanandTechnique">
-            <v-list-item-group active-class="activeDrawer" class="itemDrawer">        
+            <v-list-item-group active-class="activeDrawer" class="itemDrawer">
               <router-link class="linktext" to="/Damage">
                 <div class="itemdrawer">
                   <v-list-item class="itemd"> Damage </v-list-item>
@@ -203,18 +202,28 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import Login from "./View/Login.vue";
+import TimeoutLOgin from "../src/components/TimeoutLOgin.vue";
+import Swal from "sweetalert2";
+import axios from "axios";
+
 export default {
   components: {
     Login,
+    TimeoutLOgin
   },
   data() {
     return {
+      shownForTheFirstTime:false,
       drawer: false,
       logged: false,
+      dialogLogin: false,
       dialog: false,
       show1: false,
       show2: false,
-
+      timeOutLogin:false,
+      username: null,
+      password: null,
+      time:null,
       Validpassword: "",
       model: {
         id: 0,
@@ -244,13 +253,22 @@ export default {
       this.department = this.getUserActive.fonction.department.name;
       this.logged = true;
     }
+   /*  this.initialize();
+    
+    addEventListener('onmousemove', (event,time) => {
+          clearTimeout(time);
+          time = setTimeout(alert("You are now logged out."), 4000);
+    }); */
   },
   computed: {
     ...mapGetters(["getUsers", "getUserActive"]),
+    
   },
   watch: {},
   methods: {
-    initialize() {},
+    initialize() {
+      this.inactivityTime();
+    },
     logout() {
       localStorage.clear();
       this.$router.push({
@@ -274,7 +292,29 @@ export default {
       }
       //this.changePasswordAction().then(() => {});
     },
-    ...mapActions(["changePasswordAction"]),
+    changeLoginValueToFalse(){
+      console.log("changeLoginValueToFalse ",this.timeOutLogin)
+      this.timeOutLogin=false;
+    },
+    shownForTheFirstTimeValue(){
+     return this.shownForTheFirstTime=value;
+    },
+    setShownForTheFirstTimeValue(value){
+      console.log("value changeeeeeed")
+      this.shownForTheFirstTime=value;
+    },
+
+    resetTimer(){
+      clearTimeout(this.time);
+      this.time = setTimeout(()=>{
+        this.timeOutLogin=true;
+      }, 10 * 60 * 1000)
+    },
+    Login() {
+      
+    },
+
+    ...mapActions(["changePasswordAction", "LoginAction"]),
   },
 };
 </script>

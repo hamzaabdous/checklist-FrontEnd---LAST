@@ -15,7 +15,7 @@
             <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 red--text">
-                  Total Equipement With  defects items
+                  Total Equipment With  defects items
 
                 </div>
                 <v-list-item-title class="text-h5 mb-1 red--text">
@@ -62,7 +62,7 @@
             <v-list-item three-line class="d-flex ">
               <v-list-item-content>
                 <div class="text-overline mb-4 green--text">
-                  Total Equipement With non defects items
+                  Total Equipment With non defects items
                 </div>
                 <v-list-item-title class="text-h5 mb-1 green--text">
                   {{ this.ProfileGroupsByCounter.functionalEquipmnet }}
@@ -91,6 +91,12 @@
         <template v-slot:item="{ item }">
           <tr :class="getColor(item)">
             <td class="">{{ item.nameEquipment }}</td>
+
+            <td class="text-uppercase" v-if="fonction != 'TECHNICIEN' && item.isShecked == true">Checked</td>
+            <td class="text-uppercase" v-if="fonction != 'TECHNICIEN' && item.isShecked == false">unchecked </td>
+            <td class="" v-else></td>
+
+            <td class="">{{ item.ceriticalDefectsCount }}</td>
             <td class="">{{ item.damagedCount }}</td>
             <td class="">{{ item.confirmedCount }}</td>
             <td>
@@ -141,6 +147,8 @@ export default {
     search: "",
     headers: [
       { text: "Name", value: "nameEquipment", sortable: true },
+      { text: "Checklist", value: "isShecked", sortable: true },
+      { text: "Critical  defects", value: "ceriticalDefectsCount", sortable: true },
       { text: "Total defects items", value: "damagedCount", sortable: true },
       { text: "Resolved", value: "confirmedCount", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
@@ -182,10 +190,13 @@ export default {
         id: null,
       },
     },
+    fonction:'',
+    userDepartment:"",
   }),
   mounted() {
     document.title = "Checklist";
-
+    this.fonction = this.getUserActive.fonction.name;
+    this.userDepartment = this.getUserActive.fonction.department.name;
     this.loading = true;
     setTimeout(() => {
       this.initialize();

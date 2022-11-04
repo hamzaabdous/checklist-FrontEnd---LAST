@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import vuetify from "./plugins/vuetify";
 import swal from 'sweetalert';
+import Swal from 'sweetalert2';
 
 import "@/scss/GlobalStyle.scss";
 

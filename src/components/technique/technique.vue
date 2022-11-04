@@ -69,6 +69,7 @@ export default {
     confirmAddSave: false,
     headers: [
       { text: "Name", value: "name", sortable: true },
+      { text: "Total equipment Checked", value: "equipmentCheckedCount", sortable: true },
       { text: "Total equipments", value: "equipmentsCount", sortable: true },
       {
         text: "With non defects items",
