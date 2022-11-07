@@ -864,7 +864,6 @@ export default {
     },
     initialize() {
       console.log("initialize");
-      this.inactivityTime();
       this.setPROFILEDROUPSAction().then(() => {
         this.setUsersbyIDAction(this.getUserActive.id).then(() => {
           this.userFiltre = this.getUsers;
@@ -1381,15 +1380,19 @@ export default {
       let nowDate = new Date();
       let shift = ["D", "A", "B", "C"];
       let momentDate = moment(thisDate);
-
+      
       while (momentDate.add(72, "hours").toDate() < nowDate) {
         shift = this.shiftArrays(shift);
       }
-      if ((nowDate.getHours() >= 7 && nowDate.getMinutes() >= 30) && (nowDate.getHours() < 14 && nowDate.getMinutes() < 30)) return shift[0];
-      else if ((nowDate.getHours() >= 14 && nowDate.getMinutes() >= 30) && (nowDate.getHours() < 22 && nowDate.getMinutes() < 30))
+
+      if (( (nowDate.getHours()==6 && nowDate.getMinutes() >= 30) || (nowDate.getHours() >= 7 ) ) &&
+       ( (nowDate.getHours()==14 && nowDate.getMinutes() < 30) || (nowDate.getHours() < 15 ) )) return shift[0];
+
+      else if (( (nowDate.getHours()==14 && nowDate.getMinutes() >= 30) || (nowDate.getHours() >= 15 ) ) &&
+       ( (nowDate.getHours()==22 && nowDate.getMinutes() < 30) || (nowDate.getHours() < 23 ) ))
         return shift[1];
       else if (
-        (nowDate.getHours() >= 22 && nowDate.getMinutes() >= 30) ||
+         (nowDate.getHours()==22 && nowDate.getMinutes() >= 30) ||
         (nowDate.getHours() >= 0 && (nowDate.getHours() < 6 && nowDate.getMinutes() < 30))
       )
         return shift[2];
@@ -1404,23 +1407,7 @@ export default {
 
       return array;
     },
-    inactivityTime () {
-      let time;
-        window.onload = resetTimer;
-        document.onmousemove = resetTimer;
-        document.onkeypress = resetTimer;
-        function logout() {
-          this.dialogLogin=true;
-          localStorage.clear();
-          window.location.reload();
-          console.log('cccc login time out');
-        }
-        function resetTimer() {
-          clearTimeout(time);
-          time = setTimeout(logout, 5 * 60 * 1000);
-         // time = setTimeout(logout, 4000);
-        }
-    },
+   
   },
 };
 </script>

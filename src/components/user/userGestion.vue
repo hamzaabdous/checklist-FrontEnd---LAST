@@ -143,7 +143,7 @@
                     <v-data-table
                       :headers="headersProfilegroup"
                       :items="profilegroupsActive"
-                      :search="search"
+                      :search="searchprofilegroupsActive"
                       sort-by="item.id"
                       class="elevation-1"
                     >
@@ -220,7 +220,7 @@
                         </v-dialog>
                         <v-toolbar flat>
                           <v-text-field
-                            v-model="search"
+                            v-model="searchprofilegroupsActive"
                             append-icon="mdi-magnify"
                             label="Search"
                             single-line
@@ -463,6 +463,7 @@ export default {
       { text: "LastName", value: "lastName", sortable: true },
       { text: "FirstName", value: "firstName", sortable: true },
       { text: "Email", value: "email", sortable: true },
+      { text: "Company", value: "company", sortable: true },
       { text: "Fonction", value: "fonction.name", sortable: true },
       { text: "Department", value: "fonction.department.name", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
@@ -523,6 +524,7 @@ export default {
         },
       },
     },
+    searchprofilegroupsActive:"",
   }),
   mounted() {
     document.title = "Checklist";
