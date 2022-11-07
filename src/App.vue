@@ -308,7 +308,8 @@ export default {
       clearTimeout(this.time);
       this.time = setTimeout(()=>{
         this.timeOutLogin=true;
-      }, 10 * 60 * 1000)
+        localStorage.clear();
+      },10 * 60 * 1000)
     },
     Login() {
       

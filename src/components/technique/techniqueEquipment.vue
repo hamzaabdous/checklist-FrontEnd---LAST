@@ -93,7 +93,7 @@
             
             <td v-if="item.damage_type.important == 1" class="cursor">
               <v-chip class="white--text cursor text-uppercase" :color="getColorceritical(item.damage_type.important)">
-                ciritical
+                critical
               </v-chip>
             </td>
             <td v-else class="cursor">
@@ -731,7 +731,7 @@ export default {
     userDepartment: "",
     headers: [
       { text: "Name", value: "damage_type.name", sortable: true },
-      { text: "Ciritical Defect", value: "damage_type.name", sortable: true },
+      { text: "Critical Defect", value: "damage_type.name", sortable: true },
       { text: "Status", value: "status", sortable: true },
       { text: "Created By", value: "declared_by.username", sortable: true },
       { text: "Created At", value: "created_at", sortable: true },
