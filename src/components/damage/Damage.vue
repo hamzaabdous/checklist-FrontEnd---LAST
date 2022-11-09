@@ -32,7 +32,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure to validet this Checklist ?
+              Are you sure to validate this Checklist ?
             </v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -48,7 +48,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure to validet this Checklist ?
+              Are you sure to validate this Checklist ?
             </v-card-title>
             <v-card-text class="font-weight-bold"></v-card-text>
             <v-card-actions>
@@ -64,7 +64,7 @@
               <v-toolbar-title>Warning !</v-toolbar-title>
             </v-toolbar>
             <v-card-title class="text-h5">
-              Are you sure to validet this Checklist ?
+              Are you sure to validate this Checklist ?
             </v-card-title>
             <v-card-text class="font-weight-bold"></v-card-text>
             <v-card-actions>
@@ -745,7 +745,7 @@ export default {
         } else {
           swal({
             title: "Are you sure?",
-            text: "you want make Presence check!",
+            text: "you want make checklist !",
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -755,12 +755,12 @@ export default {
               this.presenceCheck.equipment_id = this.equipments_id;
               this.presenceChecksAction(this.presenceCheck).then((resolve) => {
                 console.log("presenceCheck DONE");
-                swal("success !!", "Presence check  success", "success");
+                swal("success !!", "Checklist success", "success");
               });
               this.dialogValide = false;
               this.dialogValideDamage = false;
             } else {
-              swal("Presence check cancel");
+              swal("Checklist cancel");
             }
           });
         }
@@ -1096,12 +1096,9 @@ export default {
           this.SendEmailAction(this.EmailModel).then(() => {
             console.log("DONE");
           });
-          this.LoadingPage = true;
+         // this.LoadingPage = true;
 
-          setTimeout(() => {
-            this.LoadingPage = false;
-            swal("Good job!", "success", "success");
-          }, 2000);
+          this.$router.go();
         })
         .catch(() => {
           swal("Error", "", "error");
@@ -1144,12 +1141,9 @@ export default {
             console.log("DONE");
           });
           this.resolvedDialoge = false;
-          this.LoadingPage = true;
+         // this.LoadingPage = true;
 
-          setTimeout(() => {
-            this.LoadingPage = false;
-            swal("Good job!", "success", "success");
-          }, 2000);
+          this.$router.go();
         })
         .catch(() => {
           swal("Error", "", "error");
@@ -1193,12 +1187,9 @@ export default {
           });
           this.resolvedDialoge = false;
 
-          this.LoadingPage = true;
+         // this.LoadingPage = true;
 
-          setTimeout(() => {
-            this.LoadingPage = false;
-            swal("Good job!", "success", "success");
-          }, 2000);
+          this.$router.go();
         })
         .catch(() => {
           swal("Error", "", "error");

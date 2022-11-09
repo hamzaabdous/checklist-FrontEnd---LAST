@@ -90,20 +90,29 @@
         <template v-slot:item="{ item }">
           <tr @click="pageView(item)" class="">
             <td class="cursor">{{ item.damage_type.name }}</td>
-            
+
             <td v-if="item.damage_type.important == 1" class="cursor">
-              <v-chip class="white--text cursor text-uppercase" :color="getColorceritical(item.damage_type.important)">
+              <v-chip
+                class="white--text cursor text-uppercase"
+                :color="getColorceritical(item.damage_type.important)"
+              >
                 critical
               </v-chip>
             </td>
             <td v-else class="cursor">
-              <v-chip class="black--text cursor text-uppercase" :color="getColorceritical(item.status)">
+              <v-chip
+                class="black--text cursor text-uppercase"
+                :color="getColorceritical(item.status)"
+              >
                 not critical
               </v-chip>
             </td>
 
             <td class="cursor">
-              <v-chip class="white--text cursor text-uppercase" :color="getColor(item.status)">
+              <v-chip
+                class="white--text cursor text-uppercase"
+                :color="getColor(item.status)"
+              >
                 {{ item.status }}
               </v-chip>
             </td>
@@ -111,13 +120,11 @@
             <td class="cursor" v-if="fonction != 'TECHNICIEN'">
               {{ item.declared_by.username }}
             </td>
-            <td class="cursor" v-else>
-              
+            <td class="cursor" v-else></td>
+            <td class="cursor" v-if="fonction != 'TECHNICIEN'">
+              {{ item.created_at }}
             </td>
-            <td class="cursor" v-if="fonction != 'TECHNICIEN'">{{ item.created_at }}</td>
-            <td class="cursor" v-else>
-              
-            </td>
+            <td class="cursor" v-else></td>
             <td class="cursor">{{ item.confirmedAt }}</td>
             <td>
               <v-btn

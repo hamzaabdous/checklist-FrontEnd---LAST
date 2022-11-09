@@ -93,7 +93,7 @@
             <td class="">{{ item.nameEquipment }}</td>
 
             <td class="text-uppercase" v-if="fonction != 'TECHNICIEN' && item.isShecked == true">Checked</td>
-            <td class="text-uppercase" v-if="fonction != 'TECHNICIEN' && item.isShecked == false">unchecked </td>
+            <td class="text-uppercase" v-else-if="fonction != 'TECHNICIEN' && item.isShecked == false">unchecked </td>
             <td class="" v-else></td>
 
             <td class="">{{ item.ceriticalDefectsCount }}</td>

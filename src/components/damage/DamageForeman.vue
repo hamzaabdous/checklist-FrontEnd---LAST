@@ -1080,13 +1080,10 @@ export default {
         this.SendEmailAction(this.EmailModel).then(() => {
           console.log("DONE");
         });
-        this.LoadingPage = true;
+      //  this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-        swal("Good job!", "success", "success");
+        this.$router.go();
 
-      }, 2000);
       }).catch(()=>{
           swal("Error", "", "error");
 
@@ -1129,13 +1126,10 @@ export default {
           console.log("DONE");
         });
         this.resolvedDialoge = false;
-      this.LoadingPage = true;
+    //  this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-        swal("Good job!", "success", "success");
+      this.$router.go();
 
-      }, 2000);
       }).catch(()=>{
           swal("Error", "", "error");
 
@@ -1177,13 +1171,10 @@ export default {
         });
         this.resolvedDialoge = false;
 
-        this.LoadingPage = true;
+       // this.LoadingPage = true;
 
-      setTimeout(() => {
-        this.LoadingPage = false;
-        swal("Good job!", "success", "success");
-
-      }, 2000);
+       
+        this.$router.go();
       }).catch(()=>{
           swal("Error", "", "error");
 
