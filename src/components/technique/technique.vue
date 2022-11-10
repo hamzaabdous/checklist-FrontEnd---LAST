@@ -11,7 +11,7 @@
       </v-btn>
     </v-col>
     <v-data-table
-      :headers="headers"
+      :headers="computedHeaders"
       :items="profilegroupsBydepartements"
       :search="search"
       :loading="loading"
@@ -115,10 +115,13 @@ export default {
         id: "",
       },
     },
+    userDepartment:'',
   }),
   mounted() {
     document.title = "Checklist";
     this.fonction = this.getUserActive.fonction.name;
+    
+
     
     this.loading = true;
     setTimeout(() => {
@@ -129,6 +132,14 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
+    },
+    computedHeaders () {
+      this.fonction = this.getUserActive.fonction.name;
+      this.userDepartment = this.getUserActive.fonction.department.name;
+        if (this.userDepartment == 'TECHNIQUE') {
+          
+          return this.headers.filter((c)=> c.value != "equipmentCheckedCount")  
+        }else return this.headers;
     },
     ...mapGetters([
       "getProfileGroupsByCounters",

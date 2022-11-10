@@ -80,7 +80,7 @@
     </v-row>
     <div style="padding: 3px; padding-top: 4%">
       <v-data-table
-        :headers="headers"
+        :headers="computedHeaders"
         :items="damageByEquipments"
         :search="search"
         :loading="loading"
@@ -120,12 +120,20 @@
             <td class="cursor" v-if="fonction != 'TECHNICIEN'">
               {{ item.declared_by.username }}
             </td>
-            <td class="cursor" v-else></td>
-            <td class="cursor" v-if="fonction != 'TECHNICIEN'">
+            <td class="cursor" >
               {{ item.created_at }}
             </td>
-            <td class="cursor" v-else></td>
             <td class="cursor">{{ item.confirmedAt }}</td>
+            <td class="cursor">
+              <v-chip
+                class="black--text cursor text-uppercase"
+                :color="getColorRejectTimes(item.rejectedTimes)"
+              >
+              {{ item.rejectedTimes }}
+              </v-chip>
+              
+            </td>
+
             <td>
               <v-btn
                 v-if="item.status != 'closed'"
@@ -413,7 +421,7 @@
                             <h4 v-else>{{ damageSelect.equipment.name }}</h4>
                           </td>
                         </tr>
-                        <tr v-if="fonction != 'TECHNICIEN'">
+                        <tr >
                           <td><h3>Declared At</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.declaredAt == null">
@@ -479,7 +487,7 @@
                             <h4 v-else>{{ damageSelect.closedAt }}</h4>
                           </td>
                         </tr>
-                        <tr>
+                        <tr v-if="fonction != 'TECHNICIEN'">
                           <td><h3>Rejected By</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.rejected_by == null">
@@ -743,6 +751,7 @@ export default {
       { text: "Created By", value: "declared_by.username", sortable: true },
       { text: "Created At", value: "created_at", sortable: true },
       { text: "Resolved At", value: "confirmedAt", sortable: true },
+      { text: "rejected Times", value: "rejectedTimes", sortable: true },
       { text: "Actions", value: "actions", sortable: false },
     ],
     damageByEquipments: [],
@@ -979,6 +988,14 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
+    computedHeaders () {
+      this.fonction = this.getUserActive.fonction.name;
+      this.userDepartment = this.getUserActive.fonction.department.name;
+        if (this.userDepartment == 'TECHNIQUE') {
+          
+          return this.headers.filter((c)=> c.value != "declared_by.username")  
+        }else return this.headers;
+    },
     ...mapGetters([
       "getDamageTypeByEquipmentID",
       "getEquipmentsByCounter",
@@ -1005,6 +1022,12 @@ export default {
     getColorceritical(important) {
       var color = "";
       if (important == 1) color = "#f54 ";
+
+      return color;
+    },
+    getColorRejectTimes(rejectedTimes) {
+      var color = "";
+      if (rejectedTimes >= 1) color = "#f54 ";
 
       return color;
     },

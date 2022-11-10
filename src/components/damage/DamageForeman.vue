@@ -735,7 +735,7 @@ export default {
         } else {
           swal({
             title: "Are you sure?",
-            text: "you want make Presence check!",
+            text: "you want make checklist!",
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -745,12 +745,12 @@ export default {
               this.presenceCheck.equipment_id = this.equipments_id;
               this.presenceChecksAction(this.presenceCheck).then((resolve) => {
                 console.log("presenceCheck DONE");
-                swal("success !!", "Presence check  success", "success");
+                swal("success !!", "Checklist success", "success");
               });
               this.dialogValide = false;
               this.dialogValideDamage = false;
             } else {
-              swal("Presence check cancel");
+              swal("checklist cancel");
             }
           });
         }

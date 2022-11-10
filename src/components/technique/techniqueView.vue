@@ -81,7 +81,7 @@
     </v-row>
     <div style="padding: 3px; padding-top: 4%">
       <v-data-table
-        :headers="headers"
+        :headers="computedHeaders"
         :items="equipments"
         :search="search"
         :loading="loading"
@@ -94,7 +94,6 @@
 
             <td class="text-uppercase" v-if="fonction != 'TECHNICIEN' && item.isShecked == true">Checked</td>
             <td class="text-uppercase" v-else-if="fonction != 'TECHNICIEN' && item.isShecked == false">unchecked </td>
-            <td class="" v-else></td>
 
             <td class="">{{ item.ceriticalDefectsCount }}</td>
             <td class="">{{ item.damagedCount }}</td>
@@ -206,6 +205,14 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
+    },
+    computedHeaders () {
+      this.fonction = this.getUserActive.fonction.name;
+      this.userDepartment = this.getUserActive.fonction.department.name;
+        if (this.userDepartment == 'TECHNIQUE') {
+          
+          return this.headers.filter((c)=> c.value != "isShecked")  
+        }else return this.headers;
     },
     ...mapGetters([
       "getequipments",
