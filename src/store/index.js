@@ -8,6 +8,8 @@ import profilegroupModule from "./models/profilegroupModule";
 import damageTypeModule from "./models/damageTypeModule";
 import damageModule from "./models/damageModule";
 import equipmentModule from "./models/equipmentModule";
+import commentModule from "./models/commentModule";
+
 import VuexPersist from "vuex-persist";
 Vue.use(Vuex);
  const vuexLocalStorage = new VuexPersist({
@@ -33,6 +35,7 @@ export default function () {
       damageTypeModule,
       damageModule,
       equipmentModule,
+      commentModule,
     },
     state: {},
     mutations: {},

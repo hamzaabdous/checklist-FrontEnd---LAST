@@ -117,10 +117,11 @@
               </v-chip>
             </td>
 
-            <td class="cursor" v-if="fonction != 'TECHNICIEN'">
+            <td class="cursor" v-if="userDepartment != 'TECHNIQUE'" >
               {{ item.declared_by.username }}
             </td>
-            <td class="cursor" >
+            
+            <td class="cursor">
               {{ item.created_at }}
             </td>
             <td class="cursor">{{ item.confirmedAt }}</td>
@@ -129,14 +130,12 @@
                 class="black--text cursor text-uppercase"
                 :color="getColorRejectTimes(item.rejectedTimes)"
               >
-              {{ item.rejectedTimes }}
+                {{ item.rejectedTimes }}
               </v-chip>
-              
             </td>
 
             <td>
               <v-btn
-                v-if="item.status != 'closed'"
                 color="primary"
                 class="mr-2 btn white--text"
                 @click.stop="clickImage(item)"
@@ -208,28 +207,45 @@
               Defects history
             </v-btn>
           </template>
-          <v-dialog v-model="dialogimage" max-width="700px">
+          <v-dialog
+            v-model="dialogimage"
+            fullscreen
+            hide-overlay
+            transition="dialog-bottom-transition"
+          >
             <v-card>
               <v-toolbar dark color="primary">
                 <v-btn icon dark @click="dialogimage = false">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Details</v-toolbar-title>
+                <v-toolbar-title>Comments</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items> </v-toolbar-items>
               </v-toolbar>
+              <div v-if="showComments" class="scrollComments" 
+              
+              >
+                <Comment class="my-2" v-for="item in comments"
+                  :key="item.id" :status="item.status" :comment_id="item.id" :editeCommentParent="editeComment" :username="item.user.username" :damage_id="item.damage_id" :user_id="item.user_id"  :refreshComments="refreshComments" :comment="item.comment" :photos="item.photos"/>
+              </div>
+              
 
-              <v-card-title class="text-h5"> Description : </v-card-title>
-              <v-col cols="12" md="12">
+              <v-divider ></v-divider>
+
+              <v-row class="addDescription">
+      
+                <v-col cols="12" md="6">
+                <h3> Description :</h3>
                 <v-textarea
                   solo
                   name="input-7-4"
                   label="Description"
-                  v-model="photo.description"
+                  v-model="photo.comment"
                 ></v-textarea>
               </v-col>
-              <v-card-title class="text-h5"> Add picture : </v-card-title>
-              <v-col cols="12" md="12">
+              <v-col cols="12" md="4">
+                <h3> Add picture :</h3>
+
                 <v-file-input
                   label="Pictures"
                   v-model="photo.photos"
@@ -238,6 +254,20 @@
                   prepend-icon="mdi-camera"
                 ></v-file-input>
               </v-col>
+              <v-col v-if="userDepartment != 'TECHNIQUE'" cols="12" md="2">
+                <v-card class="d-flex pa-4 mb-4" max-width="170" outlined>
+                 <h5 class="green--text text--lighten-2">Natural</h5>
+                  <v-switch
+                    color="deep-orange lighten-1"
+                    v-model="switch1"
+                    @change="ClaimOrIncident()"
+                  ></v-switch>
+                  <h5 class="deep-orange--text text--lighten-1">Rejected</h5>
+                </v-card>
+              </v-col>
+             
+              </v-row>
+              
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn depressed color="" @click="dialogimage = false">
@@ -255,19 +285,14 @@
                 <v-btn icon dark @click="dialogresolve = false">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Settings</v-toolbar-title>
+                <v-toolbar-title>Resolved</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-toolbar-items> </v-toolbar-items>
+                <v-toolbar-items>   </v-toolbar-items>
               </v-toolbar>
 
-              <v-card-title class="text-h5"> Description : </v-card-title>
+              <v-card-title class="text-h5">  </v-card-title>
               <v-col cols="12" md="12">
-                <v-textarea
-                  solo
-                  name="input-7-4"
-                  label="Description"
-                  v-model="confirmDamage.resolveDescription"
-                ></v-textarea>
+               
               </v-col>
 
               <v-card-actions>
@@ -287,19 +312,13 @@
                 <v-btn icon dark @click="dialogrejected = false">
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
-                <v-toolbar-title>Settings</v-toolbar-title>
+                <v-toolbar-title>Rejected</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items> </v-toolbar-items>
               </v-toolbar>
 
-              <v-card-title class="text-h5"> Description : </v-card-title>
               <v-col cols="12" md="12">
-                <v-textarea
-                  solo
-                  name="input-7-4"
-                  label="Description"
-                  v-model="revertDamage.rejectedDescription"
-                ></v-textarea>
+                
               </v-col>
 
               <v-card-actions>
@@ -375,16 +394,7 @@
                             <h4>{{ damageSelect.damage_type.name }}</h4>
                           </td>
                         </tr>
-                        <tr>
-                          <td><h3>Description</h3></td>
-                          <td class="valueColumn">
-                            <h5 v-if="damageSelect.description == null">
-                              Empty
-                            </h5>
 
-                            <h4 v-else>{{ damageSelect.description }}</h4>
-                          </td>
-                        </tr>
                         <tr>
                           <td><h3>Status</h3></td>
                           <td class="valueColumn">
@@ -421,7 +431,7 @@
                             <h4 v-else>{{ damageSelect.equipment.name }}</h4>
                           </td>
                         </tr>
-                        <tr >
+                        <tr>
                           <td><h3>Declared At</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.declaredAt == null">
@@ -455,18 +465,7 @@
                             <h4 v-else>{{ damageSelect.confirmedAt }}</h4>
                           </td>
                         </tr>
-                        <tr>
-                          <td><h3>Resolve Description</h3></td>
-                          <td class="valueColumn">
-                            <h5 v-if="damageSelect.resolveDescription == null">
-                              Empty
-                            </h5>
 
-                            <h4 v-else>
-                              {{ damageSelect.resolveDescription }}
-                            </h4>
-                          </td>
-                        </tr>
                         <tr>
                           <td><h3>Resolved By</h3></td>
                           <td class="valueColumn">
@@ -519,18 +518,7 @@
                             <h4 v-else>{{ damageSelect.rejectedTimes }}</h4>
                           </td>
                         </tr>
-                        <tr>
-                          <td><h3>Rejected Description</h3></td>
-                          <td class="valueColumn">
-                            <h5 v-if="damageSelect.rejectedDescription == null">
-                              Empty
-                            </h5>
 
-                            <h4 v-else>
-                              {{ damageSelect.rejectedDescription }}
-                            </h4>
-                          </td>
-                        </tr>
                         <tr>
                           <td><h3>Updated at</h3></td>
                           <td class="valueColumn">
@@ -577,50 +565,7 @@
                   </v-col>
                 </v-row>
               </v-container>
-              <v-card-title class="text-h5 blue--text text--darken-3">
-                Photos :
-              </v-card-title>
-              <v-container class="DamageDetails">
-                <v-row class="photos">
-                  <template>
-                    <v-row v-if="damageSelect.photos.length == 0">
-                      <v-col cols="4">
-                        <h5>Empty</h5>
-                      </v-col>
-                    </v-row>
-                    <v-row v-else>
-                      <v-col
-                        v-for="item in damageSelect.photos"
-                        :key="item.id"
-                        class="d-flex child-flex"
-                        cols="4"
-                      >
-                        <v-img
-                          max-height="150"
-                          max-width="200"
-                          :src="`http://localhost:8000/storage/cdn/damagePhotos/${item.filename}`"
-                          aspect-ratio="1"
-                          class="grey lighten-2 imageRadius"
-                          @click="showImage(item)"
-                        >
-                          <template v-slot:placeholder>
-                            <v-row
-                              class="fill-height ma-0"
-                              align="center"
-                              justify="center"
-                            >
-                              <v-progress-circular
-                                indeterminate
-                                color="grey lighten-5"
-                              ></v-progress-circular>
-                            </v-row>
-                          </template>
-                        </v-img>
-                      </v-col>
-                    </v-row>
-                  </template>
-                </v-row>
-              </v-container>
+              
               <v-card-actions>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -724,10 +669,12 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import LoadingPage from "../LoadingPage.vue";
+import Comment from "../../components/comments/Comment.vue";
 
 export default {
   components: {
     LoadingPage,
+    Comment,
   },
   data: () => ({
     isHistorique: false,
@@ -741,6 +688,7 @@ export default {
     dialogrejected: false,
     dialogDelete: false,
     dialogimageShow: false,
+
     search: "",
     fonction: "",
     userDepartment: "",
@@ -767,8 +715,9 @@ export default {
     },
     photo: {
       id: "",
-      description: "",
-      foreman_id: "",
+      comment: "",
+      damage_id: "",
+      user_id: "",
       photos: [],
     },
     ImagesPath: "http://localhost:8000/storage/cdn/damagePhotos/",
@@ -887,16 +836,7 @@ export default {
           updated_at: "",
         },
       },
-      photos: [
-        {
-          id: null,
-          description: null,
-          filename: "",
-          damage_id: null,
-          created_at: "",
-          updated_at: "",
-        },
-      ],
+  
     },
     equipment: null,
     idEquipment: null,
@@ -973,12 +913,95 @@ export default {
       created_at: "",
       updated_at: "",
     },
+    useractiveUSERNAME:"",
+    commenttest:"commenttest commenttest commenttest",
+    showComments:false,
+    commentsDefect:[
+      {
+        id:1,
+        comment:'test comment1',
+        status:"",
+        damage_id:1,
+        user:{
+          id:1,
+          username:"hamza abdous",
+        },
+        photos:[
+          {
+            id:1,
+            filename:"1",
+            comment_id:1,
+            user_id:1,
+          },
+          {
+            id:2,
+            filename:"2",
+            comment_id:1,
+            user_id:2,
+          },
+          {
+            id:3,
+            filename:"3",
+            comment_id:1,
+            user_id:2,
+          },
+          {
+            id:4,
+            filename:"4",
+            comment_id:1,
+            user_id:2,
+          },
+        ]
+
+      },
+      {
+        id:2,
+        comment:'test comment 2 ',
+        status:"",
+        damage_id:1,
+        user:{
+          id:1,
+          username:"hamza abdous 2",
+        },
+        photos:[
+          {
+            id:1,
+            filename:"1",
+            comment_id:1,
+            user_id:1,
+          },
+          {
+            id:2,
+            filename:"2",
+            comment_id:1,
+            user_id:2,
+          },
+          {
+            id:3,
+            filename:"3",
+            comment_id:1,
+            user_id:2,
+          },
+          {
+            id:4,
+            filename:"4",
+            comment_id:1,
+            user_id:2,
+          },
+        ]
+
+      },
+    ],
+    comments:[],
+    switch1:false,
+    switchValue:"",
   }),
   mounted() {
     document.title = "Checklist";
     this.loading = true;
     this.fonction = this.getUserActive.fonction.name;
     this.userDepartment = this.getUserActive.fonction.department.name;
+
     setTimeout(() => {
       this.initialize();
       this.loading = false;
@@ -988,13 +1011,12 @@ export default {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
     },
-    computedHeaders () {
+    computedHeaders() {
       this.fonction = this.getUserActive.fonction.name;
       this.userDepartment = this.getUserActive.fonction.department.name;
-        if (this.userDepartment == 'TECHNIQUE') {
-          
-          return this.headers.filter((c)=> c.value != "declared_by.username")  
-        }else return this.headers;
+      if (this.userDepartment == "TECHNIQUE") {
+        return this.headers.filter((c) => c.value != "declared_by.username");
+      } else return this.headers;
     },
     ...mapGetters([
       "getDamageTypeByEquipmentID",
@@ -1002,6 +1024,7 @@ export default {
       "sendDamagePhotosStoragePath",
       "getUserActive",
       "getdepartements",
+      "getcomments"
     ]),
   },
   watch: {
@@ -1009,6 +1032,8 @@ export default {
   },
   created() {
     // this.initialize();
+    this.useractiveUSERNAME = this.getUserActive.username;
+
   },
   methods: {
     getColor(status) {
@@ -1018,6 +1043,14 @@ export default {
       else if (status == "resolved") color = "#FF8F56";
 
       return color;
+    },
+    ClaimOrIncident() {
+      if (this.switch1 == false) {
+        this.switchValue = "natural";
+      } else {
+        this.switchValue = "revert";
+      }
+      
     },
     getColorceritical(important) {
       var color = "";
@@ -1169,6 +1202,8 @@ export default {
       "FindDamageTypeByEquipmentID_TECAction",
       "SendEmailAction",
       "setDepartementsAction",
+      "setCOMMENTSAction",
+      "addCOMMENTAction"
     ]),
     pageView(item, row) {
       this.damageSelect = item;
@@ -1317,10 +1352,20 @@ export default {
       this.isHistorique = true;
     },
     clickImage(item) {
-      this.damageSelect = item;
-      this.photo.id = item.id;
+       this.damageSelect = item;
+      
+      this.photo.damage_id = item.id;
+      this.photo.user_id = this.getUserActive.id;
+
+      this.setCOMMENTSAction(item.id).then(() => {
+        this.comments = [...this.getcomments];
+        
+        console.log("set comments", this.comments);
+      });
+
 
       this.dialogimage = true;
+      this.showComments=true;
     },
     closedtailedialoge() {
       this.showdetails = false;
@@ -1604,44 +1649,46 @@ export default {
       }
     },
     sendImage() {
-      this.photo.foreman_id = this.getUserActive.id;
 
       var formData = new FormData();
-      formData.append("id", parseFloat(this.photo.id));
-      formData.append("description", this.photo.description);
+      formData.append("damage_id", parseFloat(this.photo.damage_id));
+
+      formData.append("comment", this.photo.comment);
+
+      if (this.userDepartment == "TECHNIQUE") {
+        
+        formData.append("status", "resolve");
+      } else {
+        formData.append("status", this.switchValue);           
+      }
 
       this.photo.photos.map((item) => {
         formData.append("photos[]", item);
       });
       formData.append(
-        "foreman_id",
-        parseFloat(parseFloat(this.photo.foreman_id))
+        "user_id",
+        parseFloat(parseFloat(this.photo.user_id))
       );
 
-      console.log("this.photo", this.photo);
-      this.sendDamagePhotosStoragePathAction(formData)
+      this.addCOMMENTAction(formData)
         .then((resolve) => {
-          this.damageByEquipments = this.damageByEquipments.map((c) => {
-            if (c.id == resolve.id) {
-              this.damageSelect.photos = resolve.photos;
-              this.damageSelect.description = resolve.description;
-              c.photos = resolve.photos;
-              c.description = resolve.description;
-            }
-            return c;
-          });
-          this.LoadingPage = true;
-
-          setTimeout(() => {
-            this.LoadingPage = false;
-            swal("Good job!", "Add photo and description success", "success");
-          }, 2000);
+          this.comments.push(resolve);
         })
         .catch(() => {
           swal("Error", "", "error");
         });
 
-      this.dialogimage = false;
+      //this.dialogimage = false;
+    },
+    refreshComments(id){
+      this.comments = this.comments.filter((c) => c.id != id);
+
+    },
+    editeComment(comment){
+      this.comments = this.comments.map((c) => {
+        if (c.id == comment.id) return comment;
+        return c;
+      });
     },
   },
 };

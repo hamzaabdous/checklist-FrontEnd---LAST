@@ -67,7 +67,26 @@
   border-radius: 8px;
   border: 1.5px solid #000000d4;
 }
+.scrollComments {
+  overflow-y: scroll;
+  max-height: 430px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
 
+}
+.v-dialog--fullscreen {
+  border-radius: 0;
+  margin: 0;
+  height: 100%;
+  position: fixed;
+  overflow-y: auto;
+  overflow-x: hidden;  
+
+  top: 0;
+  left: 0;
+}
 .v-list-item {
   display: block;
 }
@@ -355,4 +374,14 @@
 
 .cursor{
   cursor: pointer;
+}
+
+.addDescription{
+  padding: 15px;
+}
+
+.withC{
+  .v-text-field__details{
+    display: none !important;
+  }
 }
