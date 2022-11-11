@@ -117,10 +117,10 @@
               </v-chip>
             </td>
 
-            <td class="cursor" v-if="userDepartment != 'TECHNIQUE'" >
+            <td class="cursor" v-if="userDepartment != 'TECHNIQUE'">
               {{ item.declared_by.username }}
             </td>
-            
+
             <td class="cursor">
               {{ item.created_at }}
             </td>
@@ -207,12 +207,7 @@
               Defects history
             </v-btn>
           </template>
-          <v-dialog
-            v-model="dialogimage"
-            fullscreen
-            hide-overlay
-            transition="dialog-bottom-transition"
-          >
+          <v-dialog v-model="dialogimage" width="1000">
             <v-card>
               <v-toolbar dark color="primary">
                 <v-btn icon dark @click="dialogimage = false">
@@ -222,61 +217,86 @@
                 <v-spacer></v-spacer>
                 <v-toolbar-items> </v-toolbar-items>
               </v-toolbar>
-              <div v-if="showComments" class="scrollComments" 
-              
+              <div
+                v-if="showComments"
+                ref="scrollComment"
+                class="scrollComments"
               >
-                <Comment class="my-2" v-for="item in comments"
-                  :key="item.id" :status="item.status" :comment_id="item.id" :editeCommentParent="editeComment" :username="item.user.username" :damage_id="item.damage_id" :user_id="item.user_id"  :refreshComments="refreshComments" :comment="item.comment" :photos="item.photos"/>
+              <v-sheet
+                color="white"
+                class="mx-4 "
+                elevation="4"
+                rounded
+              >
+                <Comment
+                  class="my-2"
+                  v-for="item in comments"
+                  :key="item.id"
+                  :status="item.status"
+                  :comment_id="item.id"
+                  :editeCommentParent="editeComment"
+                  :username="item.user.username"
+                  :damage_id="item.damage_id"
+                  :user_id="item.user_id"
+                  :refreshComments="refreshComments"
+                  :comment="item.comment"
+                  :photos="item.photos"
+                  :created_at="item.created_at"
+                />
+              </v-sheet>
+                
               </div>
-              
 
-              <v-divider ></v-divider>
+              <v-divider></v-divider>
 
               <v-row class="addDescription">
-      
-                <v-col cols="12" md="6">
-                <h3> Description :</h3>
-                <v-textarea
-                  solo
-                  name="input-7-4"
-                  label="Description"
-                  v-model="photo.comment"
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12" md="4">
-                <h3> Add picture :</h3>
-
-                <v-file-input
-                  label="Pictures"
-                  v-model="photo.photos"
-                  filled
-                  multiple
-                  prepend-icon="mdi-camera"
-                ></v-file-input>
-              </v-col>
-              <v-col v-if="userDepartment != 'TECHNIQUE'" cols="12" md="2">
-                <v-card class="d-flex pa-4 mb-4" max-width="170" outlined>
-                 <h5 class="green--text text--lighten-2">Natural</h5>
-                  <v-switch
-                    color="deep-orange lighten-1"
-                    v-model="switch1"
-                    @change="ClaimOrIncident()"
-                  ></v-switch>
-                  <h5 class="deep-orange--text text--lighten-1">Rejected</h5>
-                </v-card>
-              </v-col>
-             
+                <v-col cols="12">
+                  <h3>Comment :</h3>
+                  <v-textarea
+                    solo
+                    name="input-7-4"
+                    label="Description"
+                    v-model="photo.comment"
+                  ></v-textarea>
+                </v-col>
+                <v-col cols="12" class="ma-0 py-0">
+                  <v-file-input
+                    label="Pictures"
+                    v-model="photo.photos"
+                    filled
+                    multiple
+                    prepend-icon="mdi-camera"
+                  ></v-file-input>
+                </v-col>
+                <v-col cols="12" md="12" v-if="userDepartment != 'TECHNIQUE'">
+                  <v-card class="d-flex pa-4 mb-4 commentSwitch">
+                    <v-row>
+                      <v-col cols="7"></v-col>
+                    </v-row>
+                    <h5 class="black--text text--lighten-2 mr-4">
+                      Description
+                    </h5>
+                    <v-switch
+                      color="deep-orange lighten-1 mt-0"
+                      v-model="switch1"
+                      @change="DescriptionOrReject()"
+                    ></v-switch>
+                    <h5 class="deep-orange--text text--lighten-1 ml-4">
+                      Rejected
+                    </h5>
+                  </v-card>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-card-actions class="action">
+                    <v-btn depressed color="" @click="dialogimage = false">
+                      Close
+                    </v-btn>
+                    <v-btn depressed color="primary" @click="sendImage()">
+                      Save
+                    </v-btn>
+                  </v-card-actions>
+                </v-col>
               </v-row>
-              
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn depressed color="" @click="dialogimage = false">
-                  Close
-                </v-btn>
-                <v-btn depressed color="primary" @click="sendImage()">
-                  Save
-                </v-btn>
-              </v-card-actions>
             </v-card>
           </v-dialog>
           <v-dialog v-model="dialogresolve" max-width="700px">
@@ -287,13 +307,11 @@
                 </v-btn>
                 <v-toolbar-title>Resolved</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-toolbar-items>   </v-toolbar-items>
+                <v-toolbar-items> </v-toolbar-items>
               </v-toolbar>
 
-              <v-card-title class="text-h5">  </v-card-title>
-              <v-col cols="12" md="12">
-               
-              </v-col>
+              <v-card-title class="text-h5"> Are you sure you want to resolve this Defecte ?</v-card-title>
+              <v-col cols="12" md="12"> </v-col>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -301,7 +319,7 @@
                   Close
                 </v-btn>
                 <v-btn depressed color="primary" @click="confirmed()">
-                  Save
+                  OK
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -316,10 +334,9 @@
                 <v-spacer></v-spacer>
                 <v-toolbar-items> </v-toolbar-items>
               </v-toolbar>
+              <v-card-title class="text-h5"> Are you sure you want to reject this Defecte ?</v-card-title>
 
-              <v-col cols="12" md="12">
-                
-              </v-col>
+              <v-col cols="12" md="12"> </v-col>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -327,7 +344,7 @@
                   Close
                 </v-btn>
                 <v-btn depressed color="primary" @click="revert()">
-                  Save
+                  Ok
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -441,7 +458,7 @@
                             <h4 v-else>{{ damageSelect.declaredAt }}</h4>
                           </td>
                         </tr>
-                        <tr v-if="fonction != 'TECHNICIEN'">
+                        <tr v-if="userDepartment != 'TECHNIQUE'">
                           <td><h3>Declared By</h3></td>
                           <td class="valueColumn">
                             <h5
@@ -486,7 +503,7 @@
                             <h4 v-else>{{ damageSelect.closedAt }}</h4>
                           </td>
                         </tr>
-                        <tr v-if="fonction != 'TECHNICIEN'">
+                        <tr v-if="userDepartment != 'TECHNIQUE'">
                           <td><h3>Rejected By</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.rejected_by == null">
@@ -520,17 +537,6 @@
                         </tr>
 
                         <tr>
-                          <td><h3>Updated at</h3></td>
-                          <td class="valueColumn">
-                            <h5 v-if="damageSelect.updated_at == null">
-                              Empty
-                            </h5>
-
-                            <h4 v-else>{{ damageSelect.updated_at }}</h4>
-                          </td>
-                        </tr>
-
-                        <tr v-if="fonction != 'TECHNICIEN'">
                           <td><h3>Created at</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.created_at == null">
@@ -550,7 +556,7 @@
                             </h4>
                           </td>
                         </tr>
-                        <tr v-if="fonction != 'TECHNICIEN'">
+                        <tr v-if="userDepartment != 'TECHNIQUE'">
                           <td><h3>Last driver</h3></td>
                           <td class="valueColumn">
                             <h5 v-if="damageSelect.driverOut == null">Empty</h5>
@@ -565,7 +571,7 @@
                   </v-col>
                 </v-row>
               </v-container>
-              
+
               <v-card-actions>
                 <v-spacer></v-spacer>
               </v-card-actions>
@@ -836,7 +842,6 @@ export default {
           updated_at: "",
         },
       },
-  
     },
     equipment: null,
     idEquipment: null,
@@ -913,88 +918,86 @@ export default {
       created_at: "",
       updated_at: "",
     },
-    useractiveUSERNAME:"",
-    commenttest:"commenttest commenttest commenttest",
-    showComments:false,
-    commentsDefect:[
+    useractiveUSERNAME: "",
+    commenttest: "commenttest commenttest commenttest",
+    showComments: false,
+    commentsDefect: [
       {
-        id:1,
-        comment:'test comment1',
-        status:"",
-        damage_id:1,
-        user:{
-          id:1,
-          username:"hamza abdous",
+        id: 1,
+        comment: "test comment1",
+        status: "",
+        damage_id: 1,
+        user: {
+          id: 1,
+          username: "hamza abdous",
         },
-        photos:[
+        photos: [
           {
-            id:1,
-            filename:"1",
-            comment_id:1,
-            user_id:1,
+            id: 1,
+            filename: "1",
+            comment_id: 1,
+            user_id: 1,
           },
           {
-            id:2,
-            filename:"2",
-            comment_id:1,
-            user_id:2,
+            id: 2,
+            filename: "2",
+            comment_id: 1,
+            user_id: 2,
           },
           {
-            id:3,
-            filename:"3",
-            comment_id:1,
-            user_id:2,
+            id: 3,
+            filename: "3",
+            comment_id: 1,
+            user_id: 2,
           },
           {
-            id:4,
-            filename:"4",
-            comment_id:1,
-            user_id:2,
+            id: 4,
+            filename: "4",
+            comment_id: 1,
+            user_id: 2,
           },
-        ]
-
+        ],
       },
       {
-        id:2,
-        comment:'test comment 2 ',
-        status:"",
-        damage_id:1,
-        user:{
-          id:1,
-          username:"hamza abdous 2",
+        id: 2,
+        comment: "test comment 2 ",
+        status: "",
+        damage_id: 1,
+        user: {
+          id: 1,
+          username: "hamza abdous 2",
         },
-        photos:[
+        photos: [
           {
-            id:1,
-            filename:"1",
-            comment_id:1,
-            user_id:1,
+            id: 1,
+            filename: "1",
+            comment_id: 1,
+            user_id: 1,
           },
           {
-            id:2,
-            filename:"2",
-            comment_id:1,
-            user_id:2,
+            id: 2,
+            filename: "2",
+            comment_id: 1,
+            user_id: 2,
           },
           {
-            id:3,
-            filename:"3",
-            comment_id:1,
-            user_id:2,
+            id: 3,
+            filename: "3",
+            comment_id: 1,
+            user_id: 2,
           },
           {
-            id:4,
-            filename:"4",
-            comment_id:1,
-            user_id:2,
+            id: 4,
+            filename: "4",
+            comment_id: 1,
+            user_id: 2,
           },
-        ]
-
+        ],
       },
     ],
-    comments:[],
-    switch1:false,
-    switchValue:"",
+    comments: [],
+    switch1: false,
+    switchValue: "description",
   }),
   mounted() {
     document.title = "Checklist";
@@ -1024,7 +1027,7 @@ export default {
       "sendDamagePhotosStoragePath",
       "getUserActive",
       "getdepartements",
-      "getcomments"
+      "getcomments",
     ]),
   },
   watch: {
@@ -1033,7 +1036,6 @@ export default {
   created() {
     // this.initialize();
     this.useractiveUSERNAME = this.getUserActive.username;
-
   },
   methods: {
     getColor(status) {
@@ -1044,13 +1046,12 @@ export default {
 
       return color;
     },
-    ClaimOrIncident() {
+    DescriptionOrReject() {
       if (this.switch1 == false) {
-        this.switchValue = "natural";
+        this.switchValue = "description";
       } else {
-        this.switchValue = "revert";
+        this.switchValue = "reject";
       }
-      
     },
     getColorceritical(important) {
       var color = "";
@@ -1203,7 +1204,7 @@ export default {
       "SendEmailAction",
       "setDepartementsAction",
       "setCOMMENTSAction",
-      "addCOMMENTAction"
+      "addCOMMENTAction",
     ]),
     pageView(item, row) {
       this.damageSelect = item;
@@ -1352,20 +1353,29 @@ export default {
       this.isHistorique = true;
     },
     clickImage(item) {
-       this.damageSelect = item;
-      
+      this.damageSelect = item;
+
       this.photo.damage_id = item.id;
       this.photo.user_id = this.getUserActive.id;
 
       this.setCOMMENTSAction(item.id).then(() => {
         this.comments = [...this.getcomments];
-        
+        setTimeout(() => {
+            this.$refs.scrollComment.scrollTo(
+            0,
+            this.$refs.scrollComment.scrollHeight +
+              this.$refs.scrollComment.lastElementChild.scrollHeight
+          );
+          }, 500);
         console.log("set comments", this.comments);
       });
+      this.LoadingPage = true;
 
-
+      setTimeout(() => {
+        this.LoadingPage = false;
+      }, 2000);
       this.dialogimage = true;
-      this.showComments=true;
+      this.showComments = true;
     },
     closedtailedialoge() {
       this.showdetails = false;
@@ -1649,30 +1659,43 @@ export default {
       }
     },
     sendImage() {
-
       var formData = new FormData();
       formData.append("damage_id", parseFloat(this.photo.damage_id));
 
       formData.append("comment", this.photo.comment);
 
       if (this.userDepartment == "TECHNIQUE") {
-        
         formData.append("status", "resolve");
       } else {
-        formData.append("status", this.switchValue);           
+        formData.append("status", this.switchValue);
       }
 
       this.photo.photos.map((item) => {
         formData.append("photos[]", item);
       });
-      formData.append(
-        "user_id",
-        parseFloat(parseFloat(this.photo.user_id))
-      );
+      formData.append("user_id", parseFloat(parseFloat(this.photo.user_id)));
 
       this.addCOMMENTAction(formData)
         .then((resolve) => {
           this.comments.push(resolve);
+
+          this.photo.comment = "";
+          this.switch1 = false;
+          this.photo.photos = [];
+          
+          setTimeout(() => {
+            this.$refs.scrollComment.scrollTo(
+            0,
+            this.$refs.scrollComment.scrollHeight +
+              this.$refs.scrollComment.lastElementChild.scrollHeight
+          );
+          }, 500);
+          this.LoadingPage = true;
+
+          setTimeout(() => {
+            this.LoadingPage = false;
+            swal("Good job!", "success", "success");
+          }, 2000);
         })
         .catch(() => {
           swal("Error", "", "error");
@@ -1680,15 +1703,21 @@ export default {
 
       //this.dialogimage = false;
     },
-    refreshComments(id){
+    refreshComments(id) {
       this.comments = this.comments.filter((c) => c.id != id);
+      this.LoadingPage = true;
 
+      setTimeout(() => {
+        this.LoadingPage = false;
+        swal("Good job!", "success", "success");
+      }, 2000);
     },
-    editeComment(comment){
+    editeComment(comment) {
       this.comments = this.comments.map((c) => {
         if (c.id == comment.id) return comment;
         return c;
       });
+
     },
   },
 };

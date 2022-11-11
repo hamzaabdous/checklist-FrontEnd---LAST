@@ -127,10 +127,7 @@ export default {
         .then((resolve) => {
           console.log("user login", resolve);
           console.log("userrerere", resolve.user.id == this.getUserActive.id);
-          if (resolve.user.id == this.userActive.id) {
-            console.log("here ", resolve.user.id == this.getUserActive.id);
-            this.changeLoginValueToFalse();
-          } else {
+          
             if (resolve.user.fonction.department.name == "TECHNIQUE") {
               this.$router.push({
                 name: "technique",
@@ -155,7 +152,7 @@ export default {
               });
               window.location.reload();
             }
-          }
+          
         })
         .catch(() => {
           this.failedAuth = true;
